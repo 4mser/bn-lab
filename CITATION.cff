@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use phenomena in teaching material, a publication or a talk, please cite it as below."
+title: "phenomena: interactive physics and mathematics that actually compute"
+abstract: >-
+  A dependency-free JavaScript library of interactive simulations for the web:
+  forty experiments across chaos, waves, optics, quantum mechanics, relativity,
+  statistical mechanics, automata and optimisation, plus a GPU Navier-Stokes
+  fluid solver. Each experiment integrates its own equations in the browser, and
+  a validation suite checks the on-screen numerical schemes against published
+  and exact results.
+type: software
+authors:
+  - family-names: Moreno
+    given-names: Nicolás
+    affiliation: B&N Solutions
+  - name: B&N Solutions
+    city: Santiago
+    country: CL
+    website: "https://www.bnsolutions.cl"
+repository-code: "https://github.com/4mser/phenomena"
+url: "https://www.bnsolutions.cl/research/phenomena"
+license: MIT
+version: 0.1.0
+date-released: 2026-09-15
+keywords:
+  - simulation
+  - physics
+  - mathematics
+  - explorable explanations
+  - navier-stokes
+  - webgl

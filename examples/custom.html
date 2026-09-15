@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>phenomena — write your own experiment</title>
+<link rel="stylesheet" href="../dist/phenomena.css">
+<style>
+  body { margin: 0; background: #000; color: #e8eaee; font: 14px system-ui, sans-serif; }
+  canvas { display: block; width: 100vw; height: 70vh; }
+  #controls { padding: 20px; }
+</style>
+</head>
+<body>
+<canvas id="sim"></canvas>
+<div id="controls"></div>
+
+<script type="module">
+  import { mount, define, L, TAU } from '../src/index.js';
+
+  // A damped harmonic oscillator, integrated with semi-implicit Euler.
+  //   x'' = −ω²x − 2ζωx'
+  const oscillator = define({
+    id: 'damped-oscillator',
+    name: L('Damped oscillator', 'Oscilador amortiguado'),
+    note: L('A mass on a spring losing energy to friction.', 'Una masa en un resorte que pierde energía por roce.'),
+    params: [
+      { key: 'omega', label: L('Frequency ω', 'Frecuencia ω'), min: 0.5, max: 8, step: 0.1, def: 3 },
+      { key: 'zeta', label: L('Damping ζ', 'Amortiguación ζ'), min: 0, max: 1.2, step: 0.01, def: 0.08 }
+    ],
+    make(w, h) {
+      let x = 1, v = 0;
+      const trail = [];
+      return {
+        reset() { x = 1; v = 0; trail.length = 0; },
+        step(ctx, w, h, t, acc, P, M) {
+          if (M.down) { x = (M.x / w - 0.5) * 2.4; v = 0; }      // drag to pull the mass
+          const dt = 1 / 60;
+          v += (-P.omega * P.omega * x - 2 * P.zeta * P.omega * v) * dt;
+          x += v * dt;
+          trail.push(x); if (trail.length > w) trail.shift();
+
+          ctx.strokeStyle = `rgba(${acc},0.35)`;
+          ctx.beginPath();
+          trail.forEach((y, i) => ctx[i ? 'lineTo' : 'moveTo'](i, h * 0.75 - y * h * 0.15));
+          ctx.stroke();
+
+          const px = w / 2 + x * w * 0.2;
+          ctx.fillStyle = `rgba(${acc},0.95)`;
+          ctx.beginPath(); ctx.arc(px, h * 0.35, 14, 0, TAU); ctx.fill();
+          ctx.strokeStyle = `rgba(${acc},0.5)`;
+          ctx.beginPath(); ctx.moveTo(w / 2 - w * 0.3, h * 0.35); ctx.lineTo(px, h * 0.35); ctx.stroke();
+        }
+      };
+    }
+  });
+
+  mount(document.getElementById('sim'), oscillator, {
+    controls: document.getElementById('controls'),
+    accent: '#58c7d6'
+  });
+</script>
+</body>
+</html>

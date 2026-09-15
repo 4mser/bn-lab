@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>phenomena — minimal</title>
+<link rel="stylesheet" href="../dist/phenomena.css">
+<style>
+  body { margin: 0; background: #000; color: #e8eaee; font: 14px system-ui, sans-serif; }
+  canvas { display: block; width: 100vw; height: 70vh; }
+  #controls { padding: 20px; }
+</style>
+</head>
+<body>
+<canvas id="sim"></canvas>
+<div id="controls"></div>
+
+<!-- The browser bundle registers every experiment, so they mount by id. -->
+<script src="../dist/phenomena.min.js"></script>
+<script>
+  const sim = Phenomena.mount(document.getElementById('sim'), 'fluid', {
+    controls: document.getElementById('controls')
+  });
+  document.getElementById('sim').addEventListener('phenomena:unsupported', () => {
+    document.getElementById('controls').textContent = 'This device has no WebGL half-float support.';
+  });
+</script>
+</body>
+</html>

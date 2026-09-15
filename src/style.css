@@ -1,0 +1,43 @@
+/* phenomena — default look for the controls panel.
+   Optional: every class is stable, so you can skip this file and style your own.
+   Tune it with the custom properties below. */
+
+.phen-controls {
+  --phen-fg: currentColor;
+  --phen-muted: color-mix(in srgb, currentColor 55%, transparent);
+  --phen-line: color-mix(in srgb, currentColor 18%, transparent);
+  --phen-accent: currentColor;
+  --phen-font: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  display: grid;
+  gap: 10px 18px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: center;
+  font: 12px/1.4 var(--phen-font);
+  color: var(--phen-fg);
+}
+.phen-ctl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'label value' 'range range';
+  gap: 6px 10px;
+  min-width: 0;
+}
+.phen-ctl-label { grid-area: label; color: var(--phen-muted); letter-spacing: .04em; }
+.phen-ctl-value { grid-area: value; font-variant-numeric: tabular-nums; }
+.phen-ctl input[type='range'] {
+  grid-area: range;
+  width: 100%;
+  margin: 0;
+  accent-color: var(--phen-accent);
+}
+.phen-reset {
+  justify-self: start;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid var(--phen-line);
+  padding: 8px 14px;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+.phen-reset:hover { border-color: var(--phen-muted); }

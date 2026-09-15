@@ -1,0 +1,87 @@
+{
+  "name": "phenomena",
+  "version": "0.1.0",
+  "description": "Interactive physics and mathematics that actually compute: 40 live simulations (chaos, waves, quantum, relativity, fields, automata, optimisation) and a GPU Navier-Stokes fluid. Zero dependencies.",
+  "keywords": [
+    "simulation",
+    "physics",
+    "mathematics",
+    "canvas",
+    "webgl",
+    "navier-stokes",
+    "fluid",
+    "chaos",
+    "lorenz",
+    "ising",
+    "explorable",
+    "education",
+    "visualization",
+    "generative"
+  ],
+  "homepage": "https://www.bnsolutions.cl/research/phenomena",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4mser/phenomena.git"
+  },
+  "bugs": {
+    "url": "https://github.com/4mser/phenomena/issues"
+  },
+  "license": "MIT",
+  "author": "B&N Solutions <n.moreno@bnsolutions.cl> (https://www.bnsolutions.cl)",
+  "contributors": [
+    "Nicolás Moreno (https://www.bnsolutions.cl/c/nico)"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "*.css",
+    "./src/bundle.js",
+    "./dist/*"
+  ],
+  "main": "./dist/phenomena.mjs",
+  "module": "./src/index.js",
+  "unpkg": "./dist/phenomena.min.js",
+  "jsdelivr": "./dist/phenomena.min.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./experiments": {
+      "types": "./types/experiments.d.ts",
+      "import": "./src/experiments/index.js"
+    },
+    "./experiments/*": {
+      "types": "./types/experiment.d.ts",
+      "import": "./src/experiments/*.js"
+    },
+    "./bundle": "./dist/phenomena.mjs",
+    "./style.css": "./src/style.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "dist",
+    "types",
+    "README.md",
+    "README.es.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "CITATION.cff"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/core.test.js test/experiments.test.js",
+    "validate": "node validation/run.mjs",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "acorn": "^8.18.0",
+    "acorn-walk": "^8.3.5",
+    "esbuild": "^0.28.2"
+  }
+}

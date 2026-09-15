@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>phenomena — gallery</title>
+<link rel="stylesheet" href="../dist/phenomena.css">
+<style>
+  :root { color-scheme: dark; --bg: #000; --fg: #e8eaee; --muted: #8b8f98; --line: #22252b; }
+  :root[data-mode='light'] { color-scheme: light; --bg: #f7f9fc; --fg: #141e34; --muted: #5d6576; --line: #dde2ea; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 system-ui, sans-serif; }
+  header, main { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+  header { padding-block: 40px 20px; display: flex; flex-wrap: wrap; gap: 16px; align-items: end; justify-content: space-between; }
+  h1 { margin: 0; font-weight: 500; letter-spacing: -.02em; }
+  p { margin: 6px 0 0; color: var(--muted); max-width: 60ch; }
+  button.mode { font: inherit; color: inherit; background: none; border: 1px solid var(--line); padding: 8px 14px; cursor: pointer; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; padding-block: 10px 60px; }
+  .card { border: 1px solid var(--line); background: var(--bg); color: inherit; text-align: left; padding: 0; font: inherit; cursor: pointer; }
+  .card canvas { display: block; width: 100%; aspect-ratio: 16 / 10; border-bottom: 1px solid var(--line); }
+  .card div { padding: 12px 14px 14px; }
+  .card b { font-weight: 500; }
+  .card small { display: block; color: var(--muted); margin-top: 4px; font-size: 13px; }
+  dialog { width: min(1100px, calc(100vw - 32px)); max-height: calc(100vh - 32px); border: 1px solid var(--line); background: var(--bg); color: var(--fg); padding: 0; }
+  dialog::backdrop { background: rgba(0, 0, 0, .7); }
+  dialog canvas { display: block; width: 100%; aspect-ratio: 16 / 9; border-bottom: 1px solid var(--line); touch-action: none; }
+  dialog .body { padding: 18px 20px 22px; }
+  dialog .top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 14px; }
+  dialog .top button { font: inherit; color: inherit; background: none; border: 1px solid var(--line); padding: 6px 12px; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>phenomena</h1>
+    <p>Every figure below integrates its own equations in your browser. Hover to interact; click to open the controls.</p>
+  </div>
+  <button class="mode" type="button" id="mode">Light theme</button>
+</header>
+<main><div class="grid" id="grid"></div></main>
+
+<dialog id="detail">
+  <canvas id="big"></canvas>
+  <div class="body">
+    <div class="top"><div><b id="dName"></b><small id="dNote"></small></div><button type="button" id="close">Close</button></div>
+    <div id="controls"></div>
+  </div>
+</dialog>
+
+<script src="../dist/phenomena.min.js"></script>
+<script>
+  const { mount, experiments } = Phenomena;
+  const root = document.documentElement;
+  let theme = 'dark';
+  const mounts = [];
+
+  for (const def of experiments) {
+    const card = document.createElement('button');
+    card.className = 'card';
+    card.innerHTML = `<canvas></canvas><div><b></b><small></small></div>`;
+    card.querySelector('b').textContent = def.name.en;
+    card.querySelector('small').textContent = def.note.en;
+    document.getElementById('grid').appendChild(card);
+    mounts.push(mount(card.querySelector('canvas'), def, { theme, pixelRatio: 1.5 }));
+    card.addEventListener('click', () => open(def));
+  }
+
+  let current = null;
+  const dialog = document.getElementById('detail');
+  function open(def) {
+    document.getElementById('dName').textContent = def.name.en;
+    document.getElementById('dNote').textContent = def.note.en;
+    dialog.showModal();
+    current = mount(document.getElementById('big'), def, { theme, controls: document.getElementById('controls') });
+  }
+  dialog.addEventListener('close', () => { if (current) current.destroy(); current = null; });
+  document.getElementById('close').addEventListener('click', () => dialog.close());
+
+  document.getElementById('mode').addEventListener('click', e => {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    root.dataset.mode = theme;
+    e.target.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
+    for (const m of mounts) m.setTheme(theme);
+    if (current) current.setTheme(theme);
+  });
+</script>
+</body>
+</html>
