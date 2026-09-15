@@ -1,6 +1,6 @@
 # Third-party notices
 
-phenomena is MIT-licensed. One component is adapted from third-party code under
+BN Lab is MIT-licensed. One component is adapted from third-party code under
 a compatible license, and its notice is reproduced here as that license requires.
 
 ## WebGL-Fluid-Simulation — `src/experiments/fluid.js`
@@ -34,7 +34,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-Modifications in phenomena: packaged as an experiment driven by the phenomena
+Modifications in BN Lab: packaged as an experiment driven by the BN Lab
 engine; WebGL2 half-float textures treated as filterable per the WebGL2
 specification (keeps iOS devices supported); a display shader that renders the
 same dye as additive light on dark themes and as a subtractive tint on light

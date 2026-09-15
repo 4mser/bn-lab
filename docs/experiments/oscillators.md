@@ -5,8 +5,8 @@
 > Two masses joined by a spring. Start one moving and the other stays still, for a while. Then the energy has crossed over completely and the first one is the one at rest.
 
 ```js
-import { mount } from 'phenomena';
-import oscillators from 'phenomena/experiments/oscillators';
+import { mount } from 'bn-lab';
+import oscillators from 'bn-lab/experiments/oscillators';
 
 mount(document.querySelector('canvas'), oscillators, { controls: document.querySelector('#controls') });
 ```

@@ -5,8 +5,8 @@
 > Take a number, square it, add the one you started with. Repeat. Some numbers stay near the origin forever and some run off to infinity, and the border between those two sets is this.
 
 ```js
-import { mount } from 'phenomena';
-import mandelbrot from 'phenomena/experiments/mandelbrot';
+import { mount } from 'bn-lab';
+import mandelbrot from 'bn-lab/experiments/mandelbrot';
 
 mount(document.querySelector('canvas'), mandelbrot, { controls: document.querySelector('#controls') });
 ```

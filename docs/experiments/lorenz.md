@@ -5,8 +5,8 @@
 > Three equations with no randomness in them. Run them twice from almost the same starting point and the two paths diverge until they have nothing to do with each other. Nothing was added: the divergence was already in the equations.
 
 ```js
-import { mount } from 'phenomena';
-import lorenz from 'phenomena/experiments/lorenz';
+import { mount } from 'bn-lab';
+import lorenz from 'bn-lab/experiments/lorenz';
 
 mount(document.querySelector('canvas'), lorenz, { controls: document.querySelector('#controls') });
 ```

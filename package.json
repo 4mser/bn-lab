@@ -1,5 +1,5 @@
 {
-  "name": "phenomena",
+  "name": "bn-lab",
   "version": "0.1.0",
   "description": "Interactive physics and mathematics that actually compute: 40 live simulations (chaos, waves, quantum, relativity, fields, automata, optimisation) and a GPU Navier-Stokes fluid. Zero dependencies.",
   "keywords": [
@@ -18,13 +18,13 @@
     "visualization",
     "generative"
   ],
-  "homepage": "https://www.bnsolutions.cl/research/phenomena",
+  "homepage": "https://www.bnsolutions.cl/research/bn-lab",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/4mser/phenomena.git"
+    "url": "git+https://github.com/4mser/bn-lab.git"
   },
   "bugs": {
-    "url": "https://github.com/4mser/phenomena/issues"
+    "url": "https://github.com/4mser/bn-lab/issues"
   },
   "license": "MIT",
   "author": "B&N Solutions <n.moreno@bnsolutions.cl> (https://www.bnsolutions.cl)",
@@ -37,10 +37,10 @@
     "./src/bundle.js",
     "./dist/*"
   ],
-  "main": "./dist/phenomena.mjs",
+  "main": "./dist/bn-lab.mjs",
   "module": "./src/index.js",
-  "unpkg": "./dist/phenomena.min.js",
-  "jsdelivr": "./dist/phenomena.min.js",
+  "unpkg": "./dist/bn-lab.min.js",
+  "jsdelivr": "./dist/bn-lab.min.js",
   "types": "./types/index.d.ts",
   "exports": {
     ".": {
@@ -56,7 +56,7 @@
       "types": "./types/experiment.d.ts",
       "import": "./src/experiments/*.js"
     },
-    "./bundle": "./dist/phenomena.mjs",
+    "./bundle": "./dist/bn-lab.mjs",
     "./style.css": "./src/style.css",
     "./package.json": "./package.json"
   },

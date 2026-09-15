@@ -5,8 +5,8 @@
 > The same squaring rule, but now the constant is fixed and the starting point is the pixel. Every value of that constant gives a completely different shape, and the cursor sweeps through them.
 
 ```js
-import { mount } from 'phenomena';
-import julia from 'phenomena/experiments/julia';
+import { mount } from 'bn-lab';
+import julia from 'bn-lab/experiments/julia';
 
 mount(document.querySelector('canvas'), julia, { controls: document.querySelector('#controls') });
 ```

@@ -5,8 +5,8 @@
 > Light crossing into a different medium has to bend, because it has to stay in step with itself. Tilt it far enough and it stops crossing at all: the surface becomes a perfect mirror. That is the whole reason fibre optics work.
 
 ```js
-import { mount } from 'phenomena';
-import refraction from 'phenomena/experiments/refraction';
+import { mount } from 'bn-lab';
+import refraction from 'bn-lab/experiments/refraction';
 
 mount(document.querySelector('canvas'), refraction, { controls: document.querySelector('#controls') });
 ```

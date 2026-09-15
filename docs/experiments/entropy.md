@@ -5,8 +5,8 @@
 > A gas let go in one corner spreads out and never gathers back. Nothing in the equations forbids it gathering. What forbids it is counting.
 
 ```js
-import { mount } from 'phenomena';
-import entropy from 'phenomena/experiments/entropy';
+import { mount } from 'bn-lab';
+import entropy from 'bn-lab/experiments/entropy';
 
 mount(document.querySelector('canvas'), entropy, { controls: document.querySelector('#controls') });
 ```

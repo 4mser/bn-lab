@@ -5,8 +5,8 @@
 > A sheet of arrows that only care about their four neighbours. Warm it and they argue. Cool it and at one precise temperature the entire sheet picks a side at once, with nothing telling it to.
 
 ```js
-import { mount } from 'phenomena';
-import ising from 'phenomena/experiments/ising';
+import { mount } from 'bn-lab';
+import ising from 'bn-lab/experiments/ising';
 
 mount(document.querySelector('canvas'), ising, { controls: document.querySelector('#controls') });
 ```

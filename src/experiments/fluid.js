@@ -22,7 +22,7 @@
      Copyright (c) 2017 Pavel Dobryakov — MIT License
      https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
 
-   Changes here: it runs as a phenomena experiment (sized, paused and themed by
+   Changes here: it runs as a BN Lab experiment (sized, paused and themed by
    the engine), WebGL2 half-float textures are treated as filterable by spec
    so iOS devices keep the simulation, and the display shader reads the same
    dye either as additive light on a dark theme or as a subtractive tint on a
@@ -30,7 +30,7 @@
 
 import { L } from '../core/shared.js';
 
-const unsupported = message => Object.assign(new Error('phenomena/fluid: ' + message), { code: 'WEBGL_UNSUPPORTED' });
+const unsupported = message => Object.assign(new Error('bn-lab/fluid: ' + message), { code: 'WEBGL_UNSUPPORTED' });
 
 export default {
   id: 'fluid',
@@ -105,7 +105,7 @@ export default {
       const s = gl.createShader(type);
       gl.shaderSource(s, src); gl.compileShader(s);
       if (!gl.getShaderParameter(s, gl.COMPILE_STATUS) && !gl.isContextLost()) {
-        throw new Error('phenomena/fluid: shader failed to compile\n' + gl.getShaderInfoLog(s));
+        throw new Error('bn-lab/fluid: shader failed to compile\n' + gl.getShaderInfoLog(s));
       }
       shaders.push(s);
       return s;

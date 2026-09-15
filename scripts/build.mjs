@@ -1,9 +1,9 @@
 // Builds the distributable files and regenerates src/experiments/index.js.
 //
-//   dist/phenomena.mjs      ES module, every experiment included
-//   dist/phenomena.js       browser global `Phenomena`, readable
-//   dist/phenomena.min.js   browser global `Phenomena`, minified
-//   dist/phenomena.css      default controls stylesheet
+//   dist/bn-lab.mjs      ES module, every experiment included
+//   dist/bn-lab.js       browser global `BNLab`, readable
+//   dist/bn-lab.min.js   browser global `BNLab`, minified
+//   dist/bn-lab.css      default controls stylesheet
 //
 // Consumers with a bundler should import from src/ (see package.json
 // "exports") so only the experiments they use are shipped.
@@ -35,14 +35,14 @@ const indexFile = path.join(root, 'src/index.js');
 fs.writeFileSync(indexFile, fs.readFileSync(indexFile, 'utf8')
   .replace(/export const version = '[^']*';/, `export const version = '${pkg.version}';`));
 
-const banner = `/*! phenomena v${pkg.version} | MIT License | ${pkg.homepage} */`;
+const banner = `/*! BN Lab v${pkg.version} | MIT License | ${pkg.homepage} */`;
 const common = { entryPoints: [path.join(root, 'src/bundle.js')], bundle: true, target: 'es2019', legalComments: 'inline', banner: { js: banner } };
 fs.mkdirSync(path.join(root, 'dist'), { recursive: true });
 
-await esbuild.build({ ...common, format: 'esm', outfile: path.join(root, 'dist/phenomena.mjs') });
-await esbuild.build({ ...common, format: 'iife', globalName: 'Phenomena', outfile: path.join(root, 'dist/phenomena.js') });
-await esbuild.build({ ...common, format: 'iife', globalName: 'Phenomena', minify: true, legalComments: 'eof', outfile: path.join(root, 'dist/phenomena.min.js') });
-fs.copyFileSync(path.join(root, 'src/style.css'), path.join(root, 'dist/phenomena.css'));
+await esbuild.build({ ...common, format: 'esm', outfile: path.join(root, 'dist/bn-lab.mjs') });
+await esbuild.build({ ...common, format: 'iife', globalName: 'BNLab', outfile: path.join(root, 'dist/bn-lab.js') });
+await esbuild.build({ ...common, format: 'iife', globalName: 'BNLab', minify: true, legalComments: 'eof', outfile: path.join(root, 'dist/bn-lab.min.js') });
+fs.copyFileSync(path.join(root, 'src/style.css'), path.join(root, 'dist/bn-lab.css'));
 
 const kb = f => (fs.statSync(path.join(root, 'dist', f)).size / 1024).toFixed(1) + ' KB';
-console.log(`${ids.length} experiments · phenomena.min.js ${kb('phenomena.min.js')} · phenomena.mjs ${kb('phenomena.mjs')}`);
+console.log(`${ids.length} experiments · bn-lab.min.js ${kb('bn-lab.min.js')} · bn-lab.mjs ${kb('bn-lab.mjs')}`);

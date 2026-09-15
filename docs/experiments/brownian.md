@@ -5,8 +5,8 @@
 > A particle with no direction of its own, hit from every side by things too small to see. It goes nowhere in particular, and how far it gets follows a law you can write down.
 
 ```js
-import { mount } from 'phenomena';
-import brownian from 'phenomena/experiments/brownian';
+import { mount } from 'bn-lab';
+import brownian from 'bn-lab/experiments/brownian';
 
 mount(document.querySelector('canvas'), brownian, { controls: document.querySelector('#controls') });
 ```

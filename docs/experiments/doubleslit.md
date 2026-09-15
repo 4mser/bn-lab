@@ -5,8 +5,8 @@
 > Send particles at two slits one at a time. Each lands as a single dot, and after enough of them the dots have arranged themselves into fringes. Then put a detector at the slits so somebody knows which one each particle went through, and the fringes are gone.
 
 ```js
-import { mount } from 'phenomena';
-import doubleslit from 'phenomena/experiments/doubleslit';
+import { mount } from 'bn-lab';
+import doubleslit from 'bn-lab/experiments/doubleslit';
 
 mount(document.querySelector('canvas'), doubleslit, { controls: document.querySelector('#controls') });
 ```

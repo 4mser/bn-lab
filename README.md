@@ -1,4 +1,4 @@
-# phenomena
+# BN Lab
 
 **Interactive physics and mathematics that actually compute.**
 Forty live simulations — chaos, waves, optics, quantum mechanics, relativity,
@@ -6,12 +6,12 @@ statistical mechanics, automata, optimisation — and a GPU Navier-Stokes fluid.
 Every figure integrates its own equations in the browser. Zero dependencies,
 100 KB minified for all of them, and each one importable on its own.
 
-[Read the article](https://www.bnsolutions.cl/research/phenomena) ·
+[Read the article](https://www.bnsolutions.cl/research/bn-lab) ·
 [Experiments](docs/EXPERIMENTS.md) ·
 [Validation results](validation/RESULTS.md) ·
 [Leer en español](README.es.md)
 
-![The phenomena gallery](docs/assets/gallery.png)
+![The BN Lab gallery](docs/assets/gallery.png)
 
 ## Why
 
@@ -24,7 +24,7 @@ perturbing a live system, not scrubbing a video.
 
 That also makes them testable. A [validation suite](#validation) calls the
 exact update functions the figures run and compares them with published
-results — and it found three of our own figures wrong before this release.
+results.
 
 ## Quick start
 
@@ -34,27 +34,27 @@ results — and it found three of our own figures wrong before this release.
 <canvas id="sim" style="width:100%;height:480px"></canvas>
 <div id="controls"></div>
 
-<script src="https://cdn.jsdelivr.net/gh/4mser/phenomena@v0.1.0/dist/phenomena.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/4mser/bn-lab@v0.1.0/dist/bn-lab.min.js"></script>
 <script>
-  Phenomena.mount(document.getElementById('sim'), 'lorenz', {
+  BNLab.mount(document.getElementById('sim'), 'lorenz', {
     controls: document.getElementById('controls')
   });
 </script>
 ```
 
 The browser bundle registers every experiment, so you mount by id. Add
-`dist/phenomena.css` for a neutral look for the sliders, or style the
-`.phen-*` classes yourself.
+`dist/bn-lab.css` for a neutral look for the sliders, or style the
+`.bnlab-*` classes yourself.
 
 ### With a bundler
 
 ```sh
-npm install github:4mser/phenomena
+npm install github:4mser/bn-lab
 ```
 
 ```js
-import { mount } from 'phenomena';
-import fluid from 'phenomena/experiments/fluid';
+import { mount } from 'bn-lab';
+import fluid from 'bn-lab/experiments/fluid';
 
 const sim = mount(canvas, fluid, { theme: 'auto', accent: '#0a5cff' });
 ```
@@ -95,8 +95,8 @@ sim.destroy();             // removes listeners, frees GPU resources
 sim.supported;             // false if it could not start
 ```
 
-A canvas that cannot run its experiment gets `data-phenomena="unsupported"` and
-fires a `phenomena:unsupported` event, so you can show a fallback.
+A canvas that cannot run its experiment gets `data-bnlab="unsupported"` and
+fires a `bnlab:unsupported` event, so you can show a fallback.
 
 ### Other exports
 
@@ -112,7 +112,7 @@ An experiment is a plain object. `make` builds the state once; `step` advances
 and draws one frame.
 
 ```js
-import { mount, define, L, TAU } from 'phenomena';
+import { mount, define, L, TAU } from 'bn-lab';
 
 const oscillator = define({
   id: 'damped-oscillator',
@@ -177,13 +177,6 @@ run. Full output: [validation/RESULTS.md](validation/RESULTS.md).
 | Kepler orbits | angular momentum drift · periapsis precession | 7e-14 · 0.38° per orbit | 0 · 0° |
 | Ising model | ⟨\|m\|⟩ at T = 2.0, 64×64 lattice | 0.9113 | 0.9113 (Onsager–Yang) |
 
-Writing these checks exposed three figures that were wrong in the lab they came
-from: Lorenz ran forward Euler (λ₁ 5.8 % high), the pendulum lost 7 % of its
-energy per minute to an integrator it never declared, and a distance softening
-made Kepler's ellipses precess 60° per orbit. All three schemes were replaced
-before release; the old ones stay in the suite as controls. Details in the
-[changelog](CHANGELOG.md).
-
 `npm test` separately runs every 2D experiment headless with default, minimum
 and maximum parameters in both themes, and fails on any exception or
 non-finite coordinate.
@@ -223,7 +216,7 @@ node scripts/docs.mjs
 
 ## Citing
 
-If you use phenomena in teaching material, a paper or a talk, see
+If you use BN Lab in teaching material, a paper or a talk, see
 [CITATION.cff](CITATION.cff).
 
 ## License

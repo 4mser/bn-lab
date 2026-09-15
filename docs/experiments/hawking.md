@@ -5,8 +5,8 @@
 > Empty space is not empty: pairs of particles appear and annihilate constantly. Do that right at a horizon and sometimes one falls in while the other escapes, and the hole pays for it.
 
 ```js
-import { mount } from 'phenomena';
-import hawking from 'phenomena/experiments/hawking';
+import { mount } from 'bn-lab';
+import hawking from 'bn-lab/experiments/hawking';
 
 mount(document.querySelector('canvas'), hawking, { controls: document.querySelector('#controls') });
 ```

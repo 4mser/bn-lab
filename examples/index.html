@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>phenomena — gallery</title>
-<link rel="stylesheet" href="../dist/phenomena.css">
+<title>BN Lab — gallery</title>
+<link rel="stylesheet" href="../dist/bn-lab.css">
 <style>
   :root { color-scheme: dark; --bg: #000; --fg: #e8eaee; --muted: #8b8f98; --line: #22252b; }
   :root[data-mode='light'] { color-scheme: light; --bg: #f7f9fc; --fg: #141e34; --muted: #5d6576; --line: #dde2ea; }
@@ -32,7 +32,7 @@
 <body>
 <header>
   <div>
-    <h1>phenomena</h1>
+    <h1>BN Lab</h1>
     <p>Every figure below integrates its own equations in your browser. Hover to interact; click to open the controls.</p>
   </div>
   <button class="mode" type="button" id="mode">Light theme</button>
@@ -47,9 +47,9 @@
   </div>
 </dialog>
 
-<script src="../dist/phenomena.min.js"></script>
+<script src="../dist/bn-lab.min.js"></script>
 <script>
-  const { mount, experiments } = Phenomena;
+  const { mount, experiments } = BNLab;
   const root = document.documentElement;
   let theme = 'dark';
   const mounts = [];

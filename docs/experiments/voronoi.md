@@ -5,8 +5,8 @@
 > Scatter some points, then colour every position in the plane by whichever point is nearest. The boundaries that appear were never drawn: they are just where the answer changes.
 
 ```js
-import { mount } from 'phenomena';
-import voronoi from 'phenomena/experiments/voronoi';
+import { mount } from 'bn-lab';
+import voronoi from 'bn-lab/experiments/voronoi';
 
 mount(document.querySelector('canvas'), voronoi, { controls: document.querySelector('#controls') });
 ```

@@ -31,12 +31,12 @@ const registry = new Map();
 const FRAME_MS = 1000 / 60;
 
 function validate(def) {
-  if (!def || typeof def !== 'object') throw new TypeError('phenomena: experiment must be an object');
-  if (!def.id || typeof def.id !== 'string') throw new TypeError('phenomena: experiment needs a string id');
-  if (typeof def.make !== 'function') throw new TypeError(`phenomena: experiment "${def.id}" needs make()`);
+  if (!def || typeof def !== 'object') throw new TypeError('BN Lab: experiment must be an object');
+  if (!def.id || typeof def.id !== 'string') throw new TypeError('BN Lab: experiment needs a string id');
+  if (typeof def.make !== 'function') throw new TypeError(`BN Lab: experiment "${def.id}" needs make()`);
   for (const p of def.params || []) {
     if (!p.key || !(p.min <= p.def && p.def <= p.max)) {
-      throw new RangeError(`phenomena: parameter "${p.key}" of "${def.id}" needs min <= def <= max`);
+      throw new RangeError(`BN Lab: parameter "${p.key}" of "${def.id}" needs min <= def <= max`);
     }
   }
   return def;
@@ -97,10 +97,10 @@ function fitText(ctx, width) {
  */
 export function mount(canvas, experiment, options = {}) {
   if (!canvas || typeof canvas.getContext !== 'function') {
-    throw new TypeError('phenomena.mount: the first argument must be a <canvas>');
+    throw new TypeError('BNLab.mount: the first argument must be a <canvas>');
   }
   const def = typeof experiment === 'string' ? registry.get(experiment) : experiment;
-  if (!def) throw new Error(`phenomena.mount: unknown experiment "${experiment}"`);
+  if (!def) throw new Error(`BNLab.mount: unknown experiment "${experiment}"`);
   validate(def);
 
   let opts = { ...options };
@@ -133,8 +133,8 @@ export function mount(canvas, experiment, options = {}) {
 
   function fail(error) {
     supported = false;
-    canvas.dataset.phenomena = 'unsupported';
-    canvas.dispatchEvent(new CustomEvent('phenomena:unsupported', { detail: error }));
+    canvas.dataset.bnlab = 'unsupported';
+    canvas.dispatchEvent(new CustomEvent('bnlab:unsupported', { detail: error }));
     if (opts.onError) opts.onError(error);
     else if (error && error.code !== 'WEBGL_UNSUPPORTED') console.error(error);
   }
@@ -249,7 +249,7 @@ export function mount(canvas, experiment, options = {}) {
     /** Sets a parameter (clamped to its range). */
     set(key, value) {
       const p = (def.params || []).find(q => q.key === key);
-      if (!p) throw new Error(`phenomena: "${def.id}" has no parameter "${key}"`);
+      if (!p) throw new Error(`BN Lab: "${def.id}" has no parameter "${key}"`);
       P[key] = Math.min(p.max, Math.max(p.min, +value));
       if (controls) controls.sync(key);
       if (reduce) still(1);

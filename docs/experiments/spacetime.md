@@ -5,8 +5,8 @@
 > There is no force in this simulation. The grid is bent by mass and the particles just go straight through it. What looks like attraction is geometry.
 
 ```js
-import { mount } from 'phenomena';
-import spacetime from 'phenomena/experiments/spacetime';
+import { mount } from 'bn-lab';
+import spacetime from 'bn-lab/experiments/spacetime';
 
 mount(document.querySelector('canvas'), spacetime, { controls: document.querySelector('#controls') });
 ```

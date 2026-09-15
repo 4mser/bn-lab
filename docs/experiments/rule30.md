@@ -5,8 +5,8 @@
 > One row of cells, each either on or off. One rule that looks at three neighbours and decides the cell below. Repeat. The left side settles into stripes, the right side never settles into anything.
 
 ```js
-import { mount } from 'phenomena';
-import rule30 from 'phenomena/experiments/rule30';
+import { mount } from 'bn-lab';
+import rule30 from 'bn-lab/experiments/rule30';
 
 mount(document.querySelector('canvas'), rule30, { controls: document.querySelector('#controls') });
 ```

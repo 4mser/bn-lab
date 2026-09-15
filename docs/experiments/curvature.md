@@ -5,8 +5,8 @@
 > Newton said mass pulls. Einstein said mass bends, and things follow the bend. This is a lattice of space with a mass in it, and there is no force anywhere in the code.
 
 ```js
-import { mount } from 'phenomena';
-import curvature from 'phenomena/experiments/curvature';
+import { mount } from 'bn-lab';
+import curvature from 'bn-lab/experiments/curvature';
 
 mount(document.querySelector('canvas'), curvature, { controls: document.querySelector('#controls') });
 ```

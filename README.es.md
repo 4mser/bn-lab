@@ -1,4 +1,4 @@
-# phenomena
+# BN Lab
 
 **Física y matemática interactivas que calculan de verdad.**
 Cuarenta simulaciones en vivo —caos, ondas, óptica, mecánica cuántica,
@@ -7,12 +7,12 @@ Navier-Stokes en la GPU. Cada figura integra sus propias ecuaciones en el
 navegador. Sin dependencias, 100 KB minificado con todas incluidas, y cada una
 se puede importar por separado.
 
-[Leer el artículo](https://www.bnsolutions.cl/research/phenomena) ·
+[Leer el artículo](https://www.bnsolutions.cl/research/bn-lab) ·
 [Experimentos](docs/EXPERIMENTS.md) ·
 [Resultados de validación](validation/RESULTS.md) ·
 [Read in English](README.md)
 
-![La galería de phenomena](docs/assets/gallery.png)
+![La galería de BN Lab](docs/assets/gallery.png)
 
 ## Por qué
 
@@ -25,8 +25,7 @@ vivo.
 
 Eso también las hace comprobables. Una [suite de validación](#validación) llama
 a las mismas funciones que corren en pantalla y las compara con resultados
-publicados, y antes de este lanzamiento encontró tres figuras nuestras que
-estaban mal.
+publicados.
 
 ## Empezar
 
@@ -36,9 +35,9 @@ estaban mal.
 <canvas id="sim" style="width:100%;height:480px"></canvas>
 <div id="controles"></div>
 
-<script src="https://cdn.jsdelivr.net/gh/4mser/phenomena@v0.1.0/dist/phenomena.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/4mser/bn-lab@v0.1.0/dist/bn-lab.min.js"></script>
 <script>
-  Phenomena.mount(document.getElementById('sim'), 'lorenz', {
+  BNLab.mount(document.getElementById('sim'), 'lorenz', {
     controls: document.getElementById('controles'),
     locale: 'es'
   });
@@ -46,18 +45,18 @@ estaban mal.
 ```
 
 El paquete para navegador registra todos los experimentos, así que se montan
-por id. `dist/phenomena.css` da un estilo neutro a los deslizadores; también
-puedes estilizar tú las clases `.phen-*`.
+por id. `dist/bn-lab.css` da un estilo neutro a los deslizadores; también
+puedes estilizar tú las clases `.bnlab-*`.
 
 ### Con un empaquetador
 
 ```sh
-npm install github:4mser/phenomena
+npm install github:4mser/bn-lab
 ```
 
 ```js
-import { mount } from 'phenomena';
-import fluid from 'phenomena/experiments/fluid';
+import { mount } from 'bn-lab';
+import fluid from 'bn-lab/experiments/fluid';
 
 const sim = mount(canvas, fluid, { theme: 'auto', accent: '#0a5cff', locale: 'es' });
 ```
@@ -86,7 +85,7 @@ pantallas de alta frecuencia a 60 fps para que la física corra igual en todas.
 Devuelve un objeto con `set(clave, valor)`, `get`, `reset()`, `resetParams()`,
 `pause()`, `play()`, `step(n)`, `setTheme(tema)`, `destroy()` y `supported`.
 Un lienzo que no puede correr su experimento recibe
-`data-phenomena="unsupported"` y dispara el evento `phenomena:unsupported`.
+`data-bnlab="unsupported"` y dispara el evento `bnlab:unsupported`.
 
 La referencia completa, con los tipos, está en el [README en inglés](README.md#api)
 y en [`types/index.d.ts`](types/index.d.ts).
@@ -128,14 +127,6 @@ correr. Salida completa: [validation/RESULTS.md](validation/RESULTS.md).
 | Órbitas de Kepler | deriva del momento angular · precesión del periapsis | 7e-14 · 0,38° por órbita | 0 · 0° |
 | Modelo de Ising | ⟨\|m\|⟩ a T = 2,0, red de 64×64 | 0,9113 | 0,9113 (Onsager–Yang) |
 
-Escribir estas pruebas destapó tres figuras que estaban mal en el laboratorio
-del que vienen: Lorenz corría con Euler explícito (λ₁ un 5,8 % alto), el
-péndulo perdía un 7 % de su energía por minuto por un integrador que nunca
-declaraba, y un suavizado de la distancia hacía precesar las elipses de Kepler
-60° por vuelta. Los tres esquemas se reemplazaron antes de publicar; los
-anteriores quedan en la suite como control. Detalle en el
-[registro de cambios](CHANGELOG.md).
-
 ## Experimentos
 
 Cuarenta, cada uno con el modelo, cómo está implementado, qué mirar, por qué
@@ -144,7 +135,7 @@ importa y fuentes primarias, en inglés y español:
 
 ## Citar
 
-Si usas phenomena en material docente, un artículo o una charla, revisa
+Si usas BN Lab en material docente, un artículo o una charla, revisa
 [CITATION.cff](CITATION.cff).
 
 ## Licencia

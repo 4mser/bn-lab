@@ -5,8 +5,8 @@
 > The one operation underneath every language model. Each word builds a query, every other word offers a key, and the match decides who gets listened to. Everything else in a transformer is plumbing around this.
 
 ```js
-import { mount } from 'phenomena';
-import attention from 'phenomena/experiments/attention';
+import { mount } from 'bn-lab';
+import attention from 'bn-lab/experiments/attention';
 
 mount(document.querySelector('canvas'), attention, { controls: document.querySelector('#controls') });
 ```

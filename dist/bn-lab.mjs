@@ -1,4 +1,4 @@
-/*! phenomena v0.1.0 | MIT License | https://www.bnsolutions.cl/research/phenomena */
+/*! BN Lab v0.1.0 | MIT License | https://www.bnsolutions.cl/research/bn-lab */
 
 // src/core/shared.js
 var TAU = Math.PI * 2;
@@ -28,7 +28,7 @@ function parseColor(value) {
   }
   m = /^(?:rgba?\()?\s*(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)/i.exec(s);
   if (m) return [m[1], m[2], m[3]].map((n) => Math.round(+n)).join(",");
-  throw new TypeError(`phenomena: cannot parse color "${value}"`);
+  throw new TypeError(`BN Lab: cannot parse color "${value}"`);
 }
 var prefersLight = () => typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: light)").matches;
 function resolveTheme({ theme = "dark", accent } = {}) {
@@ -52,7 +52,7 @@ function buildControls(host, def, api, locale = "en") {
   var _a, _b;
   const params = def.params || [];
   host.textContent = "";
-  host.classList.add("phen-controls");
+  host.classList.add("bnlab-controls");
   if (!params.length) return { sync() {
   }, destroy() {
     host.textContent = "";
@@ -64,9 +64,9 @@ function buildControls(host, def, api, locale = "en") {
   };
   for (const p of params) {
     const row = document.createElement("label");
-    row.className = "phen-ctl";
+    row.className = "bnlab-ctl";
     const name = document.createElement("span");
-    name.className = "phen-ctl-label";
+    name.className = "bnlab-ctl-label";
     name.textContent = (_a = text(p.label)) != null ? _a : p.key;
     const input = document.createElement("input");
     input.type = "range";
@@ -75,7 +75,7 @@ function buildControls(host, def, api, locale = "en") {
     input.step = (_b = p.step) != null ? _b : "any";
     input.value = api.params[p.key];
     const out = document.createElement("output");
-    out.className = "phen-ctl-value";
+    out.className = "bnlab-ctl-value";
     const fmt = (v) => (p.step && p.step < 1 ? Number(v).toFixed(decimals(p.step)) : String(v)) + (p.unit || "");
     out.textContent = fmt(api.params[p.key]);
     input.addEventListener("input", () => {
@@ -87,7 +87,7 @@ function buildControls(host, def, api, locale = "en") {
   }
   const reset = document.createElement("button");
   reset.type = "button";
-  reset.className = "phen-reset";
+  reset.className = "bnlab-reset";
   reset.textContent = locale === "es" ? "Reiniciar" : "Reset";
   reset.addEventListener("click", () => {
     api.resetParams();
@@ -104,7 +104,7 @@ function buildControls(host, def, api, locale = "en") {
     },
     destroy() {
       host.textContent = "";
-      host.classList.remove("phen-controls");
+      host.classList.remove("bnlab-controls");
     }
   };
 }
@@ -113,12 +113,12 @@ function buildControls(host, def, api, locale = "en") {
 var registry = /* @__PURE__ */ new Map();
 var FRAME_MS = 1e3 / 60;
 function validate(def) {
-  if (!def || typeof def !== "object") throw new TypeError("phenomena: experiment must be an object");
-  if (!def.id || typeof def.id !== "string") throw new TypeError("phenomena: experiment needs a string id");
-  if (typeof def.make !== "function") throw new TypeError(`phenomena: experiment "${def.id}" needs make()`);
+  if (!def || typeof def !== "object") throw new TypeError("BN Lab: experiment must be an object");
+  if (!def.id || typeof def.id !== "string") throw new TypeError("BN Lab: experiment needs a string id");
+  if (typeof def.make !== "function") throw new TypeError(`BN Lab: experiment "${def.id}" needs make()`);
   for (const p of def.params || []) {
     if (!p.key || !(p.min <= p.def && p.def <= p.max)) {
-      throw new RangeError(`phenomena: parameter "${p.key}" of "${def.id}" needs min <= def <= max`);
+      throw new RangeError(`BN Lab: parameter "${p.key}" of "${def.id}" needs min <= def <= max`);
     }
   }
   return def;
@@ -156,10 +156,10 @@ function fitText(ctx, width) {
 function mount(canvas, experiment, options = {}) {
   var _a, _b;
   if (!canvas || typeof canvas.getContext !== "function") {
-    throw new TypeError("phenomena.mount: the first argument must be a <canvas>");
+    throw new TypeError("BNLab.mount: the first argument must be a <canvas>");
   }
   const def = typeof experiment === "string" ? registry.get(experiment) : experiment;
-  if (!def) throw new Error(`phenomena.mount: unknown experiment "${experiment}"`);
+  if (!def) throw new Error(`BNLab.mount: unknown experiment "${experiment}"`);
   validate(def);
   let opts = { ...options };
   const kind = def.kind || "2d";
@@ -191,8 +191,8 @@ function mount(canvas, experiment, options = {}) {
   };
   function fail(error) {
     supported = false;
-    canvas.dataset.phenomena = "unsupported";
-    canvas.dispatchEvent(new CustomEvent("phenomena:unsupported", { detail: error }));
+    canvas.dataset.bnlab = "unsupported";
+    canvas.dispatchEvent(new CustomEvent("bnlab:unsupported", { detail: error }));
     if (opts.onError) opts.onError(error);
     else if (error && error.code !== "WEBGL_UNSUPPORTED") console.error(error);
   }
@@ -338,7 +338,7 @@ function mount(canvas, experiment, options = {}) {
     /** Sets a parameter (clamped to its range). */
     set(key, value) {
       const p = (def.params || []).find((q) => q.key === key);
-      if (!p) throw new Error(`phenomena: "${def.id}" has no parameter "${key}"`);
+      if (!p) throw new Error(`BN Lab: "${def.id}" has no parameter "${key}"`);
       P[key] = Math.min(p.max, Math.max(p.min, +value));
       if (controls) controls.sync(key);
       if (reduce) still(1);
@@ -1685,7 +1685,7 @@ var flow_default = {
 };
 
 // src/experiments/fluid.js
-var unsupported = (message) => Object.assign(new Error("phenomena/fluid: " + message), { code: "WEBGL_UNSUPPORTED" });
+var unsupported = (message) => Object.assign(new Error("bn-lab/fluid: " + message), { code: "WEBGL_UNSUPPORTED" });
 var fluid_default = {
   id: "fluid",
   kind: "webgl",
@@ -1758,7 +1758,7 @@ var fluid_default = {
       gl.shaderSource(s, src);
       gl.compileShader(s);
       if (!gl.getShaderParameter(s, gl.COMPILE_STATUS) && !gl.isContextLost()) {
-        throw new Error("phenomena/fluid: shader failed to compile\n" + gl.getShaderInfoLog(s));
+        throw new Error("bn-lab/fluid: shader failed to compile\n" + gl.getShaderInfoLog(s));
       }
       shaders.push(s);
       return s;

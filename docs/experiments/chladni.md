@@ -5,8 +5,8 @@
 > Sand on a metal plate. Bow it and the sand runs away from everywhere that is moving and piles up along the lines that are not. You end up looking directly at a standing wave.
 
 ```js
-import { mount } from 'phenomena';
-import chladni from 'phenomena/experiments/chladni';
+import { mount } from 'bn-lab';
+import chladni from 'bn-lab/experiments/chladni';
 
 mount(document.querySelector('canvas'), chladni, { controls: document.querySelector('#controls') });
 ```

@@ -5,8 +5,8 @@
 > Stir it with the cursor. What moves is not a particle system or a noise field: it is a velocity field kept incompressible, solved on the GPU sixty times a second.
 
 ```js
-import { mount } from 'phenomena';
-import fluid from 'phenomena/experiments/fluid';
+import { mount } from 'bn-lab';
+import fluid from 'bn-lab/experiments/fluid';
 
 mount(document.querySelector('canvas'), fluid, { controls: document.querySelector('#controls') });
 ```

@@ -5,8 +5,8 @@
 > A photon bouncing between two mirrors is a clock. Put that clock on a moving train and the photon has to travel diagonally, which is a longer path at the same speed. So the clock ticks slower. That is the whole argument.
 
 ```js
-import { mount } from 'phenomena';
-import relativity from 'phenomena/experiments/relativity';
+import { mount } from 'bn-lab';
+import relativity from 'bn-lab/experiments/relativity';
 
 mount(document.querySelector('canvas'), relativity, { controls: document.querySelector('#controls') });
 ```

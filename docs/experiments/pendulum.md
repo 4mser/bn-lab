@@ -5,8 +5,8 @@
 > A pendulum hanging from another pendulum. Two rods, four numbers, and a system that no closed formula can solve. The first pendulum is predictable for centuries. Adding the second one breaks that permanently.
 
 ```js
-import { mount } from 'phenomena';
-import pendulum from 'phenomena/experiments/pendulum';
+import { mount } from 'bn-lab';
+import pendulum from 'bn-lab/experiments/pendulum';
 
 mount(document.querySelector('canvas'), pendulum, { controls: document.querySelector('#controls') });
 ```

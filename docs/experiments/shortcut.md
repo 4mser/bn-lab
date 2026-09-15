@@ -5,8 +5,8 @@
 > Not a diagram of a wormhole: the view through one. Every pixel is a light ray traced backwards through the metric, and the ones that make it to the other side bring back a different sky.
 
 ```js
-import { mount } from 'phenomena';
-import shortcut from 'phenomena/experiments/shortcut';
+import { mount } from 'bn-lab';
+import shortcut from 'bn-lab/experiments/shortcut';
 
 mount(document.querySelector('canvas'), shortcut, { controls: document.querySelector('#controls') });
 ```

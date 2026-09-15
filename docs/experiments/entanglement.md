@@ -5,8 +5,8 @@
 > Two particles are measured far apart. Each result on its own is a coin flip. Put the two lists side by side and they agree more often than any theory where the answers were decided in advance could allow.
 
 ```js
-import { mount } from 'phenomena';
-import entanglement from 'phenomena/experiments/entanglement';
+import { mount } from 'bn-lab';
+import entanglement from 'bn-lab/experiments/entanglement';
 
 mount(document.querySelector('canvas'), entanglement, { controls: document.querySelector('#controls') });
 ```

@@ -5,8 +5,8 @@
 > Both mouths in the same universe. Cut two discs out of a plane, glue their edges to each other, and the space you are left with has a route between two places that is not the road between them.
 
 ```js
-import { mount } from 'phenomena';
-import handle from 'phenomena/experiments/handle';
+import { mount } from 'bn-lab';
+import handle from 'bn-lab/experiments/handle';
 
 mount(document.querySelector('canvas'), handle, { controls: document.querySelector('#controls') });
 ```

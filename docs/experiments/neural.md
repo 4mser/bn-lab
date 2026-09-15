@@ -5,8 +5,8 @@
 > This is the picture people mean when they say a network activates. Two numbers go in on the left, and every neuron downstream lights up in proportion to how strongly it responds. The signal sweeps left to right, layer by layer.
 
 ```js
-import { mount } from 'phenomena';
-import neural from 'phenomena/experiments/neural';
+import { mount } from 'bn-lab';
+import neural from 'bn-lab/experiments/neural';
 
 mount(document.querySelector('canvas'), neural, { controls: document.querySelector('#controls') });
 ```
