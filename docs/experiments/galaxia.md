@@ -5,8 +5,8 @@
 > Give two thousand stars one law — the closer to the core, the faster the orbit — and a spiral appears. Keep watching and the arms wind up tighter and tighter, which is exactly the problem that forced astronomy to rethink what a spiral arm is.
 
 ```js
-import { mount } from 'bn-lab';
-import galaxia from 'bn-lab/experiments/galaxia';
+import { mount } from 'bn-lab-simulations';
+import galaxia from 'bn-lab-simulations/experiments/galaxia';
 
 mount(document.querySelector('canvas'), galaxia, { controls: document.querySelector('#controls') });
 ```

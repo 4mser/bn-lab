@@ -1,14 +1,14 @@
 # Contributing
 
-Thanks for wanting to add to BN Lab. The bar for an experiment is simple to
+Thanks for wanting to add to BN Lab Simulations. The bar for an experiment is simple to
 state and hard to meet: **the figure has to compute what it shows.** If a
 picture could be drawn without solving anything, it does not belong here.
 
 ## Setup
 
 ```sh
-git clone https://github.com/4mser/bn-lab.git
-cd bn-lab
+git clone https://github.com/4mser/bn-lab-simulations.git
+cd bn-lab-simulations
 npm install
 npm run build      # regenerates src/experiments/index.js and dist/
 npm test           # headless run of every experiment + core tests

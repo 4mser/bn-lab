@@ -5,8 +5,8 @@
 > Every bird follows three rules and looks only at whoever is nearby. Nobody is leading, nobody knows the shape of the flock, and there is no flock stored anywhere. It exists only as something you see.
 
 ```js
-import { mount } from 'bn-lab';
-import boids from 'bn-lab/experiments/boids';
+import { mount } from 'bn-lab-simulations';
+import boids from 'bn-lab-simulations/experiments/boids';
 
 mount(document.querySelector('canvas'), boids, { controls: document.querySelector('#controls') });
 ```

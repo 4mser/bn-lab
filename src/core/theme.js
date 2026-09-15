@@ -31,7 +31,7 @@ export function parseColor(value) {
   }
   m = /^(?:rgba?\()?\s*(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)/i.exec(s);
   if (m) return [m[1], m[2], m[3]].map(n => Math.round(+n)).join(',');
-  throw new TypeError(`BN Lab: cannot parse color "${value}"`);
+  throw new TypeError(`BN Lab Simulations: cannot parse color "${value}"`);
 }
 
 const prefersLight = () =>

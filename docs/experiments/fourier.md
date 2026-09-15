@@ -5,8 +5,8 @@
 > A circle turning on the rim of another circle, on another, on another. Add enough of them at the right sizes and speeds and the tip traces a square wave: a shape with corners, drawn entirely by things with none.
 
 ```js
-import { mount } from 'bn-lab';
-import fourier from 'bn-lab/experiments/fourier';
+import { mount } from 'bn-lab-simulations';
+import fourier from 'bn-lab-simulations/experiments/fourier';
 
 mount(document.querySelector('canvas'), fourier, { controls: document.querySelector('#controls') });
 ```

@@ -5,8 +5,8 @@
 > Two sources emitting the same wave. Where the crests meet, light. Where a crest meets a trough, nothing. The pattern is not in either wave: it only exists in the sum.
 
 ```js
-import { mount } from 'bn-lab';
-import interference from 'bn-lab/experiments/interference';
+import { mount } from 'bn-lab-simulations';
+import interference from 'bn-lab-simulations/experiments/interference';
 
 mount(document.querySelector('canvas'), interference, { controls: document.querySelector('#controls') });
 ```

@@ -5,8 +5,8 @@
 > Trap a particle between two walls and it can only have certain energies. Put it in two of them at once and the probability starts sloshing back and forth, forever, with no energy going anywhere.
 
 ```js
-import { mount } from 'bn-lab';
-import quantum from 'bn-lab/experiments/quantum';
+import { mount } from 'bn-lab-simulations';
+import quantum from 'bn-lab-simulations/experiments/quantum';
 
 mount(document.querySelector('canvas'), quantum, { controls: document.querySelector('#controls') });
 ```

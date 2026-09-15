@@ -5,8 +5,8 @@
 > Training is one thing repeated a lot: look at the slope, take a step. Three ways of taking that step, released on the same surface from the same point, with the same learning rate.
 
 ```js
-import { mount } from 'bn-lab';
-import optimizers from 'bn-lab/experiments/optimizers';
+import { mount } from 'bn-lab-simulations';
+import optimizers from 'bn-lab-simulations/experiments/optimizers';
 
 mount(document.querySelector('canvas'), optimizers, { controls: document.querySelector('#controls') });
 ```

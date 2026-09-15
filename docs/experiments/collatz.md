@@ -5,8 +5,8 @@
 > Take any number. Even, halve it. Odd, triple it and add one. Every number anybody has ever tried falls to 1. Nobody can prove it, and Erdős said mathematics is not ready for problems like this.
 
 ```js
-import { mount } from 'bn-lab';
-import collatz from 'bn-lab/experiments/collatz';
+import { mount } from 'bn-lab-simulations';
+import collatz from 'bn-lab-simulations/experiments/collatz';
 
 mount(document.querySelector('canvas'), collatz, { controls: document.querySelector('#controls') });
 ```

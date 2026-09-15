@@ -1,7 +1,7 @@
 /* Sliders for an experiment's parameters.
 
    Plain DOM with stable class names and no inline styles, so the host page
-   can style it. `bn-lab/style.css` ships a neutral default. */
+   can style it. `bn-lab-simulations/style.css` ships a neutral default. */
 
 const decimals = step => (String(step).split('.')[1] || '').length;
 

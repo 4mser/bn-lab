@@ -5,8 +5,8 @@
 > Place each new seed at a fixed angle from the last one and push it slightly further out. Almost every angle wastes space. One angle does not, and it is the one sunflowers use.
 
 ```js
-import { mount } from 'bn-lab';
-import phyllotaxis from 'bn-lab/experiments/phyllotaxis';
+import { mount } from 'bn-lab-simulations';
+import phyllotaxis from 'bn-lab-simulations/experiments/phyllotaxis';
 
 mount(document.querySelector('canvas'), phyllotaxis, { controls: document.querySelector('#controls') });
 ```

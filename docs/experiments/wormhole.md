@@ -5,8 +5,8 @@
 > Two regions of space joined by a tunnel that is shorter than the distance between them. Nothing in general relativity forbids the geometry. Keeping it open is the hard part.
 
 ```js
-import { mount } from 'bn-lab';
-import wormhole from 'bn-lab/experiments/wormhole';
+import { mount } from 'bn-lab-simulations';
+import wormhole from 'bn-lab-simulations/experiments/wormhole';
 
 mount(document.querySelector('canvas'), wormhole, { controls: document.querySelector('#controls') });
 ```

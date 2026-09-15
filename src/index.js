@@ -1,13 +1,13 @@
-/* BN Lab — interactive physics and mathematics that actually compute.
+/* BN Lab Simulations — interactive physics and mathematics that actually compute.
 
    The core is tiny and has no dependencies. Experiments are separate modules,
    so a bundler only ships the ones you import:
 
-     import { mount } from 'bn-lab';
-     import lorenz from 'bn-lab/experiments/lorenz';
+     import { mount } from 'bn-lab-simulations';
+     import lorenz from 'bn-lab-simulations/experiments/lorenz';
      mount(canvas, lorenz, { controls: panel });
 
-   The prebuilt browser bundle (dist/bn-lab.min.js) registers every
+   The prebuilt browser bundle (dist/bn-lab-simulations.min.js) registers every
    experiment, so there you can mount by id: BNLab.mount(canvas, 'lorenz'). */
 
 export { mount, define, register, getExperiment, listExperiments, label } from './core/mount.js';

@@ -1,9 +1,9 @@
 // Builds the distributable files and regenerates src/experiments/index.js.
 //
-//   dist/bn-lab.mjs      ES module, every experiment included
-//   dist/bn-lab.js       browser global `BNLab`, readable
-//   dist/bn-lab.min.js   browser global `BNLab`, minified
-//   dist/bn-lab.css      default controls stylesheet
+//   dist/bn-lab-simulations.mjs      ES module, every experiment included
+//   dist/bn-lab-simulations.js       browser global `BNLab`, readable
+//   dist/bn-lab-simulations.min.js   browser global `BNLab`, minified
+//   dist/bn-lab-simulations.css      default controls stylesheet
 //
 // Consumers with a bundler should import from src/ (see package.json
 // "exports") so only the experiments they use are shipped.
@@ -35,14 +35,14 @@ const indexFile = path.join(root, 'src/index.js');
 fs.writeFileSync(indexFile, fs.readFileSync(indexFile, 'utf8')
   .replace(/export const version = '[^']*';/, `export const version = '${pkg.version}';`));
 
-const banner = `/*! BN Lab v${pkg.version} | MIT License | ${pkg.homepage} */`;
+const banner = `/*! BN Lab Simulations v${pkg.version} | MIT License | ${pkg.homepage} */`;
 const common = { entryPoints: [path.join(root, 'src/bundle.js')], bundle: true, target: 'es2019', legalComments: 'inline', banner: { js: banner } };
 fs.mkdirSync(path.join(root, 'dist'), { recursive: true });
 
-await esbuild.build({ ...common, format: 'esm', outfile: path.join(root, 'dist/bn-lab.mjs') });
-await esbuild.build({ ...common, format: 'iife', globalName: 'BNLab', outfile: path.join(root, 'dist/bn-lab.js') });
-await esbuild.build({ ...common, format: 'iife', globalName: 'BNLab', minify: true, legalComments: 'eof', outfile: path.join(root, 'dist/bn-lab.min.js') });
-fs.copyFileSync(path.join(root, 'src/style.css'), path.join(root, 'dist/bn-lab.css'));
+await esbuild.build({ ...common, format: 'esm', outfile: path.join(root, 'dist/bn-lab-simulations.mjs') });
+await esbuild.build({ ...common, format: 'iife', globalName: 'BNLab', outfile: path.join(root, 'dist/bn-lab-simulations.js') });
+await esbuild.build({ ...common, format: 'iife', globalName: 'BNLab', minify: true, legalComments: 'eof', outfile: path.join(root, 'dist/bn-lab-simulations.min.js') });
+fs.copyFileSync(path.join(root, 'src/style.css'), path.join(root, 'dist/bn-lab-simulations.css'));
 
 const kb = f => (fs.statSync(path.join(root, 'dist', f)).size / 1024).toFixed(1) + ' KB';
-console.log(`${ids.length} experiments · bn-lab.min.js ${kb('bn-lab.min.js')} · bn-lab.mjs ${kb('bn-lab.mjs')}`);
+console.log(`${ids.length} experiments · bn-lab-simulations.min.js ${kb('bn-lab-simulations.min.js')} · bn-lab-simulations.mjs ${kb('bn-lab-simulations.mjs')}`);

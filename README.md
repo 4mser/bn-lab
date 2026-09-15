@@ -1,17 +1,17 @@
-# BN Lab
+# BN Lab Simulations
 
-**Interactive physics and mathematics that actually compute.**
+**Interactive physics and mathematics simulations for the web.**
 Forty live simulations — chaos, waves, optics, quantum mechanics, relativity,
 statistical mechanics, automata, optimisation — and a GPU Navier-Stokes fluid.
 Every figure integrates its own equations in the browser. Zero dependencies,
 100 KB minified for all of them, and each one importable on its own.
 
-[Read the article](https://www.bnsolutions.cl/research/bn-lab) ·
+[Read the article](https://www.bnsolutions.cl/research/bn-lab-simulations) ·
 [Experiments](docs/EXPERIMENTS.md) ·
 [Validation results](validation/RESULTS.md) ·
 [Leer en español](README.es.md)
 
-![The BN Lab gallery](docs/assets/gallery.png)
+![The BN Lab Simulations gallery](docs/assets/gallery.png)
 
 ## Why
 
@@ -34,7 +34,7 @@ results.
 <canvas id="sim" style="width:100%;height:480px"></canvas>
 <div id="controls"></div>
 
-<script src="https://cdn.jsdelivr.net/gh/4mser/bn-lab@v0.1.0/dist/bn-lab.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/4mser/bn-lab-simulations@v0.1.0/dist/bn-lab-simulations.min.js"></script>
 <script>
   BNLab.mount(document.getElementById('sim'), 'lorenz', {
     controls: document.getElementById('controls')
@@ -43,18 +43,18 @@ results.
 ```
 
 The browser bundle registers every experiment, so you mount by id. Add
-`dist/bn-lab.css` for a neutral look for the sliders, or style the
+`dist/bn-lab-simulations.css` for a neutral look for the sliders, or style the
 `.bnlab-*` classes yourself.
 
 ### With a bundler
 
 ```sh
-npm install github:4mser/bn-lab
+npm install github:4mser/bn-lab-simulations
 ```
 
 ```js
-import { mount } from 'bn-lab';
-import fluid from 'bn-lab/experiments/fluid';
+import { mount } from 'bn-lab-simulations';
+import fluid from 'bn-lab-simulations/experiments/fluid';
 
 const sim = mount(canvas, fluid, { theme: 'auto', accent: '#0a5cff' });
 ```
@@ -112,7 +112,7 @@ An experiment is a plain object. `make` builds the state once; `step` advances
 and draws one frame.
 
 ```js
-import { mount, define, L, TAU } from 'bn-lab';
+import { mount, define, L, TAU } from 'bn-lab-simulations';
 
 const oscillator = define({
   id: 'damped-oscillator',
@@ -216,7 +216,7 @@ node scripts/docs.mjs
 
 ## Citing
 
-If you use BN Lab in teaching material, a paper or a talk, see
+If you use BN Lab Simulations in teaching material, a paper or a talk, see
 [CITATION.cff](CITATION.cff).
 
 ## License

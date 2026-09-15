@@ -5,8 +5,8 @@
 > Planets do not move at a constant speed and their orbits are not circles. Kepler worked that out from Tycho's tables alone, decades before anyone could explain why.
 
 ```js
-import { mount } from 'bn-lab';
-import kepler from 'bn-lab/experiments/kepler';
+import { mount } from 'bn-lab-simulations';
+import kepler from 'bn-lab-simulations/experiments/kepler';
 
 mount(document.querySelector('canvas'), kepler, { controls: document.querySelector('#controls') });
 ```

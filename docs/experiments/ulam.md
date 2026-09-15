@@ -5,8 +5,8 @@
 > Ulam was bored in a talk in 1963 and started numbering a square spiral on a napkin, circling the primes. They fell on diagonals. Sixty years later nobody has explained why.
 
 ```js
-import { mount } from 'bn-lab';
-import ulam from 'bn-lab/experiments/ulam';
+import { mount } from 'bn-lab-simulations';
+import ulam from 'bn-lab-simulations/experiments/ulam';
 
 mount(document.querySelector('canvas'), ulam, { controls: document.querySelector('#controls') });
 ```

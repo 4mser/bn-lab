@@ -31,12 +31,12 @@ const registry = new Map();
 const FRAME_MS = 1000 / 60;
 
 function validate(def) {
-  if (!def || typeof def !== 'object') throw new TypeError('BN Lab: experiment must be an object');
-  if (!def.id || typeof def.id !== 'string') throw new TypeError('BN Lab: experiment needs a string id');
-  if (typeof def.make !== 'function') throw new TypeError(`BN Lab: experiment "${def.id}" needs make()`);
+  if (!def || typeof def !== 'object') throw new TypeError('BN Lab Simulations: experiment must be an object');
+  if (!def.id || typeof def.id !== 'string') throw new TypeError('BN Lab Simulations: experiment needs a string id');
+  if (typeof def.make !== 'function') throw new TypeError(`BN Lab Simulations: experiment "${def.id}" needs make()`);
   for (const p of def.params || []) {
     if (!p.key || !(p.min <= p.def && p.def <= p.max)) {
-      throw new RangeError(`BN Lab: parameter "${p.key}" of "${def.id}" needs min <= def <= max`);
+      throw new RangeError(`BN Lab Simulations: parameter "${p.key}" of "${def.id}" needs min <= def <= max`);
     }
   }
   return def;
@@ -249,7 +249,7 @@ export function mount(canvas, experiment, options = {}) {
     /** Sets a parameter (clamped to its range). */
     set(key, value) {
       const p = (def.params || []).find(q => q.key === key);
-      if (!p) throw new Error(`BN Lab: "${def.id}" has no parameter "${key}"`);
+      if (!p) throw new Error(`BN Lab Simulations: "${def.id}" has no parameter "${key}"`);
       P[key] = Math.min(p.max, Math.max(p.min, +value));
       if (controls) controls.sync(key);
       if (reduce) still(1);

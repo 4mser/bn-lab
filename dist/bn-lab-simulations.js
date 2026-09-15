@@ -1,4 +1,4 @@
-/*! BN Lab v0.1.0 | MIT License | https://www.bnsolutions.cl/research/bn-lab */
+/*! BN Lab Simulations v0.1.0 | MIT License | https://www.bnsolutions.cl/research/bn-lab-simulations */
 var BNLab = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -67,7 +67,7 @@ var BNLab = (() => {
     }
     m = /^(?:rgba?\()?\s*(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)/i.exec(s);
     if (m) return [m[1], m[2], m[3]].map((n) => Math.round(+n)).join(",");
-    throw new TypeError(`BN Lab: cannot parse color "${value}"`);
+    throw new TypeError(`BN Lab Simulations: cannot parse color "${value}"`);
   }
   var prefersLight = () => typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: light)").matches;
   function resolveTheme({ theme = "dark", accent } = {}) {
@@ -152,12 +152,12 @@ var BNLab = (() => {
   var registry = /* @__PURE__ */ new Map();
   var FRAME_MS = 1e3 / 60;
   function validate(def) {
-    if (!def || typeof def !== "object") throw new TypeError("BN Lab: experiment must be an object");
-    if (!def.id || typeof def.id !== "string") throw new TypeError("BN Lab: experiment needs a string id");
-    if (typeof def.make !== "function") throw new TypeError(`BN Lab: experiment "${def.id}" needs make()`);
+    if (!def || typeof def !== "object") throw new TypeError("BN Lab Simulations: experiment must be an object");
+    if (!def.id || typeof def.id !== "string") throw new TypeError("BN Lab Simulations: experiment needs a string id");
+    if (typeof def.make !== "function") throw new TypeError(`BN Lab Simulations: experiment "${def.id}" needs make()`);
     for (const p of def.params || []) {
       if (!p.key || !(p.min <= p.def && p.def <= p.max)) {
-        throw new RangeError(`BN Lab: parameter "${p.key}" of "${def.id}" needs min <= def <= max`);
+        throw new RangeError(`BN Lab Simulations: parameter "${p.key}" of "${def.id}" needs min <= def <= max`);
       }
     }
     return def;
@@ -377,7 +377,7 @@ var BNLab = (() => {
       /** Sets a parameter (clamped to its range). */
       set(key, value) {
         const p = (def.params || []).find((q) => q.key === key);
-        if (!p) throw new Error(`BN Lab: "${def.id}" has no parameter "${key}"`);
+        if (!p) throw new Error(`BN Lab Simulations: "${def.id}" has no parameter "${key}"`);
         P[key] = Math.min(p.max, Math.max(p.min, +value));
         if (controls) controls.sync(key);
         if (reduce) still(1);
@@ -1724,7 +1724,7 @@ var BNLab = (() => {
   };
 
   // src/experiments/fluid.js
-  var unsupported = (message) => Object.assign(new Error("bn-lab/fluid: " + message), { code: "WEBGL_UNSUPPORTED" });
+  var unsupported = (message) => Object.assign(new Error("bn-lab-simulations/fluid: " + message), { code: "WEBGL_UNSUPPORTED" });
   var fluid_default = {
     id: "fluid",
     kind: "webgl",
@@ -1797,7 +1797,7 @@ var BNLab = (() => {
         gl.shaderSource(s, src);
         gl.compileShader(s);
         if (!gl.getShaderParameter(s, gl.COMPILE_STATUS) && !gl.isContextLost()) {
-          throw new Error("bn-lab/fluid: shader failed to compile\n" + gl.getShaderInfoLog(s));
+          throw new Error("bn-lab-simulations/fluid: shader failed to compile\n" + gl.getShaderInfoLog(s));
         }
         shaders.push(s);
         return s;

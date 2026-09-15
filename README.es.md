@@ -1,18 +1,18 @@
-# BN Lab
+# BN Lab Simulations
 
-**Física y matemática interactivas que calculan de verdad.**
+**Simulaciones interactivas de física y matemática para la web.**
 Cuarenta simulaciones en vivo —caos, ondas, óptica, mecánica cuántica,
 relatividad, mecánica estadística, autómatas, optimización— y un fluido de
 Navier-Stokes en la GPU. Cada figura integra sus propias ecuaciones en el
 navegador. Sin dependencias, 100 KB minificado con todas incluidas, y cada una
 se puede importar por separado.
 
-[Leer el artículo](https://www.bnsolutions.cl/research/bn-lab) ·
+[Leer el artículo](https://www.bnsolutions.cl/research/bn-lab-simulations) ·
 [Experimentos](docs/EXPERIMENTS.md) ·
 [Resultados de validación](validation/RESULTS.md) ·
 [Read in English](README.md)
 
-![La galería de BN Lab](docs/assets/gallery.png)
+![La galería de BN Lab Simulations](docs/assets/gallery.png)
 
 ## Por qué
 
@@ -35,7 +35,7 @@ publicados.
 <canvas id="sim" style="width:100%;height:480px"></canvas>
 <div id="controles"></div>
 
-<script src="https://cdn.jsdelivr.net/gh/4mser/bn-lab@v0.1.0/dist/bn-lab.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/4mser/bn-lab-simulations@v0.1.0/dist/bn-lab-simulations.min.js"></script>
 <script>
   BNLab.mount(document.getElementById('sim'), 'lorenz', {
     controls: document.getElementById('controles'),
@@ -45,18 +45,18 @@ publicados.
 ```
 
 El paquete para navegador registra todos los experimentos, así que se montan
-por id. `dist/bn-lab.css` da un estilo neutro a los deslizadores; también
+por id. `dist/bn-lab-simulations.css` da un estilo neutro a los deslizadores; también
 puedes estilizar tú las clases `.bnlab-*`.
 
 ### Con un empaquetador
 
 ```sh
-npm install github:4mser/bn-lab
+npm install github:4mser/bn-lab-simulations
 ```
 
 ```js
-import { mount } from 'bn-lab';
-import fluid from 'bn-lab/experiments/fluid';
+import { mount } from 'bn-lab-simulations';
+import fluid from 'bn-lab-simulations/experiments/fluid';
 
 const sim = mount(canvas, fluid, { theme: 'auto', accent: '#0a5cff', locale: 'es' });
 ```
@@ -135,7 +135,7 @@ importa y fuentes primarias, en inglés y español:
 
 ## Citar
 
-Si usas BN Lab en material docente, un artículo o una charla, revisa
+Si usas BN Lab Simulations en material docente, un artículo o una charla, revisa
 [CITATION.cff](CITATION.cff).
 
 ## Licencia

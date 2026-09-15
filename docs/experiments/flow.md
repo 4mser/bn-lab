@@ -5,8 +5,8 @@
 > Two hundred particles that know nothing. At each position they read one angle from an invisible field and take a step. The structure you see was never drawn: it is what the field looks like when enough things follow it.
 
 ```js
-import { mount } from 'bn-lab';
-import flow from 'bn-lab/experiments/flow';
+import { mount } from 'bn-lab-simulations';
+import flow from 'bn-lab-simulations/experiments/flow';
 
 mount(document.querySelector('canvas'), flow, { controls: document.querySelector('#controls') });
 ```

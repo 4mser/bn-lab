@@ -5,8 +5,8 @@
 > Two chemicals spreading and eating each other. Four numbers decide whether you get spots, stripes, a maze, or blobs that split like cells. Turing wrote the equations in 1952 to ask how an animal decides where to put its markings.
 
 ```js
-import { mount } from 'bn-lab';
-import grayscott from 'bn-lab/experiments/grayscott';
+import { mount } from 'bn-lab-simulations';
+import grayscott from 'bn-lab-simulations/experiments/grayscott';
 
 mount(document.querySelector('canvas'), grayscott, { controls: document.querySelector('#controls') });
 ```

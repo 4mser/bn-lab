@@ -5,8 +5,8 @@
 > A supermassive black hole eating a galaxy. The infalling gas heats up until it outshines everything around it, and two jets leave along the rotation axis at nearly light speed.
 
 ```js
-import { mount } from 'bn-lab';
-import quasar from 'bn-lab/experiments/quasar';
+import { mount } from 'bn-lab-simulations';
+import quasar from 'bn-lab-simulations/experiments/quasar';
 
 mount(document.querySelector('canvas'), quasar, { controls: document.querySelector('#controls') });
 ```

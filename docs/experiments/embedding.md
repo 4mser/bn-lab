@@ -5,8 +5,8 @@
 > Models think in hundreds of dimensions. Screens have two. Every embedding plot you have seen is the result of squeezing one into the other, and something always breaks in the squeeze.
 
 ```js
-import { mount } from 'bn-lab';
-import embedding from 'bn-lab/experiments/embedding';
+import { mount } from 'bn-lab-simulations';
+import embedding from 'bn-lab-simulations/experiments/embedding';
 
 mount(document.querySelector('canvas'), embedding, { controls: document.querySelector('#controls') });
 ```

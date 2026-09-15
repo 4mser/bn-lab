@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-message: "If you use BN Lab in teaching material, a publication or a talk, please cite it as below."
-title: "BN Lab: interactive physics and mathematics that actually compute"
+message: "If you use BN Lab Simulations in teaching material, a publication or a talk, please cite it as below."
+title: "BN Lab Simulations: interactive physics and mathematics simulations for the web"
 abstract: >-
   A dependency-free JavaScript library of interactive simulations for the web:
   forty experiments across chaos, waves, optics, quantum mechanics, relativity,
@@ -17,8 +17,8 @@ authors:
     city: Santiago
     country: CL
     website: "https://www.bnsolutions.cl"
-repository-code: "https://github.com/4mser/bn-lab"
-url: "https://www.bnsolutions.cl/research/bn-lab"
+repository-code: "https://github.com/4mser/bn-lab-simulations"
+url: "https://www.bnsolutions.cl/research/bn-lab-simulations"
 license: MIT
 version: 0.1.0
 date-released: 2026-09-15

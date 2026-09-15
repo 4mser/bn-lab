@@ -5,8 +5,8 @@
 > A charge sitting still has field lines going straight out forever. Shake it, and a kink runs down every line at the speed of light and never comes back. That kink is light, and this is a drawing of it happening.
 
 ```js
-import { mount } from 'bn-lab';
-import radiation from 'bn-lab/experiments/radiation';
+import { mount } from 'bn-lab-simulations';
+import radiation from 'bn-lab-simulations/experiments/radiation';
 
 mount(document.querySelector('canvas'), radiation, { controls: document.querySelector('#controls') });
 ```

@@ -5,8 +5,8 @@
 > One photon, one apparatus, and a plate you can slide in or out at the last moment. Leave it in and the photon behaves as if it took both routes. Take it out and one detector clicks, naming a single route.
 
 ```js
-import { mount } from 'bn-lab';
-import duality from 'bn-lab/experiments/duality';
+import { mount } from 'bn-lab-simulations';
+import duality from 'bn-lab-simulations/experiments/duality';
 
 mount(document.querySelector('canvas'), duality, { controls: document.querySelector('#controls') });
 ```

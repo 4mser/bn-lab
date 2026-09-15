@@ -1,7 +1,7 @@
 {
-  "name": "bn-lab",
+  "name": "bn-lab-simulations",
   "version": "0.1.0",
-  "description": "Interactive physics and mathematics that actually compute: 40 live simulations (chaos, waves, quantum, relativity, fields, automata, optimisation) and a GPU Navier-Stokes fluid. Zero dependencies.",
+  "description": "Open-source library of interactive physics and mathematics simulations for the web: 40 experiments and a GPU Navier-Stokes solver, with documented and validated numerical methods. No dependencies.",
   "keywords": [
     "simulation",
     "physics",
@@ -18,13 +18,13 @@
     "visualization",
     "generative"
   ],
-  "homepage": "https://www.bnsolutions.cl/research/bn-lab",
+  "homepage": "https://www.bnsolutions.cl/research/bn-lab-simulations",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/4mser/bn-lab.git"
+    "url": "git+https://github.com/4mser/bn-lab-simulations.git"
   },
   "bugs": {
-    "url": "https://github.com/4mser/bn-lab/issues"
+    "url": "https://github.com/4mser/bn-lab-simulations/issues"
   },
   "license": "MIT",
   "author": "B&N Solutions <n.moreno@bnsolutions.cl> (https://www.bnsolutions.cl)",
@@ -37,10 +37,10 @@
     "./src/bundle.js",
     "./dist/*"
   ],
-  "main": "./dist/bn-lab.mjs",
+  "main": "./dist/bn-lab-simulations.mjs",
   "module": "./src/index.js",
-  "unpkg": "./dist/bn-lab.min.js",
-  "jsdelivr": "./dist/bn-lab.min.js",
+  "unpkg": "./dist/bn-lab-simulations.min.js",
+  "jsdelivr": "./dist/bn-lab-simulations.min.js",
   "types": "./types/index.d.ts",
   "exports": {
     ".": {
@@ -56,7 +56,7 @@
       "types": "./types/experiment.d.ts",
       "import": "./src/experiments/*.js"
     },
-    "./bundle": "./dist/bn-lab.mjs",
+    "./bundle": "./dist/bn-lab-simulations.mjs",
     "./style.css": "./src/style.css",
     "./package.json": "./package.json"
   },
