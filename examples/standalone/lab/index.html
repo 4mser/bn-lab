@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0806">
+  <script>
+  /* Tema antes del primer pixel. chrome.js va con defer y llegaría tarde: sin
+     esto la página pinta oscura y salta al claro. Comparte la preferencia con
+     el home ('bn-tema'); el modo va en data-mode porque data-theme ya es la
+     paleta de acento del lab. */
+  (function(){var t;try{t=localStorage.getItem('bn-tema');}catch(e){}
+  if(!({dark:1,light:1})[t])t='dark';document.documentElement.dataset.mode=t;})();
+  </script>
+  <script>(function(){try{var t=localStorage.getItem('nm-theme');
+    if(t&&['amber','lilac','magenta','blue','jade','aurora','nova'].indexOf(t)>-1)
+      document.documentElement.setAttribute('data-theme',t);
+    var l=localStorage.getItem('nm-lang'); if(l==='es')document.documentElement.lang='es';}catch(e){}})();</script>
+  <title>Lab — B&N SOLUTIONS</title>
+  <meta name="description" content="39 simulaciones interactivas de física y matemática escritas desde las ecuaciones: interferencia, caos, autómatas celulares, atractores y más. Cada una con su código real documentado. Lab de B&amp;N Solutions, Santiago de Chile.">
+<link rel="canonical" href="https://bnsolutions.cl/lab">
+<link rel="alternate" hreflang="es-cl" href="https://bnsolutions.cl/lab">
+<link rel="alternate" hreflang="x-default" href="https://bnsolutions.cl/lab">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="B&amp;N SOLUTIONS">
+<meta property="og:locale" content="es_CL">
+<meta property="og:title" content="Lab de simulaciones — B&amp;N SOLUTIONS">
+<meta property="og:description" content="39 experimentos interactivos de física y matemática, con su código real documentado paso a paso.">
+<meta property="og:url" content="https://bnsolutions.cl/lab">
+<meta property="og:image" content="https://www.bnsolutions.cl/og-2026.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.bnsolutions.cl/og-2026.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="robots" content="index,follow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="/lab.js" defer></script>
+  <script src="/chrome.js" defer></script>
+  <style>
+    /* NAV — like observatory control panel */
+    nav.site-nav{
+      position:fixed;top:1.25rem;left:50%;transform:translateX(-50%);
+      display:flex;align-items:center;gap:0;
+      background:rgba(10,8,6,0.82);
+      backdrop-filter:blur(18px) saturate(150%);
+      -webkit-backdrop-filter:blur(18px) saturate(150%);
+      border:1px solid var(--border);
+      border-radius:3px;
+      padding:0.35rem;
+      z-index:50;
+      font-family:'IBM Plex Mono',monospace;
+    }
+    nav.site-nav a{
+      padding:0.55rem 0.95rem;
+      color:var(--text-2);
+      text-decoration:none;
+      font-size:0.68rem;
+      font-weight:500;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      transition:color 0.3s,background 0.3s;
+      border-radius:2px;
+    }
+    nav.site-nav a:hover{color:var(--amber);background:rgba(232,234,238,0.08);}
+    nav.site-nav a.dot{
+      width:6px;height:6px;border-radius:50%;
+      background:var(--amber);
+      padding:0;margin:0 0.35rem;
+      align-self:center;
+      animation:blink 2s infinite;
+      display:inline-block;
+    }
+    /* ── Selector de color ───────────────────────────────────────────────
+       Colapsado a un solo punto para no cargar la barra. En escritorio se abre
+       al pasar el mouse (o con foco de teclado); en táctil, donde no hay hover,
+       se abre tocando y se cierra tocando fuera. */
+    .theme-pick{position:relative;margin-left:0.6rem;padding-left:0.7rem;
+      border-left:1px solid var(--border-2);display:flex;align-items:center;}
+    .theme-trigger{
+      width:17px;height:17px;padding:0;border-radius:50%;cursor:none;
+      background:none;border:0;position:relative;
+      transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+    .theme-trigger i{
+      position:absolute;inset:0;border-radius:50%;
+      background:var(--accent-grad);
+      box-shadow:0 0 0 1px rgb(var(--accent-rgb)/0.55),0 0 12px rgb(var(--accent-rgb)/0.45);
+      transition:box-shadow 0.35s ease;
+    }
+    .theme-pick.open .theme-trigger{transform:scale(1.14);}
+    .theme-pick.open .theme-trigger i{box-shadow:0 0 0 1px var(--accent),0 0 18px rgb(var(--accent-rgb)/0.7);}
+
+    .theme-panel{
+      position:absolute;top:calc(100% + 14px);right:-10px;z-index:60;
+      display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+      padding:0.7rem 0.85rem 0.6rem;
+      background:rgb(var(--accent-rgb)/0.04);
+      border:1px solid var(--border-2);
+      opacity:0;visibility:hidden;transform:translateY(-8px) scale(0.96);
+      transform-origin:top right;pointer-events:none;
+      transition:opacity 0.32s ease,transform 0.42s cubic-bezier(0.16,1,0.3,1),visibility 0s linear 0.32s;
+    }
+    .theme-pick.open .theme-panel{
+      opacity:1;visibility:visible;transform:none;pointer-events:auto;
+      transition:opacity 0.32s ease,transform 0.42s cubic-bezier(0.16,1,0.3,1),visibility 0s;
+    }
+    /* Puente invisible: el mouse cruza el hueco sin que el panel se cierre. */
+    .theme-panel::before{content:'';position:absolute;top:-16px;left:0;right:0;height:16px;}
+
+    .theme-swatches{display:flex;align-items:center;gap:0.5rem;}
+    .theme-swatches button{
+      width:15px;height:15px;padding:0;border:0;background:none;cursor:none;
+      position:relative;border-radius:50%;
+      opacity:0;transform:translateY(-6px) scale(0.7);
+      transition:opacity 0.3s ease,transform 0.44s cubic-bezier(0.16,1,0.3,1);
+    }
+    /* Entran escalonados: da la sensación de que se despliegan, no de que aparecen */
+    .theme-pick.open .theme-swatches button{opacity:1;transform:none;}
+    .theme-pick.open .theme-swatches button:nth-child(1){transition-delay:0.02s}
+    .theme-pick.open .theme-swatches button:nth-child(2){transition-delay:0.05s}
+    .theme-pick.open .theme-swatches button:nth-child(3){transition-delay:0.08s}
+    .theme-pick.open .theme-swatches button:nth-child(4){transition-delay:0.11s}
+    .theme-pick.open .theme-swatches button:nth-child(5){transition-delay:0.14s}
+    .theme-pick.open .theme-swatches button:nth-child(6){transition-delay:0.17s}
+    .theme-pick.open .theme-swatches button:nth-child(7){transition-delay:0.20s}
+    .theme-swatches button i{
+      position:absolute;inset:0;border-radius:50%;
+      background:var(--sw);
+      box-shadow:0 0 0 1px rgba(0,0,0,0.5);
+      transition:transform 0.35s cubic-bezier(0.16,1,0.3,1),box-shadow 0.35s ease;
+    }
+    .theme-swatches button:hover i{transform:scale(1.28);box-shadow:0 0 0 1px rgba(0,0,0,0.5),0 0 14px var(--glow);}
+    .theme-swatches button[aria-pressed="true"] i{
+      transform:scale(1.1);
+      box-shadow:0 0 0 2px var(--bg-2),0 0 0 3.5px var(--glow),0 0 16px var(--glow);
+    }
+    .theme-swatches button:focus-visible{outline:2px solid var(--accent);outline-offset:4px;}
+
+    .theme-name{
+      font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:0.16em;
+      text-transform:uppercase;color:var(--text-3);min-height:0.8em;
+      transition:color 0.3s ease;
+    }
+    .theme-pick.open .theme-name{color:var(--accent);}
+
+    /* Táctil: sin hover, el panel se abre tocando y se agranda para el dedo. */
+    @media(hover:none),(max-width:640px){
+      /* Anclado a la pantalla y no al disparador: el selector vive al borde
+         derecho de la barra y centrarlo ahí dejaba los últimos colores fuera. */
+      .theme-panel{position:fixed;top:4.4rem;left:50%;right:auto;
+        transform:translate(-50%,-8px) scale(0.96);
+        transform-origin:top center;padding:0.6rem 0.7rem 0.55rem;
+        background:var(--surface);}
+      .theme-pick.open .theme-panel{transform:translate(-50%,0) scale(1);}
+      .theme-panel::before{display:none;}
+      /* Punto de 22px dentro de un blanco táctil de 40px */
+      .theme-swatches{gap:0.1rem;}
+      .theme-swatches button{width:40px;height:40px;}
+      .theme-swatches button i{inset:9px;}
+      .theme-trigger{width:20px;height:20px;}
+      .theme-name{margin-top:0.15rem;}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .theme-panel,.theme-swatches button,.theme-trigger,.theme-trigger i{transition:none;}
+      .theme-pick.open .theme-swatches button{transition-delay:0s;}
+    }
+
+    .lang-toggle{
+      margin-left:0.15rem;
+      padding:0.4rem 0.7rem;
+      background:rgb(var(--accent-rgb)/0.08);
+      border:1px solid var(--border-2);
+      border-radius:2px;
+      color:var(--amber);
+      font-family:'IBM Plex Mono',monospace;
+      font-size:0.58rem;
+      font-weight:600;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      cursor:none;
+      transition:all 0.3s;
+    }
+    .lang-toggle:hover{
+      background:rgb(var(--accent-rgb)/0.18);
+      border-color:var(--amber);
+    }
+    .lang-toggle span{opacity:0.4;}
+    .lang-toggle span.active{opacity:1;color:var(--text);}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+    .container{
+      max-width:1120px;
+      margin:0 auto;
+      padding:0 2rem;
+    }
+
+    /* ── Temas ────────────────────────────────────────────────────────────
+       El acento no es solo un color de detalle: cada tema reencuadra el negro
+       del fondo, el tinte de los bordes y la temperatura de los blancos. Por eso
+       cambiar de tema se siente como cambiar de atmósfera y no como repintar
+       botones. --accent-rgb existe para poder usar el acento con transparencia.
+       --amber* se mantienen como alias: hay ~50 usos repartidos por la hoja. */
+    :root,[data-theme="amber"]{
+      --accent:#e8eaee;      --accent-rgb:232 234 238;
+      --accent-warm:#c9ced6; --accent-deep:#9aa3af;
+      --rust:#c2410c;        --nebula:#dc2626;
+      --accent-pale:#f4f5f7; --on-accent:#0a0b0d;
+      --bg:#000000; --bg-2:#060708; --surface:#0b0d10; --surface-2:#12151a;
+      --border:rgba(232,234,238,0.08); --border-2:rgba(232,234,238,0.16);
+      --text:#f4f5f7; --text-2:#c9ced6; --text-3:rgba(244,245,247,.5); --text-dim:rgba(244,245,247,.3);
+    }
+    [data-theme="lilac"]{
+      --accent:#b98cff;      --accent-rgb:185 140 255;
+      --accent-warm:#a78bfa; --accent-deep:#7c3aed;
+      --rust:#6d28d9;        --nebula:#e879f9;
+      --accent-pale:#ded0ff; --on-accent:#12081f;
+      --bg:#050410; --bg-2:#0a0818; --surface:#100d1e; --surface-2:#171326;
+      --border:rgba(215,200,255,0.09); --border-2:rgba(215,200,255,0.17);
+      --text:#efeaf8; --text-2:#b0a8c4; --text-3:#6a6280; --text-dim:#494360;
+    }
+    [data-theme="magenta"]{
+      --accent:#ff5da2;      --accent-rgb:255 93 162;
+      --accent-warm:#ff7ab8; --accent-deep:#db2777;
+      --rust:#be185d;        --nebula:#f43f5e;
+      --accent-pale:#ffc2da; --on-accent:#1f0512;
+      --bg:#0a0308; --bg-2:#12060d; --surface:#1a0a13; --surface-2:#22101a;
+      --border:rgba(255,205,230,0.09); --border-2:rgba(255,205,230,0.17);
+      --text:#f8e9f1; --text-2:#c2a4b4; --text-3:#7a5f6c; --text-dim:#55404b;
+    }
+    [data-theme="blue"]{
+      --accent:#5aa8ff;      --accent-rgb:90 168 255;
+      --accent-warm:#e8eaee; --accent-deep:#9aa3af;
+      --rust:#0369a1;        --nebula:#22d3ee;
+      --accent-pale:#c2ddff; --on-accent:#04101f;
+      --bg:#020509; --bg-2:#050b14; --surface:#08111c; --surface-2:#0d1826;
+      --border:rgba(190,220,255,0.09); --border-2:rgba(190,220,255,0.17);
+      --text:#e8f0fa; --text-2:#9fb2c8; --text-3:#5c6b7d; --text-dim:#3e4a58;
+    }
+    /* Temas de degradado: acento, cálido y óxido son tres tonos distintos, así el
+       planeta (que mezcla los tres en los puntos de tierra) se ve degradado solo.
+       --accent-grad es para las superficies que sí admiten gradiente. */
+    [data-theme="aurora"]{
+      --accent:#7cf5d0;      --accent-rgb:124 245 208;
+      --accent-warm:#7aa2ff; --accent-deep:#4f46e5;
+      --rust:#b98cff;        --nebula:#f0abfc;
+      --accent-pale:#d6fff2; --on-accent:#04211a;
+      --accent-grad:linear-gradient(135deg,#7cf5d0 0%,#7aa2ff 52%,#b98cff 100%);
+      --bg:#02070c; --bg-2:#050e16; --surface:#08161f; --surface-2:#0d2029;
+      --border:rgba(200,240,255,0.09); --border-2:rgba(200,240,255,0.17);
+      --text:#e8f6f2; --text-2:#9fbcb8; --text-3:#5a7370; --text-dim:#3e5250;
+    }
+    [data-theme="nova"]{
+      --accent:#e8eaee;      --accent-rgb:232 234 238;
+      --accent-warm:#ff5da2; --accent-deep:#db2777;
+      --rust:#b98cff;        --nebula:#f0abfc;
+      --accent-pale:#ffd9e8; --on-accent:#1f0a14;
+      --accent-grad:linear-gradient(135deg,#e8eaee 0%,#ff5da2 54%,#b98cff 100%);
+      --bg:#08040a; --bg-2:#100714; --surface:#180b1d; --surface-2:#201026;
+      --border:rgba(255,215,240,0.09); --border-2:rgba(255,215,240,0.17);
+      --text:#f7eaf4; --text-2:#bda6b8; --text-3:#756070; --text-dim:#524250;
+    }
+    [data-theme="jade"]{
+      --accent:#4ee7a8;      --accent-rgb:78 231 168;
+      --accent-warm:#34d399; --accent-deep:#059669;
+      --rust:#047857;        --nebula:#22d3ee;
+      --accent-pale:#bff5de; --on-accent:#04170f;
+      --bg:#020705; --bg-2:#050d0a; --surface:#08150f; --surface-2:#0d1e16;
+      --border:rgba(200,255,230,0.09); --border-2:rgba(200,255,230,0.17);
+      --text:#e6f7ef; --text-2:#9dbcae; --text-3:#597268; --text-dim:#3d5148;
+    }
+    :root{
+      --amber:var(--accent); --amber-warm:var(--accent-warm); --amber-deep:var(--accent-deep);
+      --accent-grad:linear-gradient(135deg,var(--accent),var(--accent-warm));
+      /* El cambio de tema se cruza en vez de saltar. */
+      transition:--accent 0s;
+    }
+    body,nav,.hud-cta,#hudCard,.trans-btn,.observation{
+      transition:background-color 0.55s ease,border-color 0.55s ease,color 0.55s ease;
+    }
+    @media(hover:hover) and (pointer:fine){
+      body,a,button{cursor:none!important;}
+    }
+
+    /* === CUSTOM CURSOR === */
+    .cursor-dot,.cursor-ring{
+      position:fixed;
+      pointer-events:none;
+      z-index:999;
+      transform:translate(-50%,-50%);
+      will-change:left,top,width,height;
+    }
+    .cursor-dot{
+      width:6px;height:6px;
+      background:var(--amber);
+      border-radius:50%;
+      box-shadow:0 0 10px rgb(var(--accent-rgb)/0.8);
+      opacity:0;
+      transition:width 0.3s,height 0.3s,opacity 0.2s;
+    }
+    .cursor-ring{
+      width:34px;height:34px;
+      border:1px solid rgb(var(--accent-rgb)/0.45);
+      border-radius:50%;
+      opacity:0;
+      transition:width 0.4s cubic-bezier(0.16,1,0.3,1),height 0.4s cubic-bezier(0.16,1,0.3,1),border-color 0.35s,background 0.35s,box-shadow 0.35s,opacity 0.2s;
+    }
+    /* Cursor-ring has no pseudo decorations — clean circle only */
+    .cursor-ring::before,.cursor-ring::after{display:none;}
+
+    /* Orbit container (positioned by JS, does not rotate itself) */
+    .cursor-orbit{
+      position:fixed;
+      pointer-events:none;
+      z-index:998;
+      width:54px;height:54px;
+      transform:translate(-50%,-50%);
+      will-change:left,top,width,height;
+      transition:width 0.45s cubic-bezier(0.16,1,0.3,1),height 0.45s cubic-bezier(0.16,1,0.3,1),opacity 0.25s;
+    }
+    /* Inner rotating layers — concentric orbits like a mini solar system */
+    .orbit-layer{
+      position:absolute;
+      border-radius:50%;
+      opacity:0;
+      transition:opacity 0.5s ease;
+      border:1px dashed rgb(var(--accent-rgb)/0.12);
+    }
+    /* Outer orbit — slow (like outer planets) */
+    .orbit-layer-1{
+      inset:0;
+      animation:orbit-cw 9s linear infinite;
+    }
+    /* Middle orbit — medium speed, opposite direction */
+    .orbit-layer-2{
+      inset:22%;
+      animation:orbit-ccw 5.5s linear infinite;
+      border-color:rgb(var(--accent-rgb)/0.1);
+    }
+    /* Inner orbit — fastest (like Mercury) */
+    .orbit-layer-3{
+      inset:42%;
+      animation:orbit-cw 3s linear infinite;
+      border-color:rgb(var(--accent-rgb)/0.08);
+    }
+    @keyframes orbit-cw{to{transform:rotate(360deg);}}
+    @keyframes orbit-ccw{to{transform:rotate(-360deg);}}
+
+    /* Orbit bodies (planets) — each on its orbit edge */
+    .orbit-layer::before,.orbit-layer::after{
+      content:'';
+      position:absolute;
+      border-radius:50%;
+      background:var(--amber);
+      box-shadow:0 0 8px var(--amber),0 0 2px rgba(255,255,255,0.7);
+    }
+    /* Outer orbit: 2 bodies (12 and 6) */
+    .orbit-layer-1::before{
+      top:-2.5px;left:50%;transform:translateX(-50%);
+      width:4px;height:4px;
+      background:var(--amber);
+    }
+    .orbit-layer-1::after{
+      bottom:-2px;left:50%;transform:translateX(-50%);
+      width:3px;height:3px;
+      background:var(--amber-warm);
+    }
+    /* Middle orbit: 2 bodies (3 and 9) */
+    .orbit-layer-2::before{
+      top:50%;left:-2px;transform:translateY(-50%);
+      width:3px;height:3px;
+      background:var(--amber-warm);
+    }
+    .orbit-layer-2::after{
+      top:50%;right:-2px;transform:translateY(-50%);
+      width:2.5px;height:2.5px;
+      background:var(--accent-pale);
+      box-shadow:0 0 6px var(--accent-pale);
+    }
+    /* Inner orbit: 1 small body (planet Mercury-style) */
+    .orbit-layer-3::before{
+      top:-1.5px;left:50%;transform:translateX(-50%);
+      width:2.5px;height:2.5px;
+      background:#fff;
+      box-shadow:0 0 6px rgb(var(--accent-rgb)/0.9);
+    }
+    .orbit-layer-3::after{display:none;}
+
+    /* Default state: no orbit particles visible */
+
+    /* Hover state — ring expands + all orbit layers visible */
+    .cursor-ring.hover{
+      width:58px;height:58px;
+      border-color:var(--amber);
+      background:rgb(var(--accent-rgb)/0.05);
+      box-shadow:0 0 40px rgb(var(--accent-rgb)/0.2),inset 0 0 18px rgb(var(--accent-rgb)/0.05);
+    }
+    .cursor-dot.hover{
+      width:8px;height:8px;
+      box-shadow:0 0 16px rgb(var(--accent-rgb)/1),0 0 32px rgb(var(--accent-rgb)/0.4);
+    }
+    .cursor-orbit.hover{width:140px;height:140px;}
+    .cursor-orbit.hover .orbit-layer{opacity:1;}
+    ::selection{background:rgb(var(--accent-rgb)/0.25);color:var(--text);}
+    @media(hover:hover) and (pointer:fine){ *,*::before,*::after{cursor:none!important;} }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{-webkit-text-size-adjust:100%;}
+    body{
+      font-family:'IBM Plex Sans',-apple-system,sans-serif;
+      background:var(--bg); color:var(--text);
+      -webkit-font-smoothing:antialiased; min-height:100vh;
+    }
+    a{color:inherit;}
+    .wrap{max-width:1240px;margin:0 auto;padding:0 2rem;}
+
+    .lab-top{
+      display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      padding:6.5rem 0 0;
+      font-family:'IBM Plex Mono',monospace;font-size:0.6rem;
+      letter-spacing:0.16em;text-transform:uppercase;color:var(--text-3);
+    }
+    .lab-back{text-decoration:none;color:var(--accent);}
+    .lab-back:hover{text-decoration:underline;}
+
+    header.lab-head{padding:5rem 0 3.5rem;}
+    .lab-eyebrow{
+      font-family:'IBM Plex Mono',monospace;font-size:0.62rem;letter-spacing:0.18em;
+      text-transform:uppercase;color:var(--accent);margin-bottom:1rem;
+    }
+    .lab-h1{
+      font-family:'Fraunces',serif;font-weight:400;
+      font-size:clamp(2.2rem,6vw,4rem);line-height:1.05;letter-spacing:-0.02em;
+    }
+    .lab-h1 em{font-style:italic;color:var(--accent);}
+    .lab-lede{margin-top:1.2rem;max-width:56ch;color:var(--text-2);line-height:1.7;}
+    .lab-author{display:inline-flex;align-items:center;gap:12px;margin-top:1.5rem;color:var(--text);text-decoration:none;}
+    .lab-author img{width:44px;height:44px;border-radius:50%;object-fit:cover;filter:grayscale(1);}
+    .lab-author .k{display:block;font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;margin-bottom:.25rem;}
+    .lab-author small{display:block;margin-top:.25rem;font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.08em;color:var(--text-3);}
+
+    .grid{
+      display:grid;gap:2rem;padding-bottom:6rem;
+      grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    }
+    .exp{scroll-margin-top:2rem;}
+    .exp-shot{
+      position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;
+      background:rgba(0,0,0,0.28);
+      -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+      border:1px solid var(--border);
+      transition:border-color 0.45s ease;
+    }
+    .exp:hover .exp-shot,.exp:target .exp-shot{border-color:rgb(var(--accent-rgb)/0.5);}
+    .exp-shot canvas{display:block;width:100%;height:100%;}
+    .exp-idx{
+      position:absolute;top:0.6rem;right:0.7rem;
+      font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;
+      color:rgb(var(--accent-rgb)/0.75);pointer-events:none;
+    }
+    .exp-name{
+      font-family:'Fraunces',serif;font-size:1.2rem;font-weight:400;
+      margin:1rem 0 0.4rem;letter-spacing:-0.01em;
+    }
+    .exp-note{font-size:0.85rem;line-height:1.6;color:var(--text-3);}
+    .exp-go{display:inline-block;margin-top:0.7rem;font-family:'IBM Plex Mono',monospace;
+      font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);
+      opacity:0;transform:translateX(-4px);transition:opacity .35s ease,transform .35s cubic-bezier(.16,1,.3,1);}
+    .exp:hover .exp-go{opacity:1;transform:none;}
+    .exp:hover .exp-name{color:var(--accent);}
+    .exp-name{transition:color .35s ease;}
+
+    footer.lab-foot{
+      border-top:1px solid var(--border);padding:2.5rem 0 4rem;
+      font-family:'IBM Plex Mono',monospace;font-size:0.6rem;
+      letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);
+      display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    }
+    /* Copia del bloque móvil del index. El generador verifica que siga acá. */
+    /* ── El nav.site-nav en móvil ────────────────────────────────────────────────
+       Seis enlaces más idioma y color no caben en 360px: la barra medía 514px
+       y se cortaba por los dos lados. Una tira que se desliza tampoco estaba
+       a la altura del resto. Ahora la barra queda mínima (menú + idioma +
+       color) y los MISMOS enlaces se convierten en una hoja a pantalla
+       completa: cero markup duplicado, solo otra forma de mostrarlos. */
+    nav.site-nav .nav-links{ display:flex; align-items:center; min-width:0; }
+    .nav-menu{ display:none; }
+
+    @media(max-width:768px){
+      nav.site-nav{
+        top:0.6rem; left:0.6rem; right:0.6rem; transform:none; width:auto;
+        gap:0.2rem; padding:0 0.2rem; justify-content:space-between;
+        /* El backdrop-filter convierte al nav.site-nav en bloque contenedor de sus hijos
+           position:fixed, así que la hoja resolvía inset:0 contra la BARRA y
+           salía de 369×44 en vez de ocupar la pantalla. El desenfoque se muda
+           a un pseudo-elemento, que no contiene a nadie. */
+        background:transparent; border:0;
+        backdrop-filter:none; -webkit-backdrop-filter:none;
+      }
+      /* Sin fondo ni borde en móvil: la barra son solo sus controles flotando
+         sobre el contenido. El pseudo-elemento sigue existiendo pero vacío,
+         porque es el que evita que el nav.site-nav sea bloque contenedor de la hoja. */
+      /* Sin caja: ni fondo sólido, ni borde, ni desenfoque. Solo un velo que
+         se desvanece hacia abajo, porque sin NADA el texto de la página cruzaba
+         por encima de los botones y no se leía ninguno de los dos. El
+         pseudo-elemento además es lo que evita que el nav.site-nav sea bloque contenedor
+         de la hoja del menú. */
+      nav.site-nav::before{
+        content:'';position:absolute;left:0;right:0;top:-0.6rem;bottom:-1.6rem;
+        z-index:0;border:0;pointer-events:none;
+        background:linear-gradient(to bottom,
+          rgba(5,4,3,0.92) 0%, rgba(5,4,3,0.80) 46%, rgba(5,4,3,0) 100%);
+      }
+      nav.site-nav.menu-open::before{ background:none; }
+      nav.site-nav > *:not(.nav-links){ position:relative; z-index:1; }
+
+      /* Botón de menú: dos trazos que se cruzan al abrir */
+      .nav-menu{
+        display:flex; flex-direction:column; justify-content:center; gap:5px;
+        width:44px; height:44px; padding:0 0 0 0.55rem;
+        background:none; border:0; cursor:pointer;
+      }
+      .nav-menu i{
+        display:block; width:19px; height:1.5px; background:var(--text-2);
+        transition:transform .42s cubic-bezier(.16,1,.3,1), opacity .25s ease,
+                   background-color .3s ease;
+      }
+      nav.site-nav.menu-open .nav-menu i{ background:var(--accent); }
+      nav.site-nav.menu-open .nav-menu i:first-child{ transform:translateY(3.25px) rotate(45deg); }
+      nav.site-nav.menu-open .nav-menu i:last-child{ transform:translateY(-3.25px) rotate(-45deg); }
+
+      /* La hoja: los mismos <a>, a pantalla completa */
+      nav.site-nav .nav-links{
+        position:fixed; inset:0; z-index:-1;
+        flex-direction:column; align-items:flex-start; justify-content:center;
+        gap:0.15rem; padding:0 2rem;
+        background:rgba(8,6,5,0.93);
+        -webkit-backdrop-filter:blur(26px) saturate(140%);
+        backdrop-filter:blur(26px) saturate(140%);
+        opacity:0; visibility:hidden; pointer-events:none;
+        transition:opacity .45s ease, visibility .45s;
+        counter-reset:navi;
+      }
+      nav.site-nav.menu-open .nav-links{
+        opacity:1; visibility:visible; pointer-events:auto;
+      }
+      nav.site-nav .nav-links a{
+        font-family:'Fraunces',serif; font-weight:400; text-transform:none;
+        font-size:clamp(1.9rem,8.5vw,2.6rem); letter-spacing:-0.02em;
+        line-height:1.18; color:var(--text); padding:0.42rem 0;
+        min-height:44px; display:flex; align-items:baseline; gap:0.9rem;
+        opacity:0; transform:translateY(14px);
+        transition:opacity .5s ease, transform .6s cubic-bezier(.16,1,.3,1), color .3s ease;
+      }
+      nav.site-nav.menu-open .nav-links a{ opacity:1; transform:none; }
+      /* Cada enlace entra un poco después que el anterior */
+      nav.site-nav.menu-open .nav-links a:nth-child(1){ transition-delay:.06s; }
+      nav.site-nav.menu-open .nav-links a:nth-child(2){ transition-delay:.11s; }
+      nav.site-nav.menu-open .nav-links a:nth-child(3){ transition-delay:.16s; }
+      nav.site-nav.menu-open .nav-links a:nth-child(4){ transition-delay:.21s; }
+      nav.site-nav.menu-open .nav-links a:nth-child(5){ transition-delay:.26s; }
+      nav.site-nav.menu-open .nav-links a:nth-child(6){ transition-delay:.31s; }
+      nav.site-nav .nav-links a::before{
+        counter-increment:navi; content:"0" counter(navi);
+        font-family:'IBM Plex Mono',monospace; font-size:0.72rem; font-weight:500;
+        letter-spacing:0.18em; color:rgb(var(--accent-rgb)/0.7);
+        transform:translateY(-0.35em);
+      }
+      nav.site-nav .nav-links a.is-here{ color:var(--accent); }
+      nav.site-nav .nav-links a:hover{ background:none; }
+
+      /* Controles: siempre alcanzables, dentro y fuera de la hoja */
+      /* Menú a la izquierda; idioma y color agrupados a la derecha. Con
+         space-between a secas el EN/ES quedaba flotando en el medio. */
+      nav.site-nav .lang-toggle{
+        flex:0 0 auto; display:flex; align-items:center; white-space:nowrap;
+        min-height:44px; padding:0 0.55rem; font-size:0.72rem; margin-left:auto;
+      }
+      nav.site-nav .theme-pick{ flex:0 0 auto; }
+      /* Área táctil grande sin agrandar el punto: el <i> va con inset:0, así
+         que estirar el botón inflaba el círculo hasta parecer otra cosa. */
+      nav.site-nav .theme-trigger{ width:44px; height:44px; min-width:44px; min-height:44px;
+        display:flex; align-items:center; justify-content:center; }
+      nav.site-nav .theme-trigger i{ position:static; inset:auto; width:17px; height:17px; flex:0 0 auto; }
+      nav.site-nav .theme-swatches{ gap:0.2rem; }
+      nav.site-nav .theme-swatches button{ width:40px; height:40px;
+        display:flex; align-items:center; justify-content:center; }
+      nav.site-nav .theme-swatches button i{ position:static; inset:auto; width:18px; height:18px; flex:0 0 auto; }
+      nav.site-nav .theme-name{ font-size:0.72rem; }
+    }
+    @media(max-width:768px) and (prefers-reduced-motion:reduce){
+      nav.site-nav .nav-links a{ transition:none; opacity:1; transform:none; }
+      .nav-menu i{ transition:none; }
+    }
+
+    @media(max-width:640px){
+      .wrap{padding:0 1.25rem;}
+      header.lab-head{padding:3.5rem 0 2.5rem;}
+      .grid{gap:2.4rem;grid-template-columns:1fr;}
+      .lab-back{min-height:44px;display:inline-flex;align-items:center;}
+      .exp-name{font-size:1.15rem;margin-top:0.9rem;}
+      .exp-note{font-size:0.9rem;line-height:1.65;}
+      .exp-idx{font-size:0.68rem;}
+      .lab-back{font-size:0.72rem;}
+      .lab-top span{font-size:0.72rem;}
+      .lab-foot span,.lab-foot a{font-size:0.72rem;line-height:1.7;}
+      .lab-eyebrow{font-size:0.72rem;}
+      /* Sin hover no se revela nunca: en táctil el enlace queda visible */
+      .exp-go{opacity:1;transform:none;font-size:0.72rem;
+        min-height:44px;display:inline-flex;align-items:center;}
+      .lab-lede{font-size:1rem;line-height:1.7;}
+      .lab-foot a{min-height:44px;display:inline-flex;align-items:center;}
+    }
+    /* ── Tema claro ────────────────────────────────────────────────────────
+       El modo vive en data-mode y la paleta de acento sigue en data-theme, así
+       que el visitante conserva el acento que eligió: solo cambia la atmósfera
+       —papel, superficies, bordes y texto—, no su color. */
+    html[data-mode="light"]{
+      --bg:#f7f9fc; --bg-2:#eef2f8; --surface:#ffffff; --surface-2:#f2f5fa;
+      --border:rgba(8,13,24,.10); --border-2:rgba(8,13,24,.20);
+      --text:#080d18; --text-2:rgb(23 36 61/.78);
+      --text-3:rgb(23 36 61/.52); --text-dim:rgb(23 36 61/.34);
+      --on-accent:#ffffff;
+      color-scheme:light;
+    }
+    /* La paleta por defecto es casi blanca (#e8eaee): sobre papel desaparece.
+       Solo esa se reencuadra al azul de marca; las otras seis ya son colores
+       saturados que se sostienen sobre blanco. */
+    /* Superficies que estaban en negro translúcido fijo: sobre papel salían
+       gris sucio. El lienzo del experimento y los bloques de código pasan a
+       superficie clara con borde, que es como se leen en esta atmósfera. */
+    html[data-mode="light"] .stage{
+      background:var(--surface);
+      box-shadow:inset 0 0 0 1px var(--border);
+    }
+    html[data-mode="light"] pre.code{ background:var(--surface-2); }
+    html[data-mode="light"] .exp-shot,
+    html[data-mode="light"] .lab-shot{
+      background:var(--surface);
+      box-shadow:inset 0 0 0 1px var(--border);
+    }
+    html[data-mode="light"] .theme-swatches button i{ box-shadow:0 0 0 1px rgba(8,13,24,.28); }
+    html[data-mode="light"][data-theme="amber"],
+    html[data-mode="light"]:not([data-theme]){
+      --accent:#0a5cff; --accent-rgb:10 92 255;
+      --accent-warm:#1d5bc4; --accent-deep:#0b3fa8;
+      --accent-pale:#5c7aaa;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="lab-top">
+      <a class="lab-back" href="/" data-en="&larr; Back home" data-es="&larr; Volver al inicio">&larr; Volver al inicio</a>
+      <span id="labCount">&mdash;</span>
+    </div>
+
+    <header class="lab-head">
+      <div class="lab-eyebrow" data-en="// Lab" data-es="// Lab">// Lab</div>
+      <h1 class="lab-h1"><span data-en="We understand before " data-es="Entendemos antes de ">Entendemos antes de </span><em data-en="we build." data-es="construir.">construir.</em></h1>
+      <p class="lab-lede" data-en="At B&amp;N we write every experiment from its equations, in pure canvas &mdash; no libraries, no shaders. They run while you look and stop when you move on. It is how the team sharpens its intuition: what we master here is what we later put to work in your operation." data-es="En B&amp;N escribimos cada experimento desde sus ecuaciones, en canvas puro &mdash; sin librer&iacute;as, sin shaders. Corren mientras los miras y se detienen cuando avanzas. As&iacute; el equipo afila la intuici&oacute;n: lo que dominamos ac&aacute; es lo que despu&eacute;s ponemos a trabajar en tu operaci&oacute;n.">En B&amp;N escribimos cada experimento desde sus ecuaciones, en canvas puro &mdash; sin librer&iacute;as, sin shaders. Corren mientras los miras y se detienen cuando avanzas. As&iacute; el equipo afila la intuici&oacute;n: lo que dominamos ac&aacute; es lo que despu&eacute;s ponemos a trabajar en tu operaci&oacute;n.</p>
+      <a class="lab-author" href="/c/nico"><img src="/equipo/nicolas.webp" width="44" height="44" alt=""><span><strong class="k" data-en="BY" data-es="POR">POR</strong>Nicolás Moreno<small>Cofundador · CTO</small></span></a>
+    </header>
+
+    <main class="grid" id="labGrid"></main>
+
+    <footer class="lab-foot">
+      <span>Nicol&aacute;s Moreno &middot; Santiago &middot; Chile</span>
+      <a href="/" data-en="bnsolutions.cl" data-es="bnsolutions.cl">bnsolutions.cl</a>
+    </footer>
+  </div>
+
+<script>
+// Construye la grilla desde el catálogo de lab.js y monta cada canvas.
+(function(){
+  function build(){
+    const grid=document.getElementById('labGrid');
+    if(!grid||!window.LAB) return setTimeout(build,60);
+    const es=document.documentElement.lang==='es';
+    LAB.experiments.forEach((def,i)=>{
+      const sec=document.createElement('a');
+      sec.className='exp'; sec.id=def.id; sec.href='/lab/'+def.id;
+      sec.style.textDecoration='none';
+      sec.innerHTML=
+        '<div class="exp-shot"><span class="exp-idx">EXP-'+String(i+1).padStart(3,'0')+'</span><canvas></canvas></div>'+
+        '<h2 class="exp-name">'+(es?def.name.es:def.name.en)+'</h2>'+
+        '<p class="exp-note">'+(es?def.note.es:def.note.en)+'</p>'+
+        '<span class="exp-go" data-en="Read it &rarr;" data-es="Leerlo &rarr;">'+(es?'Leerlo →':'Read it →')+'</span>';
+      grid.appendChild(sec);
+      LAB.mount(sec.querySelector('canvas'), def.id);
+    });
+    document.getElementById('labCount').textContent=
+      LAB.experiments.length+(es?' experimentos':' experiments');
+    // Si se llega con #id, resaltar ese
+    if(location.hash){ const el=document.getElementById(location.hash.slice(1));
+      if(el) el.scrollIntoView({block:'center'}); }
+  }
+  build();
+})();
+</script>
+</body>
+</html>

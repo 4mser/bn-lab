@@ -1,0 +1,486 @@
+<style>
+    html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+    body{font-family:'IBM Plex Sans',-apple-system,sans-serif;background:var(--bg);
+      color:var(--text);line-height:1.6;overflow-x:hidden;}
+    a{color:inherit;}
+    .wrap{max-width:1100px;margin:0 auto;padding:0 2rem;}
+
+    .top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:6.5rem 0 2rem;
+      font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.18em;
+      text-transform:uppercase;color:var(--text-dim);}
+    .top a{color:var(--accent);text-decoration:none;}
+    .top a:hover{text-decoration:underline;}
+
+    .hero{padding:1rem 0 2.6rem;}
+    .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;
+      text-transform:uppercase;color:var(--accent);margin-bottom:1.1rem;}
+    h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.1rem,6vw,3.6rem);
+      line-height:1.06;letter-spacing:-0.02em;margin-bottom:1.3rem;}
+    h1 em{font-style:italic;color:var(--accent);}
+    .lede{font-size:1.06rem;line-height:1.75;color:var(--text-2);max-width:62ch;}
+
+    /* ── Tablero ─────────────────────────────────────────────────────── */
+    .tablero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:2.2rem;
+      align-items:start;padding-top:1rem;}
+
+    .marco{position:relative;border:1px solid var(--border);background:#000;aspect-ratio:1;overflow:hidden;}
+    html[data-mode="light"] .marco{background:#fff;}
+    .marco canvas{display:block;width:100%;height:100%;touch-action:none;}
+    .marco canvas.tomando{cursor:grabbing;}
+    .marco-l{position:absolute;top:0.7rem;left:0.85rem;font-family:'IBM Plex Mono',monospace;
+      font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);pointer-events:none;}
+    .marco-d{position:absolute;top:0.7rem;right:0.85rem;font-family:'IBM Plex Mono',monospace;
+      font-size:0.56rem;letter-spacing:0.13em;color:var(--text-dim);pointer-events:none;}
+    #volverAng{position:absolute;bottom:0.75rem;right:0.8rem;z-index:3;
+      font-family:'IBM Plex Mono',monospace;font-size:0.54rem;letter-spacing:0.14em;
+      text-transform:uppercase;color:var(--accent);background:rgb(var(--accent-rgb)/0.1);
+      border:1px solid var(--accent);padding:0.4rem 0.7rem;}
+    #volverAng:hover{background:rgb(var(--accent-rgb)/0.2);}
+    .vacio-visor{position:absolute;inset:0;display:grid;place-items:center;padding:2rem;
+      text-align:center;font-family:'IBM Plex Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;
+      color:var(--text-dim);pointer-events:none;}
+    /* `display:grid` le gana a la regla del user-agent para [hidden], así que
+       el aviso quedaba encima de la figura incluso ya encontrada. */
+    .vacio-visor[hidden]{display:none;}
+
+    .bajo-visor{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      padding:0.7rem 0.1rem 0;font-family:'IBM Plex Mono',monospace;font-size:0.56rem;
+      letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);}
+    .bajo-visor label{display:flex;align-items:center;gap:0.45rem;}
+
+    .ficha{margin-top:1.4rem;border-top:1px solid var(--border);}
+    .fi{display:grid;grid-template-columns:7.2rem 1fr;gap:1rem;padding:0.6rem 0;
+      border-bottom:1px solid var(--border);align-items:baseline;}
+    .fi-k{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;
+      text-transform:uppercase;color:var(--text-dim);}
+    .fi-v{font-size:0.82rem;color:var(--text-2);word-break:break-word;}
+    .fi-v code{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--accent);}
+    .fi-v b{font-family:'IBM Plex Mono',monospace;color:var(--text-3);font-weight:500;}
+    .fi-v b.ok{color:var(--accent);}
+    .cita b.ojo{color:var(--accent);font-weight:600;}
+    .cita{display:block;font-size:0.68rem;color:var(--text-dim);margin-top:0.15rem;}
+    .vacio{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;
+      color:var(--text-dim);padding:1.2rem 0;}
+
+    /* ── Abecedario ──────────────────────────────────────────────────── */
+    .abc{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;
+      border:1px solid var(--border);background:var(--border);}
+    .cel{position:relative;aspect-ratio:1;background:var(--bg);border:0;padding:0;
+      display:block;overflow:hidden;}
+    .cel canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0.85;}
+    .cel-l{position:absolute;inset:0;display:grid;place-items:center;
+      font-family:'Fraunces',serif;font-size:1.35rem;color:var(--text-dim);
+      transition:color 0.2s,opacity 0.2s;}
+    .cel-p{position:absolute;bottom:2px;right:4px;font-family:'IBM Plex Mono',monospace;
+      font-size:0.46rem;color:var(--text-dim);}
+    .cel.hay .cel-l{opacity:0.22;}
+    .cel:hover .cel-l{color:var(--accent);opacity:0.6;}
+    .cel.sel{outline:1px solid var(--accent);outline-offset:-1px;z-index:2;}
+    .cel.sel .cel-l{color:var(--accent);}
+    .cel[data-nivel="alto"] .cel-p{color:var(--accent);}
+    .cel[data-nivel="bajo"] .cel-p{color:var(--text-dim);}
+    .cel-vacia{pointer-events:none;}
+
+    /* ── Mando ───────────────────────────────────────────────────────── */
+    .mando{margin-top:1.4rem;border:1px solid var(--border);padding:1rem;}
+    .mando h3{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.16em;
+      text-transform:uppercase;color:var(--text-dim);font-weight:500;margin-bottom:0.7rem;}
+    .sistemas{display:grid;grid-template-columns:1fr 1fr;gap:0.25rem 0.7rem;margin-bottom:1rem;}
+    .sistemas label{display:flex;align-items:center;gap:0.4rem;font-size:0.7rem;color:var(--text-3);
+      min-width:0;}
+    .sistemas span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    input[type=checkbox]{accent-color:var(--accent);width:12px;height:12px;flex:0 0 auto;}
+
+    .opc{display:flex;flex-wrap:wrap;gap:0.4rem 1.1rem;margin-bottom:0.9rem;}
+    .opc label{display:flex;align-items:center;gap:0.4rem;font-size:0.7rem;color:var(--text-3);}
+    .rango{display:grid;grid-template-columns:1fr 120px 2.4rem;align-items:center;gap:0.7rem;
+      margin-bottom:1rem;}
+    .rango span{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.13em;
+      text-transform:uppercase;color:var(--text-dim);}
+    .rango output{font-family:'IBM Plex Mono',monospace;font-size:0.66rem;color:var(--accent);
+      text-align:right;}
+    input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;
+      background:var(--border-2);outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;
+      border-radius:50%;background:var(--accent);}
+    input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;
+      background:var(--accent);border:0;}
+
+    .botones{display:flex;flex-wrap:wrap;gap:0.5rem;}
+    .btn{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.14em;
+      text-transform:uppercase;padding:0.62rem 0.9rem;border:1px solid var(--border-2);
+      background:transparent;color:var(--text-2);}
+    .btn:hover{border-color:var(--accent);color:var(--accent);}
+    .btn.pri{border-color:var(--accent);color:var(--accent);background:rgb(var(--accent-rgb)/0.1);}
+    .btn.pri:hover{background:rgb(var(--accent-rgb)/0.2);}
+    .btn[disabled]{opacity:0.35;}
+    body.buscando #buscarUna,body.buscando #buscarTodo{opacity:0.35;pointer-events:none;}
+    body:not(.buscando) #detener{opacity:0.35;pointer-events:none;}
+
+    .progreso{margin-top:0.9rem;}
+    .barra-caja{height:2px;background:var(--border-2);overflow:hidden;}
+    .barra{height:100%;width:0;background:var(--accent);transition:width 0.25s;}
+    .estado{margin-top:0.5rem;font-family:'IBM Plex Mono',monospace;font-size:0.55rem;
+      letter-spacing:0.1em;color:var(--text-dim);min-height:1.1em;}
+
+    /* ── Sala de máquinas ────────────────────────────────────────────── */
+    .sala{margin-top:3.4rem;border-top:1px solid var(--border);padding-top:1.6rem;}
+    .sala-top{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+      flex-wrap:wrap;}
+    .sala-h{font-family:'Fraunces',serif;font-weight:400;font-size:1.35rem;letter-spacing:-0.01em;}
+    .sala-sw{display:flex;align-items:center;gap:0.45rem;font-family:'IBM Plex Mono',monospace;
+      font-size:0.55rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);}
+    .sala-lede{margin-top:0.6rem;font-size:0.94rem;line-height:1.75;color:var(--text-2);max-width:64ch;}
+    body:not(.sala-abierta) .enjambre,
+    body:not(.sala-abierta) .mapas{opacity:0.28;pointer-events:none;}
+
+    /* Cada tarjeta lleva su borde. Antes el borde salía del fondo del
+       contenedor asomando por los huecos, y cuando los workers activos no
+       llenaban la última fila quedaba un bloque gris suelto. */
+    .enjambre{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+      gap:2px;margin-top:1.4rem;min-height:2px;}
+    .maq{display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:var(--bg);
+      border:1px solid var(--border);transition:background 0.3s,border-color 0.3s;}
+    .maq.lider{border-color:rgb(var(--accent-rgb)/0.4);}
+    .maq.lider{background:rgb(var(--accent-rgb)/0.07);}
+    .maq.fin{opacity:0.42;}
+    .maq-mini{width:44px;height:44px;flex:0 0 auto;background:#000;}
+    html[data-mode="light"] .maq-mini{background:#fff;}
+    .maq-txt{flex:1;min-width:0;}
+    .maq-sis{font-size:0.72rem;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;
+      white-space:nowrap;}
+    .maq-gen{font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;
+      color:var(--text-dim);}
+    .maq-spark{display:block;width:100%;height:16px;margin-top:0.2rem;}
+    .maq-p{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--accent);
+      flex:0 0 auto;}
+    .maq.lider .maq-p{font-weight:600;}
+
+    .mapas{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.6rem;
+      margin-top:1.6rem;}
+    .mapa{margin:0;}
+    .mapa figcaption{display:flex;align-items:baseline;gap:0.7rem;flex-wrap:wrap;
+      font-family:'IBM Plex Mono',monospace;font-size:0.52rem;letter-spacing:0.13em;
+      text-transform:uppercase;margin-bottom:0.5rem;}
+    .mapa-t{color:var(--text-2);}
+    /* Sin esto el `text-transform:uppercase` del pie convierte la σ del paso
+       en Σ, que es otra cosa completamente distinta. */
+    .mapa-d{color:var(--text-dim);text-transform:none;}
+    .mapa canvas{display:block;width:100%;aspect-ratio:1;background:var(--bg);
+      border:1px solid var(--border);}
+    .mapa canvas.ang{aspect-ratio:2;}
+    .mapa-x{margin-top:0.6rem;font-size:0.78rem;line-height:1.65;color:var(--text-dim);}
+
+    .descartes{border:1px solid var(--border);padding:0.9rem;}
+    .des{display:grid;grid-template-columns:8.4rem 1fr 2.6rem;align-items:center;gap:0.6rem;
+      padding:0.45rem 0;}
+    .des-k{font-size:0.7rem;color:var(--text-3);}
+    .des-b{height:2px;background:var(--border-2);overflow:hidden;}
+    .des-b i{display:block;height:100%;background:var(--accent);transition:width 0.3s;}
+    .des-n{font-family:'IBM Plex Mono',monospace;font-size:0.66rem;color:var(--accent);
+      text-align:right;}
+
+    /* ── Bloques de texto ────────────────────────────────────────────── */
+    .blk{padding:3.4rem 0 0;opacity:0;transform:translateY(22px);
+      transition:opacity 0.7s cubic-bezier(.16,1,.3,1),transform 0.7s cubic-bezier(.16,1,.3,1);}
+    .blk.in{opacity:1;transform:none;}
+    .blk-h{font-family:'Fraunces',serif;font-weight:400;font-size:1.5rem;
+      letter-spacing:-0.01em;margin-bottom:0.9rem;}
+    .blk-p{font-size:0.98rem;line-height:1.8;color:var(--text-2);max-width:64ch;}
+    .blk-p + .blk-p{margin-top:0.9rem;}
+    .blk-p code{font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:var(--accent);}
+    .blk-p strong{color:var(--text);font-weight:600;}
+
+    .eqs{margin-top:1.6rem;border-top:1px solid var(--border);}
+    .eq-row{border-bottom:1px solid var(--border);padding:1.1rem 0;}
+    .eq{font-family:'IBM Plex Mono',monospace;font-size:0.9rem;color:var(--accent);
+      margin-bottom:0.35rem;overflow-x:auto;}
+    .eq-note{font-size:0.86rem;line-height:1.7;color:var(--text-3);max-width:62ch;}
+
+    .foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      margin-top:5rem;padding:2rem 0 4rem;border-top:1px solid var(--border);
+      font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;
+      text-transform:uppercase;color:var(--text-dim);}
+    .foot a{color:var(--accent);text-decoration:none;}
+
+    @media(max-width:900px){
+      .tablero{grid-template-columns:1fr;gap:2rem;}
+      .wrap{padding:0 1.2rem;}
+      .top{padding-top:5.5rem;}
+    }
+    @media(max-width:520px){
+      .abc{grid-template-columns:repeat(5,1fr);}
+      .sistemas{grid-template-columns:1fr;}
+      .fi{grid-template-columns:1fr;gap:0.2rem;}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .blk{opacity:1;transform:none;transition:none;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a href="/lab">&larr; Lab</a>
+      <span>Abecedario de atractores</span>
+    </div>
+
+    <header class="hero">
+      <div class="eyebrow">// Lab &middot; b&uacute;squeda de forma</div>
+      <h1>Un abecedario<br>escondido <em>en el caos.</em></h1>
+      <p class="lede">Un atractor extra&ntilde;o es un objeto tridimensional fijo: la trayectoria
+        nunca se repite, pero siempre cae sobre la misma figura. Girarlo cambia lo que se ve, y
+        entre todas esas vistas hay algunas que dicen algo. El atractor de Thomas, desde cierto
+        &aacute;ngulo, es una estrella. La pregunta de este experimento es si el abecedario
+        completo est&aacute; ah&iacute; adentro &mdash; y la respuesta, que se puede comprobar
+        abajo letra por letra, es <strong>veinte de veintis&eacute;is</strong>.</p>
+    </header>
+
+    <section class="tablero">
+      <div class="izq">
+        <div class="marco">
+          <canvas id="visor"></canvas>
+          <div id="visorVacio" class="vacio-visor" hidden>Sin figura para esta letra todav&iacute;a</div>
+          <span class="marco-l" id="letraActual">A</span>
+          <span class="marco-d" id="desvio"></span>
+          <button id="volverAng" type="button" hidden>volver al &aacute;ngulo</button>
+        </div>
+        <div class="bajo-visor">
+          <label><input type="checkbox" id="verFantasma" checked> letra de fondo</label>
+          <span>arrastra la figura para girarla</span>
+        </div>
+        <div id="ficha" class="ficha"></div>
+      </div>
+
+      <div class="der">
+        <div id="abc" class="abc"></div>
+
+        <div class="mando">
+          <h3>Sistemas en juego</h3>
+          <div class="sistemas" id="sistemas"></div>
+
+          <h3>C&oacute;mo se mira</h3>
+          <div class="opc">
+            <label><input type="checkbox" id="usarExpo" checked> exposici&oacute;n recortable</label>
+            <label><input type="checkbox" id="usarEstira"> permitir estirado</label>
+          </div>
+
+          <div class="rango">
+            <span>Presupuesto</span>
+            <input type="range" id="presupuesto" min="6" max="60" step="2" value="16">
+            <output id="presupuestoV">16</output>
+          </div>
+
+          <div class="botones">
+            <button class="btn pri" id="buscarUna" type="button">Buscar esta letra</button>
+            <button class="btn" id="buscarTodo" type="button">Todo el abecedario</button>
+            <button class="btn" id="detener" type="button">Detener</button>
+          </div>
+          <div class="botones" style="margin-top:0.5rem">
+            <button class="btn" id="exportar" type="button">Exportar hallazgos</button>
+            <button class="btn" id="olvidar" type="button">Olvidar los m&iacute;os</button>
+          </div>
+
+          <div class="progreso">
+            <div class="barra-caja"><div class="barra" id="barra"></div></div>
+            <div class="estado" id="estado">&nbsp;</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Sala de máquinas ─────────────────────────────────────────── -->
+    <section class="sala">
+      <div class="sala-top">
+        <h2 class="sala-h">Sala de m&aacute;quinas</h2>
+        <label class="sala-sw"><input type="checkbox" id="verSala" checked> instrumentar en vivo</label>
+      </div>
+      <p class="sala-lede">Lo que est&aacute; pasando mientras busca. No hay una red neuronal
+        ac&aacute;: el que decide es <strong>sep-CMA-ES</strong>, una estrategia de
+        evoluci&oacute;n, y su estado interno es geom&eacute;trico &mdash; una gaussiana sobre el
+        espacio de par&aacute;metros que se mueve y se encoge. Eso s&iacute; se puede dibujar.</p>
+
+      <div id="enjambre" class="enjambre"></div>
+
+      <div class="mapas">
+        <figure class="mapa">
+          <figcaption>
+            <span class="mapa-t">Espacio de par&aacute;metros</span>
+            <span class="mapa-d" id="ejesParam">&mdash;</span>
+            <span class="mapa-d" id="sigmaParam">&sigma; = &mdash;</span>
+          </figcaption>
+          <canvas id="mapaParam"></canvas>
+          <p class="mapa-x">Cada punto es un juego de par&aacute;metros probado; el brillo, lo
+            que puntu&oacute;. La elipse punteada es la gaussiana del optimizador: d&oacute;nde
+            cree que est&aacute; la soluci&oacute;n y con cu&aacute;nta confianza. Cuando salta de
+            golpe es un reinicio &mdash; llevaba demasiadas generaciones sin aprender nada.</p>
+        </figure>
+
+        <figure class="mapa">
+          <figcaption>
+            <span class="mapa-t">Mapa de orientaciones</span>
+            <span class="mapa-d">yaw &rarr; &middot; pitch &uarr;</span>
+          </figcaption>
+          <canvas id="mapaAng" class="ang"></canvas>
+          <p class="mapa-x">El nivel interno. Cada celda guarda el mejor puntaje conseguido
+            mirando desde esa direcci&oacute;n, sobre cientos de orientaciones por candidato. Las
+            direcciones buenas no est&aacute;n repartidas al azar: salen en manchas. El
+            c&iacute;rculo marca la que va ganando.</p>
+        </figure>
+
+        <figure class="mapa">
+          <figcaption><span class="mapa-t">Descartados antes de puntuar</span></figcaption>
+          <div id="descartes" class="descartes"></div>
+          <p class="mapa-x">Candidatos que ni siquiera llegaron a dibujarse. En la familia libre
+            son la mayor&iacute;a, y ese n&uacute;mero es exactamente la raz&oacute;n por la que
+            hace falta sembrar por rechazo en vez de arrancar del centro de los rangos.</p>
+        </figure>
+      </div>
+    </section>
+
+    <section class="blk">
+      <h2 class="blk-h">Qu&eacute; se est&aacute; buscando exactamente</h2>
+      <p class="blk-p">Cada figura de arriba es una sola cosa: un sistema de tres ecuaciones
+        diferenciales, un juego de par&aacute;metros, y tres &aacute;ngulos. Nada m&aacute;s. La
+        letra no est&aacute; dibujada ni retocada &mdash; es la sombra que proyecta la
+        trayectoria cuando el objeto queda orientado de esa manera. Arrastra cualquiera de ellas
+        y la letra se deshace: eso es la prueba de que estaba en el &aacute;ngulo y no en el
+        trazo.</p>
+      <p class="blk-p">El problema tiene dos niveles con costos muy distintos, y de ah&iacute;
+        sale toda la arquitectura. Averiguar <strong>qu&eacute; sistema y con qu&eacute;
+        par&aacute;metros</strong> obliga a integrar miles de pasos. Averiguar <strong>desde
+        d&oacute;nde mirarlo</strong> es una pasada sobre la nube que ya est&aacute; calculada.
+        As&iacute; que se integra una vez y se prueban cientos de orientaciones encima. Invertir
+        ese orden multiplica el costo por cien.</p>
+      <div class="eqs">
+        <div class="eq-row">
+          <div class="eq">x' = &sigma;(y &minus; x)&nbsp;&nbsp; y' = x(&rho; &minus; z) &minus; y&nbsp;&nbsp; z' = xy &minus; &beta;z</div>
+          <p class="eq-note">Lorenz. Los par&aacute;metros no est&aacute;n fijos en sus valores
+            cl&aacute;sicos: el buscador los mueve dentro de un rango donde el sistema sigue
+            siendo ca&oacute;tico, porque cada juego de valores da una figura distinta.</p>
+        </div>
+        <div class="eq-row">
+          <div class="eq">x' = c&#8320; + c&#8321;x + c&#8322;y + c&#8323;z + c&#8324;x&sup2; + &hellip; + c&#8329;yz</div>
+          <p class="eq-note">La familia libre: las tres derivadas son polinomios de segundo grado
+            completos, treinta coeficientes en total. Contiene a Lorenz, a R&ouml;ssler y a casi
+            todos los dem&aacute;s como casos particulares, y sobre todo contiene millones de
+            formas que no tienen nombre. Es de donde salen las letras raras.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="blk">
+      <h2 class="blk-h">Por qu&eacute; una estrategia de evoluci&oacute;n y no un descenso por gradiente</h2>
+      <p class="blk-p">La funci&oacute;n que hay que maximizar &mdash;cu&aacute;nto se parece la
+        proyecci&oacute;n a la letra&mdash; es negra, discontinua y est&aacute; llena de
+        m&aacute;ximos locales. Un cambio chico en un par&aacute;metro puede hacer que el atractor
+        cambie de r&eacute;gimen y la forma salte de golpe. No hay derivada que seguir, as&iacute;
+        que descenso por gradiente y todo lo que se apoya en &eacute;l queda fuera de plano.</p>
+      <p class="blk-p">Se usa <strong>sep-CMA-ES</strong>: una estrategia de evoluci&oacute;n que
+        mantiene una gaussiana sobre el espacio de par&aacute;metros y, generaci&oacute;n a
+        generaci&oacute;n, la mueve hacia donde puntuaron mejor las muestras y le ajusta el ancho
+        por eje. La variante separable guarda s&oacute;lo la diagonal de la covarianza: la
+        completa necesita descomponer una matriz en autovalores, y en treinta dimensiones y
+        dentro de un worker eso no se paga solo.</p>
+      <p class="blk-p">La familia libre necesit&oacute; algo m&aacute;s. Arrancar desde el centro
+        de los rangos &mdash;el vector de coeficientes en cero&mdash; deja al buscador en una
+        regi&oacute;n donde todo se descarta: el sistema nulo no se mueve y sus vecinos caen a un
+        punto fijo. Con todos los hijos en cero no hay gradiente emp&iacute;rico y el optimizador
+        se convierte en un paseo al azar caro; medido, cuarenta generaciones sin encontrar nada.
+        La salida es la que us&oacute; Sprott para catalogar esta familia: <strong>sorteo con
+        rechazo</strong>. Se tiran vectores al azar y se conserva el primero que pase el validador.
+        Uno de cada siete u ocho pasa, as&iacute; que la semilla cuesta milisegundos, y desde
+        ah&iacute; s&iacute; hay de d&oacute;nde subir.</p>
+    </section>
+
+    <section class="blk">
+      <h2 class="blk-h">C&oacute;mo se mide el parecido</h2>
+      <p class="blk-p">La primera versi&oacute;n del puntaje combinaba cobertura y precisi&oacute;n
+        en una media arm&oacute;nica, y ten&iacute;a un defecto que se vio apenas se miraron los
+        resultados: contra una <code>C</code> ganaba un anillo cerrado. Cubr&iacute;a la C entera,
+        y el trozo que sobraba &mdash;el que cierra el anillo&mdash; cae justo en el hueco de la C,
+        o sea a distancia casi cero, as&iacute; que el castigo por dispersi&oacute;n no lo
+        tocaba. La diferencia entre el anillo y una C de verdad era de cent&eacute;simas.</p>
+      <p class="blk-p">Ahora se usa <strong>Jaccard sobre m&aacute;scaras blandas</strong>:
+        intersecci&oacute;n sobre uni&oacute;n. La uni&oacute;n s&iacute; crece con el sobrante,
+        est&eacute; donde est&eacute;, y el anillo cae a ~0,80 contra el ~0,97 de una C bien
+        hecha. Esa distancia es la que el buscador necesita para que le convenga arreglar el trazo
+        en vez de conformarse.</p>
+      <p class="blk-p">Encima va un factor de dispersi&oacute;n calculado con la
+        <strong>transformada de distancia</strong> de la letra: para cada p&iacute;xel de fuera, a
+        qu&eacute; distancia qued&oacute; el trazo m&aacute;s cercano. Con eso el castigo por tinta
+        perdida deja de ser binario y pasa a ser proporcional &mdash; un trazo que se sale un pelo
+        casi no molesta, uno que cruza la l&aacute;mina entera hunde el puntaje. Esa gradaci&oacute;n
+        es lo que le da al buscador una pendiente por la que bajar.</p>
+      <p class="blk-p">Y hay una verificaci&oacute;n aparte que puede contradecir al buscador. El
+        campo <em>se lee como</em> de cada ficha no compara la figura contra la letra que se
+        pidi&oacute;, sino contra las veintis&eacute;is, y muestra las tres m&aacute;s parecidas.
+        Cuando la primera no es la que se buscaba, el hallazgo es malo por m&aacute;s que
+        puntu&eacute; alto. Es el caso de varias letras de la grilla, y est&aacute; a la vista a
+        prop&oacute;sito.</p>
+    </section>
+
+    <section class="blk">
+      <h2 class="blk-h">Qu&eacute; sali&oacute; y qu&eacute; no</h2>
+      <p class="blk-p">El barrido que trae la grilla corri&oacute; las veintis&eacute;is letras
+        contra los quince sistemas. Pasando cada resultado por el clasificador &mdash;o sea
+        compar&aacute;ndolo contra las veintis&eacute;is, no contra la que se pidi&oacute;&mdash;,
+        <strong>veinte se leen como la letra buscada</strong> y seis no:
+        <code>E</code> se lee F, <code>G</code> y <code>Q</code> se leen O, <code>R</code> se lee
+        B, <code>T</code> se lee I y <code>Z</code> se lee X.</p>
+      <p class="blk-p">El patr&oacute;n tiene una explicaci&oacute;n geom&eacute;trica. La
+        proyecci&oacute;n de un atractor extra&ntilde;o es la sombra de una curva continua: entra
+        por un lado, sale por el otro y no levanta el l&aacute;piz nunca. Las letras de un solo
+        trazo son exactamente esa clase de objeto. Las que fallan son las que necesitan
+        <strong>una interrupci&oacute;n</strong>: la <code>G</code> y la <code>Q</code> piden un
+        anillo con un ap&eacute;ndice que el flujo no puede a&ntilde;adir sin cerrar otra vez, y
+        por eso se quedan en la <code>O</code>; la <code>R</code> pide un asta y dos trazos que
+        salen de ella, y termina en el ocho de Lorenz.</p>
+      <p class="blk-p">Conviene desconfiar de una parte de las veinte. La <code>I</code>, la
+        <code>X</code> y la <code>Z</code> salen como astillas &mdash;un atractor mirado casi de
+        canto, que proyecta poco m&aacute;s que una l&iacute;nea&mdash; y puntúan bien porque la
+        letra objetivo tambi&eacute;n es delgada y diagonal. Son correctas para la m&eacute;trica
+        y flojas para el ojo. Las que aguantan mirarlas de cerca son otras: la <code>J</code>, la
+        <code>L</code>, la <code>V</code>, la <code>W</code>, la <code>Y</code> y la
+        <code>F</code>.</p>
+      <p class="blk-p">La ventana de exposici&oacute;n es lo que corri&oacute; el l&iacute;mite, y
+        por eso est&aacute; separada en su propia casilla. Una exposici&oacute;n larga acumula la
+        trayectoria entera y da el retrato cl&aacute;sico del atractor; una m&aacute;s corta
+        registra un tramo del recorrido &mdash;el mismo objeto, la misma trayectoria&mdash; y deja
+        ver estructura que la larga tapa cuando el trazo se satura. Con ella aparecieron la
+        <code>L</code> y la <code>V</code>, que sin ella no sal&iacute;an. Est&aacute; acotada por
+        abajo: menos de un cuarto de la trayectoria ya no es un retrato de un atractor sino un
+        pedazo de curva.</p>
+      <p class="blk-p">Esa ventana tambi&eacute;n dej&oacute; el error m&aacute;s caro de todo
+        esto. Se guardaba como <em>fracci&oacute;n</em> de la trayectoria, y el visor integraba
+        muchos m&aacute;s pasos que el buscador: la misma fracci&oacute;n cubr&iacute;a un tramo
+        de recorrido distinto, as&iacute; que la figura dibujada no era la que se hab&iacute;a
+        puntuado. Se vio en una l&aacute;mina de contactos, donde la <code>G</code> y la
+        <code>T</code> aparec&iacute;an como un punto. La correcci&oacute;n no fue alargar el
+        recorrido sino muestrearlo m&aacute;s fino &mdash;mismo tramo, paso dividido, nueve veces
+        m&aacute;s tinta&mdash;. Con eso las letras bien le&iacute;das pasaron de trece a
+        veinte.</p>
+    </section>
+
+    <footer class="foot">
+      <span>Nicol&aacute;s Moreno &middot; Santiago &middot; Chile</span>
+      <a href="/">bnsolutions.cl</a>
+    </footer>
+  </div>
+
+  <script src="/lab/abecedario-atractores/sistemas.js"></script>
+  <script src="/lab/abecedario-atractores/nucleo.js"></script>
+  <script src="/lab/abecedario-atractores/letras.js"></script>
+  <script src="/lab/abecedario-atractores/buscador.js"></script>
+  <script src="/lab/abecedario-atractores/sala.js"></script>
+  <script src="/lab/abecedario-atractores/hallazgos.js"></script>
+  <script src="/lab/abecedario-atractores/pagina.js"></script>
+  <script>
+    // El deslizador del presupuesto se refleja en su propio número.
+    (function(){
+      var r=document.getElementById('presupuesto'),o=document.getElementById('presupuestoV');
+      r.addEventListener('input',function(){o.textContent=r.value;});
+    })();
+  </script>
+</body>
+</html>

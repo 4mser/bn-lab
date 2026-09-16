@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>OpenPsico — instrumentos psicométricos sin dejar rastro · concepto B&amp;N SOLUTIONS</title>
+<meta name="description" content="Instrumentos psicométricos clínicos gratuitos y 100% privados: se aplican, corrigen y siguen en el navegador, sin cuentas y sin servidor. Concepto de interfaz de B&N Solutions con seis simulaciones.">
+<!-- Concepto de interfaz: no se indexa ni va al sitemap. La herramienta real vive en openpsico.com. -->
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="B&amp;N SOLUTIONS">
+<meta property="og:locale" content="es_CL">
+<meta property="og:url" content="https://www.bnsolutions.cl/openpsico">
+<meta property="og:title" content="OpenPsico — sin cuentas y sin dejar rastro">
+<meta property="og:description" content="Instrumentos psicométricos clínicos que se corrigen en tu dispositivo. Seis simulaciones sobre la mente medida.">
+<meta property="og:image" content="https://www.bnsolutions.cl/og-openpsico.jpg?v=4">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenPsico — cerebro 3D formado por partículas y neuronas disparando">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpenPsico — sin cuentas y sin dejar rastro">
+<meta name="twitter:description" content="Instrumentos psicométricos clínicos que se corrigen en tu dispositivo.">
+<meta name="twitter:image" content="https://www.bnsolutions.cl/og-openpsico.jpg?v=4">
+<link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#f7f9fc">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" href="/fonts/fuentes.css">
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   OpenPsico — la landing reescrita con el chasis de B&N, en CLARO.
+
+   Mismo linaje que /lateralus y /practica: barra plana (nunca
+   backdrop-filter), riel de capítulos, cursor propio, revelado escalonado y
+   un motor de lienzos que sólo pide cuadros a lo que está a la vista.
+
+   El color sale de openpsico.com: su azul #2563EB para acentos, figuras y
+   el bloque del cierre; su celeste de sección #EEF4FF para el capítulo de
+   privacidad. El coral queda para lo que exige atención clínica.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root{
+  --ink-rgb:15 23 42;
+  --bg:#f7f9fc;
+  --papel:#ffffff;
+  --ink:#0f172a;
+  --ink-2:rgb(var(--ink-rgb)/.72);
+  --ink-3:rgb(var(--ink-rgb)/.52);
+  --ink-dim:rgb(var(--ink-rgb)/.32);
+  --edge:rgb(var(--ink-rgb)/.10);
+  --edge-2:rgb(var(--ink-rgb)/.20);
+  --azu:#2563eb;
+  --azu-2:#1d4ed8;
+  --azu-rgb:37 99 235;
+  --cielo:#eef4ff;
+  --cor:#dc4a3a;
+  --cor-rgb:220 74 58;
+  --sans:'Space Grotesk',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --pad:clamp(20px,5vw,72px);
+  --max:1180px;
+  color-scheme:light;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;overflow-x:clip;}
+html,body{background:var(--bg);}
+body{
+  font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(70% 45% at 85% -6%,rgba(37,99,235,.10) 0%,rgba(37,99,235,0) 60%),
+    var(--bg);
+}
+::selection{background:rgb(var(--azu-rgb)/.18);color:var(--ink);}
+a{color:inherit;text-decoration:none;}
+button{font:inherit;color:inherit;background:none;border:0;-webkit-appearance:none;appearance:none;}
+img{max-width:100%;display:block;}
+canvas{display:block;}
+.wrap{max-width:var(--max);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad);}
+
+/* ── Cursor ─────────────────────────────────────────────────────────── */
+@media(hover:hover) and (pointer:fine){
+  body{cursor:none;} *,*::before,*::after{cursor:none!important;}
+}
+.cur-dot,.cur-ring{position:fixed;left:0;top:0;z-index:2000;pointer-events:none;border-radius:50%;
+  transform:translate(-50%,-50%);opacity:0;transition:opacity .3s ease;}
+.cur-dot{width:5px;height:5px;background:var(--ink);}
+.cur-ring{width:30px;height:30px;border:1px solid var(--edge-2);
+  transition:width .26s cubic-bezier(.2,.7,.3,1),height .26s cubic-bezier(.2,.7,.3,1),
+             border-color .26s ease,background .26s ease,opacity .3s ease;}
+.cur-on .cur-dot,.cur-on .cur-ring{opacity:1;}
+.cur-ring.act{width:54px;height:54px;border-color:rgb(var(--azu-rgb)/.6);background:rgb(var(--azu-rgb)/.08);}
+@media(hover:none),(pointer:coarse){.cur-dot,.cur-ring{display:none;}}
+
+/* ── Barra ──────────────────────────────────────────────────────────── */
+#barra{
+  position:fixed;top:0;left:0;right:0;z-index:40;height:54px;
+  display:flex;align-items:center;gap:16px;padding:0 var(--pad);
+  background:var(--bg);border-bottom:1px solid var(--edge);
+}
+#barra .marca{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink);
+  display:flex;align-items:center;gap:10px;white-space:nowrap;font-weight:500;}
+#barra .psi{width:24px;height:24px;display:grid;place-items:center;background:var(--azu);border-radius:6px;
+  color:#fff;font-family:var(--sans);font-size:14px;letter-spacing:0;}
+#barra .rot{font-family:var(--mono);font-size:9px;letter-spacing:.20em;color:var(--ink-3);
+  margin-left:auto;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#barra .abrir{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:#fff;background:var(--azu);
+  padding:10px 14px;white-space:nowrap;transition:background .25s ease;}
+@media(hover:hover) and (pointer:fine){#barra .abrir:hover{background:var(--azu-2);}}
+@media(max-width:640px){#barra .rot{display:none;} #barra .abrir{margin-left:auto;}}
+#prog{position:fixed;top:54px;left:0;height:2px;background:var(--azu);z-index:41;width:0;}
+
+/* ── Riel ───────────────────────────────────────────────────────────── */
+#riel{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:39;
+  display:flex;flex-direction:column;gap:10px;}
+#riel a{width:22px;height:14px;display:flex;align-items:center;justify-content:flex-end;}
+#riel i{width:11px;height:1px;background:var(--ink-dim);display:block;
+  transition:width .3s cubic-bezier(.2,.7,.3,1),background .3s ease;}
+#riel a.on i{width:22px;background:var(--azu);}
+@media(max-width:900px){#riel{display:none;}}
+
+/* ── Portada ────────────────────────────────────────────────────────── */
+#tapa{position:relative;min-height:100svh;display:flex;align-items:center;
+  padding-top:108px;padding-bottom:54px;overflow:hidden;}
+#tapa canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+#tapa .velo{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,rgba(247,249,252,.97) 0%,rgba(247,249,252,.88) 36%,rgba(247,249,252,0) 50%);}
+#tapa .wrap{position:relative;z-index:2;width:100%;pointer-events:none;}
+#tapa .wrap a{pointer-events:auto;}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.26em;color:var(--azu);font-weight:500;
+  display:flex;align-items:center;gap:10px;margin-bottom:24px;}
+.eyebrow::after{content:'';flex:1;max-width:120px;height:1px;background:rgb(var(--azu-rgb)/.35);}
+h1{font-size:clamp(36px,5.4vw,76px);font-weight:300;line-height:.98;letter-spacing:-.03em;max-width:12ch;}
+h1 b{font-weight:600;color:var(--azu);}
+#tapa .baja{margin-top:24px;max-width:48ch;font-size:clamp(14.5px,1.5vw,17px);line-height:1.64;color:var(--ink-2);}
+.botones{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;}
+.cta{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--edge-2);background:var(--papel);
+  padding:15px 22px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--ink);
+  transition:background .25s ease,border-color .25s ease,transform .25s ease;}
+.cta i{width:6px;height:6px;background:var(--azu);display:block;}
+.cta.lleno{background:var(--azu);border-color:var(--azu);color:#fff;font-weight:500;
+  box-shadow:0 12px 26px -14px rgb(var(--azu-rgb)/.8);}
+.cta.lleno i{background:#fff;}
+@media(hover:hover) and (pointer:fine){
+  .cta:hover{background:var(--cielo);border-color:rgb(var(--azu-rgb)/.45);transform:translateY(-2px);}
+  .cta.lleno:hover{background:var(--azu-2);border-color:var(--azu-2);}
+}
+.cifras{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-top:clamp(34px,6vh,58px);
+  border-top:1px solid var(--edge);max-width:620px;}
+.cifras div{padding:16px 14px 0 0;min-width:0;}
+.cifras div + div{padding-left:14px;border-left:1px solid var(--edge);}
+.cifras b{display:block;font-family:var(--mono);font-weight:500;font-size:clamp(20px,2.6vw,30px);
+  color:var(--azu);letter-spacing:-.01em;}
+.cifras span{display:block;margin-top:6px;font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--ink-3);}
+.baja-hint{margin-top:26px;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ink-dim);}
+@media(min-width:900px){
+  #tapa .wrap{max-width:1440px;}
+  #tapa .wrap > *{max-width:calc(50% - 24px);}
+  #tapa .wrap h1{max-width:min(12ch,calc(50% - 24px));}
+  #tapa .wrap .baja{max-width:min(48ch,calc(50% - 24px));}
+}
+@media(max-width:899px){
+  /* En móvil el cerebro va arriba y el texto empieza donde termina. */
+  #tapa{align-items:flex-start;min-height:0;padding-top:calc(60px + 74vw);padding-bottom:64px;}
+  #tapa .velo{background:linear-gradient(to bottom,rgba(247,249,252,0) 0,rgba(247,249,252,0) calc(40px + 64vw),rgba(247,249,252,.92) calc(66px + 74vw));}
+}
+@media(max-width:640px){
+  .cifras{grid-template-columns:1fr 1fr;}
+  .cifras div{padding:14px 12px 12px 0;}
+  .cifras div + div{padding-left:0;border-left:0;}
+  .cifras div:nth-child(even){padding-left:14px;border-left:1px solid var(--edge);}
+  .cifras div:nth-child(n+3){border-top:1px solid var(--edge);}
+}
+
+/* ── Cerebro 3D (Three.js) ────────────────────────────────────────────
+   Vive en su propio contenedor, dentro de los mismos márgenes que el texto. */
+.cerebro3d{position:absolute;z-index:1;top:54px;right:max(var(--pad),calc((100% - 1440px)/2 + var(--pad)));bottom:0;left:50%;touch-action:pan-y;}
+.cerebro3d canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.cerebro3d::before{content:'';position:absolute;left:14%;right:14%;bottom:5%;height:24%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(37,99,235,.16),rgba(37,99,235,0));}
+html:not(.con-3d) .cerebro3d{display:none;}
+.cer-ley{position:absolute;left:6%;right:6%;top:clamp(18px,4vh,40px);display:flex;flex-wrap:wrap;gap:6px 18px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--ink-3);pointer-events:none;}
+.cer-ley span{display:inline-flex;align-items:center;gap:7px;}
+.cer-ley i{width:7px;height:7px;border-radius:50%;display:block;}
+.cer-dato{position:absolute;right:var(--pad);bottom:clamp(20px,4vh,40px);font-family:var(--mono);font-size:9px;
+  letter-spacing:.14em;color:var(--ink-3);pointer-events:none;text-align:right;}
+.cer-etq{position:absolute;left:0;top:0;z-index:3;pointer-events:none;background:#fff;border:1px solid var(--edge-2);
+  padding:6px 10px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;font-weight:500;white-space:nowrap;
+  box-shadow:0 8px 20px -12px rgb(var(--ink-rgb)/.35);}
+.cer-etq[hidden]{display:none;}
+@media(max-width:899px){
+  .cerebro3d{left:0;right:0;bottom:auto;height:calc(22px + 74vw);}
+  .cer-ley{display:none;}
+  .cer-dato{display:none;}
+}
+
+/* ── Capítulos ──────────────────────────────────────────────────────── */
+section{position:relative;padding:clamp(76px,11vh,140px) 0;}
+#privacidad{background:var(--cielo);}
+#corte{background:var(--papel);}
+.cab{display:flex;gap:clamp(16px,3vw,34px);align-items:baseline;margin-bottom:clamp(28px,4vh,46px);
+  opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1);}
+.cab.ok{opacity:1;transform:none;}
+.cab .num{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--azu);flex:0 0 auto;padding-top:6px;font-weight:500;}
+.cab h2{font-size:clamp(26px,4.3vw,48px);font-weight:300;line-height:1.05;letter-spacing:-.02em;max-width:19ch;}
+.cab h2 b{font-weight:600;}
+.cab .sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--ink-3);margin-top:12px;display:block;}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .75s ease,transform .75s cubic-bezier(.2,.7,.3,1);}
+.rv.ok{opacity:1;transform:none;}
+
+.col{max-width:62ch;}
+p{font-size:clamp(14.5px,1.55vw,16.5px);line-height:1.72;color:var(--ink-2);}
+p + p{margin-top:1.05em;}
+p b{color:var(--ink);font-weight:500;}
+p .n{font-family:var(--mono);color:var(--azu);font-size:.94em;font-weight:500;}
+
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:clamp(22px,3.4vw,52px);align-items:center;}
+@media(max-width:880px){.dos{grid-template-columns:1fr;} .dos.fig-primero > .fig-lado{order:-1;}}
+
+/* Pasos */
+.paso{margin-top:clamp(56px,9vh,110px);}
+.paso:first-of-type{margin-top:0;}
+.paso-k{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--azu);font-weight:500;
+  display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.paso-k em{font-style:normal;width:28px;height:28px;display:grid;place-items:center;background:var(--azu);color:#fff;border-radius:50%;}
+.paso h3{font-size:clamp(22px,3vw,32px);font-weight:400;letter-spacing:-.015em;line-height:1.12;margin-bottom:16px;}
+.lista{list-style:none;margin-top:18px;display:flex;flex-direction:column;}
+.lista li{display:grid;grid-template-columns:118px 1fr;gap:14px;padding:12px 0;border-top:1px solid var(--edge);
+  font-size:14px;line-height:1.55;color:var(--ink-2);}
+.lista li:last-child{border-bottom:1px solid var(--edge);}
+.lista .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--azu);padding-top:3px;font-weight:500;}
+@media(max-width:520px){.lista li{grid-template-columns:1fr;gap:4px;}}
+
+/* Figuras */
+.fig{position:relative;border:1px solid var(--edge);background:var(--papel);aspect-ratio:16/10;overflow:hidden;
+  box-shadow:0 1px 2px rgb(var(--ink-rgb)/.04),0 18px 40px -26px rgb(var(--azu-rgb)/.45);}
+.fig::before{content:'';position:absolute;left:0;top:0;right:0;height:3px;background:var(--azu);z-index:1;}
+.fig canvas{width:100%;height:100%;}
+.fig.ancha{aspect-ratio:16/7.4;}
+.fig.cuadra{aspect-ratio:1/1;}
+@media(max-width:880px){.fig{aspect-ratio:4/3.3;} .fig.ancha{aspect-ratio:4/3.6;} .fig.cuadra{aspect-ratio:4/3.9;}}
+figure{margin-top:clamp(24px,4vh,40px);}
+.dos figure{margin-top:0;}
+figcaption{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:var(--ink-3);margin-top:11px;line-height:1.7;}
+figcaption b{color:var(--azu);font-weight:500;}
+
+/* Recuadros de dato */
+.rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:clamp(26px,4vh,40px);}
+.dato{border:1px solid var(--edge);background:var(--papel);padding:clamp(18px,2.4vw,24px);display:flex;flex-direction:column;gap:10px;min-width:0;}
+.dato .k{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--azu);font-weight:500;}
+.dato h3{font-size:18px;font-weight:500;letter-spacing:-.01em;}
+.dato .d{font-size:14px;line-height:1.6;color:var(--ink-2);}
+.dato .vivo{margin-top:auto;padding-top:12px;border-top:1px solid var(--edge);
+  font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--ink-3);line-height:1.6;}
+.dato .vivo b{display:block;font-weight:500;font-size:17px;letter-spacing:0;color:var(--azu);margin-bottom:2px;}
+.dato .vivo b.off{color:var(--cor);}
+
+/* Aviso */
+.aviso{border:1px solid rgb(var(--azu-rgb)/.28);background:var(--papel);border-left:3px solid var(--azu);
+  padding:clamp(18px,2.6vw,26px);margin-top:clamp(26px,4vh,38px);}
+.aviso.coral{border-color:rgb(var(--cor-rgb)/.30);border-left-color:var(--cor);background:rgb(var(--cor-rgb)/.05);}
+.aviso .k{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--azu);display:block;margin-bottom:10px;font-weight:500;}
+.aviso.coral .k{color:var(--cor);}
+.aviso p{color:var(--ink-2);font-size:14.5px;}
+
+/* Bandas del PHQ-9 */
+.bandas{margin-top:22px;border:1px solid var(--edge);background:var(--papel);}
+.bandas div{display:grid;grid-template-columns:74px 1fr auto;gap:14px;align-items:center;padding:12px 16px;
+  border-top:1px solid var(--edge);font-size:14px;color:var(--ink-2);}
+.bandas div:first-child{border-top:0;}
+.bandas .s{font-family:var(--mono);font-size:12px;color:var(--ink);font-weight:500;}
+.bandas i{width:34px;height:8px;display:block;border-radius:2px;}
+
+/* Preguntas */
+.faq{max-width:820px;border-top:1px solid var(--edge);}
+.faq details{border-bottom:1px solid var(--edge);}
+.faq summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:22px 0;font-size:clamp(17px,2vw,21px);font-weight:400;letter-spacing:-.01em;}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary .mas{flex:0 0 auto;width:28px;height:28px;border:1px solid var(--edge-2);border-radius:50%;position:relative;
+  transition:border-color .25s ease,background .25s ease;}
+.faq summary .mas::before,.faq summary .mas::after{content:'';position:absolute;left:50%;top:50%;
+  width:10px;height:1.5px;background:var(--ink);transform:translate(-50%,-50%);}
+.faq summary .mas::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .35s cubic-bezier(.2,.7,.3,1);}
+.faq details[open] summary .mas{border-color:var(--azu);background:var(--azu);}
+.faq details[open] summary .mas::before,.faq details[open] summary .mas::after{background:#fff;}
+.faq details[open] summary .mas::after{transform:translate(-50%,-50%) rotate(0deg);}
+.faq details p{padding:0 46px 24px 0;max-width:62ch;}
+.faq .idx{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--azu);margin-right:16px;}
+
+/* Fuentes */
+.fuentes{margin-top:clamp(46px,7vh,80px);border-top:1px solid var(--edge);padding-top:26px;}
+.fuentes h3{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--ink-3);margin-bottom:16px;}
+.fuentes ol{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.fuentes li{font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--ink-3);}
+
+/* ── Cierre: el bloque azul de openpsico.com ─────────────────────────── */
+#empieza{background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 45%,#172554 100%);color:#fff;overflow:hidden;}
+#empieza::before{content:'';position:absolute;right:-12%;top:-30%;width:70%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.14) 0%,rgba(255,255,255,0) 62%);pointer-events:none;}
+.cierre{position:relative;}
+.cierre h2{font-size:clamp(34px,6.4vw,78px);font-weight:300;line-height:1;letter-spacing:-.03em;color:#fff;}
+.cierre h2 b{font-weight:600;}
+.cierre p{color:rgba(255,255,255,.84);}
+.cierre .cta.lleno{background:#fff;border-color:#fff;color:var(--azu-2);box-shadow:0 14px 30px -16px rgba(0,0,0,.5);}
+.cierre .cta.lleno i{background:var(--azu);}
+@media(hover:hover) and (pointer:fine){.cierre .cta.lleno:hover{background:var(--cielo);border-color:var(--cielo);}}
+.tests{display:flex;flex-wrap:wrap;gap:6px;margin-top:clamp(34px,5vh,52px);}
+.tests a{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:rgba(255,255,255,.88);
+  border:1px solid rgba(255,255,255,.28);padding:8px 11px;transition:border-color .2s ease,color .2s ease,background .2s ease;}
+@media(hover:hover) and (pointer:fine){.tests a:hover{color:#fff;border-color:#fff;background:rgba(255,255,255,.12);}}
+
+footer{border-top:1px solid rgba(255,255,255,.2);padding:34px 0 30px;margin-top:clamp(46px,7vh,80px);}
+footer .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:28px;}
+@media(max-width:720px){footer .cols{grid-template-columns:1fr;}}
+footer h4{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.22em;color:rgba(255,255,255,.6);margin-bottom:12px;}
+footer ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
+footer li a,footer li{font-size:13.5px;color:rgba(255,255,255,.88);}
+@media(hover:hover) and (pointer:fine){footer li a:hover{color:#fff;text-decoration:underline;text-underline-offset:3px;}}
+footer .legal{margin-top:30px;padding-top:20px;border-top:1px solid rgba(255,255,255,.2);
+  display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:rgba(255,255,255,.62);line-height:1.7;}
+</style>
+</head>
+<body>
+
+<div class="cur-dot" aria-hidden="true"></div>
+<div class="cur-ring" aria-hidden="true"></div>
+
+<header id="barra">
+  <a class="marca" href="https://openpsico.com/" target="_blank" rel="noopener" data-hover><span class="psi" aria-hidden="true">Ψ</span>OPENPSICO</a>
+  <span class="rot" id="rot">PORTADA</span>
+  <a class="abrir" href="https://openpsico.com/app/" target="_blank" rel="noopener" data-hover>ABRIR LA HERRAMIENTA ↗</a>
+</header>
+<div id="prog"></div>
+<nav id="riel" aria-label="Capítulos"></nav>
+
+<!-- ══ PORTADA ══════════════════════════════════════════════════════ -->
+<div id="tapa" data-rotulo="PORTADA">
+  <div class="velo"></div>
+  <div class="cerebro3d" id="cerebro3d" aria-hidden="true">
+    <div class="cer-ley" id="cerLey"></div>
+    <div class="cer-etq" id="cerEtq" hidden></div>
+    <div class="cer-dato" id="cerDato"></div>
+  </div>
+  <div class="wrap">
+    <div class="eyebrow">INSTRUMENTOS PSICOMÉTRICOS CLÍNICOS</div>
+    <h1>Sin cuentas y <b>sin dejar rastro</b></h1>
+    <p class="baja">Aplica, corrige y da seguimiento a escalas validadas —PHQ-9, GAD-7, PCL-5…—
+      directamente en el navegador. Todo el cálculo ocurre en tu dispositivo: los datos del paciente
+      nunca salen de la consulta.</p>
+    <div class="botones">
+      <a class="cta lleno" href="https://openpsico.com/app/" target="_blank" rel="noopener" data-hover><i></i>ABRIR LA HERRAMIENTA</a>
+      <a class="cta" href="#como" data-hover><i></i>CÓMO FUNCIONA</a>
+    </div>
+    <div class="cifras">
+      <div><b>28</b><span>INSTRUMENTOS HOY</span></div>
+      <div><b>0</b><span>CUENTAS</span></div>
+      <div><b>100 %</b><span>EN TU DISPOSITIVO</span></div>
+      <div><b>Offline</b><span>SE INSTALA COMO APP</span></div>
+    </div>
+    <div class="baja-hint" id="hint">ARRASTRA PARA GIRAR EL CEREBRO · EL CURSOR ESTIMULA LAS NEURONAS →</div>
+  </div>
+</div>
+
+<!-- ══ 01 · CÓMO FUNCIONA ═══════════════════════════════════════════ -->
+<section id="como" data-rotulo="01 · CÓMO FUNCIONA">
+  <div class="wrap">
+    <div class="cab">
+      <span class="num">01</span>
+      <div>
+        <h2>De la búsqueda al resultado <b>en tres pasos</b></h2>
+        <span class="sub">SIN INSTALAR NADA</span>
+      </div>
+    </div>
+
+    <!-- A · Elige -->
+    <div class="paso">
+      <div class="col rv">
+        <div class="paso-k"><em>1</em>ELIGE EL INSTRUMENTO</div>
+        <h3>Escalas clínicas validadas, organizadas por área</h3>
+        <p>Cada instrumento trae su ficha técnica, sus baremos y sus referencias. Hoy hay
+          <span class="n">28</span> listos para aplicar en <span class="n">10</span> áreas —del ánimo y la
+          ansiedad al trauma, el neurodesarrollo, las sustancias y el burnout— y
+          <span class="n">20</span> más en preparación.</p>
+      </div>
+      <figure class="rv">
+        <div class="fig ancha" data-hover><canvas data-sim="atlas"></canvas></div>
+        <figcaption><b>El atlas del catálogo.</b> Cada flor es un área y cada nodo un instrumento; el
+          tamaño sigue la cantidad de ítems. Lleno: disponible hoy. Hueco: en preparación. Pasa el cursor
+          por un nodo para leer su corte.</figcaption>
+      </figure>
+    </div>
+
+    <!-- B · Aplica -->
+    <div class="paso">
+      <div class="dos fig-primero">
+        <div class="col rv">
+          <div class="paso-k"><em>2</em>APLÍCALO COMO QUIERAS</div>
+          <h3>En la consulta o en el móvil del paciente</h3>
+          <ul class="lista">
+            <li><span class="k">MODO TABLETA</span><span>El test abre a pantalla completa para pasar el
+              dispositivo. Al terminar muestra una pantalla neutra y los resultados quedan ocultos hasta que
+              tú los revelas.</span></li>
+            <li><span class="k">ENLACE O QR</span><span>Compártelo por WhatsApp o proyéctalo en tu monitor
+              para que el paciente lo escanee y lo complete en su móvil.</span></li>
+            <li><span class="k">WEB CRYPTO</span><span>Los resultados enlazados se procesan y descifran en
+              tu navegador. En ningún servidor.</span></li>
+          </ul>
+        </div>
+        <figure class="rv fig-lado">
+          <div class="fig cuadra" data-hover><canvas data-sim="cifrado"></canvas></div>
+          <figcaption><b>Dos formas de aplicar.</b> A la derecha, el resultado viaja cifrado: el texto que
+            se ve es cifrado real, generado ahora en tu navegador. A la izquierda, el modo tableta.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- C · Corrige -->
+    <div class="paso">
+      <div class="dos">
+        <figure class="rv">
+          <div class="fig cuadra" data-hover><canvas data-sim="correccion"></canvas></div>
+          <figcaption><b>El PHQ-9, corrigiéndose.</b> Nueve ítems de 0 a 3, total de 0 a 27 y las bandas de
+            su ficha. Contesta tú: pasa el cursor por la grilla.</figcaption>
+        </figure>
+        <div class="col rv">
+          <div class="paso-k"><em>3</em>CORRIGE AL INSTANTE</div>
+          <h3>Punto de corte, severidad y cada ítem a la vista</h3>
+          <p>Corrección automática con punto de corte, severidad a color, desglose ítem por ítem y
+            descarga en PDF. Con el archivo de respaldo puedes volver a ver una sesión anterior y
+            <b>comparar la evolución</b> del paciente sin repetir el test.</p>
+          <div class="aviso coral">
+            <span class="k">LO QUE EL NÚMERO NO RESUELVE</span>
+            <p>En el PHQ-9, cualquier puntuación mayor que 0 en el ítem 9 requiere evaluación de riesgo.
+              La corrección ordena la información; la interpretan profesionales de la salud mental.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 02 · TUS DATOS ═══════════════════════════════════════════════ -->
+<section id="privacidad" data-rotulo="02 · TU CONSULTA, TUS DATOS">
+  <div class="wrap">
+    <div class="cab">
+      <span class="num">02</span>
+      <div>
+        <h2>Tu consulta, <b>tus datos</b></h2>
+        <span class="sub">100 % CLIENT-SIDE · NO HAY SERVIDOR DONDE TUS DATOS PUEDAN VIVIR</span>
+      </div>
+    </div>
+
+    <figure class="rv" style="margin-top:0">
+      <div class="fig ancha" data-hover><canvas data-sim="frontera"></canvas></div>
+      <figcaption><b>La frontera es el dispositivo.</b> Los datos de la consulta rebotan contra el borde; el
+        servidor está dibujado y sigue en cero. Acerca el cursor afuera y mira dónde chocan.</figcaption>
+    </figure>
+
+    <div class="rejilla">
+      <div class="dato rv">
+        <span class="k">01</span>
+        <h3>Privacidad total</h3>
+        <span class="d">Sin base de datos, sin cookies de rastreo, sin cuentas. Los datos del paciente nunca
+          salen del dispositivo.</span>
+      </div>
+      <div class="dato rv">
+        <span class="k">02</span>
+        <h3>Costo cero de mantenimiento</h3>
+        <span class="d">Frontend estático que funciona como complemento de tu ficha clínica electrónica o CRM
+          médico.</span>
+      </div>
+      <div class="dato rv">
+        <span class="k">03</span>
+        <h3>Funciona sin conexión</h3>
+        <span class="d">Instalable como app (PWA) para aplicar instrumentos en consultorio aunque no haya
+          internet.</span>
+        <span class="vivo"><b id="enLinea">—</b>TU CONEXIÓN EN ESTE MOMENTO</span>
+      </div>
+      <div class="dato rv">
+        <span class="k">04</span>
+        <h3>Resultados inmediatos</h3>
+        <span class="d">Baremos, punto de corte y gráfica de severidad al instante, con descarga de informe en
+          PDF.</span>
+        <span class="vivo"><b id="velCorr">midiendo…</b>CORRECCIONES DE UN PHQ-9 POR SEGUNDO, MEDIDAS AHORA EN
+          ESTE NAVEGADOR</span>
+      </div>
+    </div>
+
+    <div class="aviso rv">
+      <span class="k">LOS RESULTADOS SON EFÍMEROS</span>
+      <p>Viven sólo en el dispositivo donde se contestó el test. Si la pestaña se cierra o se recarga, se
+        pierden. Al terminar, <b>descarga el JSON de respaldo</b>: con él vuelves a ver los resultados, generas
+        el PDF o comparas la evolución, y todo se procesa en tu dispositivo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 03 · EL PUNTO DE CORTE ═══════════════════════════════════════ -->
+<section id="corte" data-rotulo="03 · EL PUNTO DE CORTE">
+  <div class="wrap">
+    <div class="cab">
+      <span class="num">03</span>
+      <div>
+        <h2>Qué hay detrás de un <b>≥ 10</b></h2>
+        <span class="sub">SENSIBILIDAD, ESPECIFICIDAD Y POR QUÉ NINGÚN CORTE GANA LAS DOS</span>
+      </div>
+    </div>
+
+    <div class="dos">
+      <div class="col rv">
+        <p>Un instrumento no dice «tiene» o «no tiene». Ordena a las personas en una escala, y el punto de
+          corte decide desde dónde vale la pena mirar más de cerca. Correrlo hacia abajo detecta a más
+          personas con depresión mayor —sube la <b>sensibilidad</b>— y a cambio marca a más personas que no
+          la tienen —baja la <b>especificidad</b>—. Correrlo hacia arriba hace lo contrario.</p>
+        <p>Para el PHQ-9, la ficha de OpenPsico toma <span class="n">≥ 10</span>: en el estudio original,
+          sensibilidad <span class="n">88 %</span> y especificidad <span class="n">88 %</span>; en el
+          metaanálisis de datos individuales de 2019 con entrevistas semiestructuradas, 88 % y 85 %.</p>
+      </div>
+      <div class="rv">
+        <div class="bandas" aria-label="Bandas de severidad del PHQ-9">
+          <div><span class="s">0–4</span><span>Depresión mínima</span><i style="background:rgb(15 23 42/.25)"></i></div>
+          <div><span class="s">5–9</span><span>Depresión leve</span><i style="background:rgb(37 99 235/.5)"></i></div>
+          <div><span class="s">10–14</span><span>Depresión moderada</span><i style="background:#2563eb"></i></div>
+          <div><span class="s">15–19</span><span>Depresión moderada-grave</span><i style="background:rgb(220 74 58/.8)"></i></div>
+          <div><span class="s">20–27</span><span>Depresión grave</span><i style="background:#dc4a3a"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <figure class="rv">
+      <div class="fig ancha" data-hover><canvas data-sim="baremo"></canvas></div>
+      <figcaption><b>El corte, en movimiento.</b> Dos poblaciones sobre la escala del PHQ-9 y la curva ROC
+        completa. Las distribuciones son ilustrativas y están ajustadas para reproducir el 88 % / 88 % en ≥ 10;
+        todo lo demás se calcula en vivo. Mueve el cursor sobre el gráfico para correr el corte.</figcaption>
+    </figure>
+
+    <div class="fuentes rv" style="margin-top:clamp(34px,5vh,56px)">
+      <h3>REFERENCIAS QUE CITA LA FICHA DEL PHQ-9</h3>
+      <ol>
+        <li>Kroenke K, Spitzer RL, Williams JBW (2001). The PHQ-9: validity of a brief depression severity
+          measure. <i>Journal of General Internal Medicine</i>, 16(9), 606–613.</li>
+        <li>Levis B, Benedetti A, Thombs BD (2019). Accuracy of Patient Health Questionnaire-9 (PHQ-9) for
+          screening to detect major depression: individual participant data meta-analysis. <i>BMJ</i>, 365, l1476.</li>
+        <li>Licencia del PHQ-9: Pfizer Inc. · uso clínico gratuito con atribución.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 04 · PREGUNTAS ═══════════════════════════════════════════════ -->
+<section id="faq" data-rotulo="04 · PREGUNTAS">
+  <div class="wrap">
+    <div class="cab">
+      <span class="num">04</span>
+      <div><h2>Preguntas <b>frecuentes</b></h2></div>
+    </div>
+    <div class="faq rv">
+      <details open>
+        <summary data-hover><span><span class="idx">01</span>¿Es gratis?</span><span class="mas" aria-hidden="true"></span></summary>
+        <p>Sí. OpenPsico es gratuito y de código abierto, sin planes de pago ni funciones premium.</p>
+      </details>
+      <details>
+        <summary data-hover><span><span class="idx">02</span>¿Dónde se guardan los resultados?</span><span class="mas" aria-hidden="true"></span></summary>
+        <p>En ningún servidor. Todo el cálculo y los resultados enlazados se procesan y descifran en tu
+          navegador mediante Web Crypto.</p>
+      </details>
+      <details>
+        <summary data-hover><span><span class="idx">03</span>¿Necesito crear una cuenta?</span><span class="mas" aria-hidden="true"></span></summary>
+        <p>No. No existen cuentas ni inicio de sesión. Abres la herramienta y empiezas a aplicar.</p>
+      </details>
+      <details>
+        <summary data-hover><span><span class="idx">04</span>¿Funciona sin internet?</span><span class="mas" aria-hidden="true"></span></summary>
+        <p>Sí. Puedes instalarla como aplicación y aplicar los instrumentos descargados sin conexión.</p>
+      </details>
+      <details>
+        <summary data-hover><span><span class="idx">05</span>¿Sustituye a un diagnóstico?</span><span class="mas" aria-hidden="true"></span></summary>
+        <p>No. Es una herramienta de apoyo clínico. Los resultados deben interpretarlos profesionales de la
+          salud mental cualificados.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CIERRE ═══════════════════════════════════════════════════════ -->
+<section id="empieza" data-rotulo="EMPIEZA HOY">
+  <div class="wrap cierre">
+    <div class="rv">
+      <h2>Empieza a <b>aplicar hoy</b></h2>
+      <p style="margin-top:22px;max-width:52ch">Sin registros, sin configuraciones, sin costos. Abre la
+        herramienta y aplica tu primer instrumento en menos de un minuto.</p>
+      <div class="botones">
+        <a class="cta lleno" href="https://openpsico.com/app/" target="_blank" rel="noopener" data-hover><i></i>ABRIR LA HERRAMIENTA</a>
+      </div>
+    </div>
+
+    <nav class="tests rv" aria-label="Instrumentos disponibles">
+      <a href="https://openpsico.com/tests/phq-9/" target="_blank" rel="noopener" data-hover>PHQ-9</a>
+      <a href="https://openpsico.com/tests/phq-2/" target="_blank" rel="noopener" data-hover>PHQ-2</a>
+      <a href="https://openpsico.com/tests/phq-15/" target="_blank" rel="noopener" data-hover>PHQ-15</a>
+      <a href="https://openpsico.com/tests/gad-7/" target="_blank" rel="noopener" data-hover>GAD-7</a>
+      <a href="https://openpsico.com/tests/gad-2/" target="_blank" rel="noopener" data-hover>GAD-2</a>
+      <a href="https://openpsico.com/tests/ces-d/" target="_blank" rel="noopener" data-hover>CES-D</a>
+      <a href="https://openpsico.com/tests/gds-15/" target="_blank" rel="noopener" data-hover>GDS-15</a>
+      <a href="https://openpsico.com/tests/pcl-5/" target="_blank" rel="noopener" data-hover>PCL-5</a>
+      <a href="https://openpsico.com/tests/pc-ptsd-5/" target="_blank" rel="noopener" data-hover>PC-PTSD-5</a>
+      <a href="https://openpsico.com/tests/dss/" target="_blank" rel="noopener" data-hover>DSS</a>
+      <a href="https://openpsico.com/tests/dss-b/" target="_blank" rel="noopener" data-hover>DSS-B</a>
+      <a href="https://openpsico.com/tests/idca/" target="_blank" rel="noopener" data-hover>IDCA</a>
+      <a href="https://openpsico.com/tests/asrs-v1/" target="_blank" rel="noopener" data-hover>ASRS v1.1</a>
+      <a href="https://openpsico.com/tests/aq-10/" target="_blank" rel="noopener" data-hover>AQ-10</a>
+      <a href="https://openpsico.com/tests/aq-50/" target="_blank" rel="noopener" data-hover>AQ-50</a>
+      <a href="https://openpsico.com/tests/raads-14/" target="_blank" rel="noopener" data-hover>RAADS-14</a>
+      <a href="https://openpsico.com/tests/ders16/" target="_blank" rel="noopener" data-hover>DERS-16</a>
+      <a href="https://openpsico.com/tests/ders36/" target="_blank" rel="noopener" data-hover>DERS-36</a>
+      <a href="https://openpsico.com/tests/k10/" target="_blank" rel="noopener" data-hover>K10</a>
+      <a href="https://openpsico.com/tests/audit/" target="_blank" rel="noopener" data-hover>AUDIT</a>
+      <a href="https://openpsico.com/tests/audit-c/" target="_blank" rel="noopener" data-hover>AUDIT-C</a>
+      <a href="https://openpsico.com/tests/cage/" target="_blank" rel="noopener" data-hover>CAGE</a>
+      <a href="https://openpsico.com/tests/scoff/" target="_blank" rel="noopener" data-hover>SCOFF</a>
+      <a href="https://openpsico.com/tests/rses/" target="_blank" rel="noopener" data-hover>RSES</a>
+      <a href="https://openpsico.com/tests/swls/" target="_blank" rel="noopener" data-hover>SWLS</a>
+      <a href="https://openpsico.com/tests/who-5/" target="_blank" rel="noopener" data-hover>WHO-5</a>
+      <a href="https://openpsico.com/tests/cbi/" target="_blank" rel="noopener" data-hover>CBI</a>
+      <a href="https://openpsico.com/tests/olbi/" target="_blank" rel="noopener" data-hover>OLBI</a>
+    </nav>
+
+    <footer>
+      <div class="cols">
+        <div>
+          <h4>OPENPSICO</h4>
+          <ul><li>Instrumentos psicométricos gratuitos y 100 % privados.</li>
+              <li><a href="https://openpsico.com/" target="_blank" rel="noopener" data-hover>openpsico.com ↗</a></li></ul>
+        </div>
+        <div>
+          <h4>PRODUCTO</h4>
+          <ul>
+            <li><a href="#como" data-hover>Cómo funciona</a></li>
+            <li><a href="#privacidad" data-hover>Privacidad</a></li>
+            <li><a href="#faq" data-hover>Preguntas</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>LEGAL</h4>
+          <ul>
+            <li><a href="https://openpsico.com/privacidad/" target="_blank" rel="noopener" data-hover>Política de privacidad</a></li>
+            <li><a href="https://openpsico.com/terminos/" target="_blank" rel="noopener" data-hover>Términos de uso</a></li>
+            <li><a href="https://openpsico.com/aviso-legal/" target="_blank" rel="noopener" data-hover>Aviso legal</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="legal">
+        <span>OPENPSICO ES UNA HERRAMIENTA DE APOYO CLÍNICO Y NO SUSTITUYE EL JUICIO PROFESIONAL.</span>
+        <span>CONCEPTO DE INTERFAZ · <a href="/" data-hover>B&amp;N SOLUTIONS</a> · SEPTIEMBRE 2026</span>
+      </div>
+    </footer>
+  </div>
+</section>
+
+<script src="/openpsico/sims.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   Motor de la página: cursor, revelado, riel y lienzos.
+   El de /lateralus sin el widget: sólo pide cuadros a lo que está a la vista.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function(){
+  'use strict';
+  const SIS = window.__SIS || {};
+  const DPR = Math.min(devicePixelRatio || 1, 2);
+  const FINO = matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const QUIETO = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  if(!FINO || innerWidth < 900){ const h = document.getElementById('hint'); if(h) h.textContent = 'DESLIZA PARA GIRAR EL CEREBRO · TÓCALO PARA ESTIMULAR ↑'; }
+
+  /* ── Cursor ───────────────────────────────────────────────────────── */
+  if(FINO){
+    const dot = document.querySelector('.cur-dot'), ring = document.querySelector('.cur-ring');
+    let dx=innerWidth/2, dy=innerHeight/2, rx=dx, ry=dy, vivo=false;
+    dot.style.transform = ring.style.transform = 'translate(-100px,-100px)';
+    addEventListener('pointermove', e=>{
+      dx = e.clientX; dy = e.clientY;
+      dot.style.transform = 'translate(' + dx + 'px,' + dy + 'px) translate(-50%,-50%)';
+      if(!vivo){ vivo = true; rx = dx; ry = dy; document.body.classList.add('cur-on'); }
+      ring.classList.toggle('act', !!e.target.closest('[data-hover],a,button,summary'));
+    }, {passive:true});
+    addEventListener('pointerleave', ()=>document.body.classList.remove('cur-on'), {passive:true});
+    (function anillo(){
+      rx += (dx-rx)*.18; ry += (dy-ry)*.18;
+      ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%)';
+      requestAnimationFrame(anillo);
+    })();
+  }
+
+  /* ── Revelado escalonado ──────────────────────────────────────────── */
+  const grupos = new Map();
+  document.querySelectorAll('.rv').forEach(el=>{
+    const p = el.parentElement;
+    const n = grupos.get(p) || 0;
+    grupos.set(p, n+1);
+    if(n) el.style.transitionDelay = Math.min(n*70, 350) + 'ms';
+  });
+  const ioRev = new IntersectionObserver(es=>{
+    for(const e of es) if(e.isIntersecting){ e.target.classList.add('ok'); ioRev.unobserve(e.target); }
+  }, { rootMargin:'0px 0px -10% 0px', threshold:.03 });
+  document.querySelectorAll('.rv,.cab').forEach(el=>ioRev.observe(el));
+  /* Seguro: nada puede quedar invisible si el observador no alcanza a disparar. */
+  setTimeout(()=>document.querySelectorAll('.rv:not(.ok),.cab:not(.ok)').forEach(el=>{
+    const r = el.getBoundingClientRect();
+    if(r.top < innerHeight && r.bottom > 0) el.classList.add('ok');
+  }), 2500);
+
+  /* ── Riel, rótulo y avance ────────────────────────────────────────── */
+  const zonas = [...document.querySelectorAll('[data-rotulo]')];
+  const riel = document.getElementById('riel');
+  const rot = document.getElementById('rot');
+  const prog = document.getElementById('prog');
+  zonas.forEach((z,i)=>{
+    if(!z.id) z.id = 'cap' + i;
+    const a = document.createElement('a');
+    a.href = '#' + z.id;
+    a.setAttribute('aria-label', z.dataset.rotulo);
+    a.innerHTML = '<i></i>';
+    riel.appendChild(a);
+  });
+  const puntos = [...riel.children];
+  const tapa = document.getElementById('tapa');
+  const tapaW = tapa && tapa.querySelector('.wrap');
+
+  let pide = false;
+  function alScroll(){
+    if(pide) return;
+    pide = true;
+    requestAnimationFrame(()=>{
+      pide = false;
+      const alto = document.documentElement.scrollHeight - innerHeight;
+      prog.style.width = (alto > 0 ? (scrollY/alto)*100 : 0) + '%';
+      let act = 0;
+      for(let i=0;i<zonas.length;i++)
+        if(zonas[i].getBoundingClientRect().top <= innerHeight*.42) act = i;
+      if(rot.textContent !== zonas[act].dataset.rotulo) rot.textContent = zonas[act].dataset.rotulo;
+      puntos.forEach((p,i)=>p.classList.toggle('on', i === act));
+      if(tapaW && innerWidth >= 900){
+        const y = Math.min(scrollY, innerHeight);
+        tapaW.style.transform = 'translate3d(0,' + (y*.14) + 'px,0)';
+        tapaW.style.opacity = String(Math.max(0, 1 - y/(innerHeight*.8)));
+      }
+    });
+  }
+  addEventListener('scroll', alScroll, {passive:true});
+  addEventListener('resize', alScroll, {passive:true});
+  alScroll();
+
+  /* ── Lienzos ──────────────────────────────────────────────────────── */
+  const vivos = [];
+  document.querySelectorAll('canvas[data-sim]').forEach(cv=>{
+    const base = SIS[cv.dataset.sim];
+    if(!base) return;
+    vivos.push({ cv, sis: Object.create(base), caja: cv.parentElement,
+                 listo:false, aLaVista:false, W:0, H:0,
+                 m:{ x:0, y:0, dentro:false, movido:false } });
+  });
+
+  function medir(v){
+    const W = v.cv.offsetWidth, H = v.cv.offsetHeight;
+    if(!W || !H) return false;
+    v.cv.width = Math.round(W*DPR);
+    v.cv.height = Math.round(H*DPR);
+    v.ctx = v.cv.getContext('2d');
+    v.ctx.setTransform(DPR,0,0,DPR,0,0);
+    v.sis.datos = v.cv.dataset;
+    v.W = W; v.H = H;
+    return true;
+  }
+
+  vivos.forEach(v=>{
+    /* Se escucha en el CONTENEDOR: en la portada el velo cubre el lienzo. */
+    const leer = e => {
+      const r = v.cv.getBoundingClientRect();
+      if(!r.width) return;
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      if(x < 0 || y < 0 || x > r.width || y > r.height){ v.m.dentro = false; return; }
+      v.m.x = x; v.m.y = y; v.m.dentro = true; v.m.movido = true;
+    };
+    v.caja.addEventListener('pointermove', leer, {passive:true});
+    v.caja.addEventListener('pointerdown', leer, {passive:true});
+    v.caja.addEventListener('pointerleave', ()=>{ v.m.dentro = false; }, {passive:true});
+    v.caja.addEventListener('pointerup', e=>{ if(e.pointerType !== 'mouse') setTimeout(()=>{ v.m.dentro = false; }, 900); }, {passive:true});
+  });
+
+  const ioSim = new IntersectionObserver(es=>{
+    for(const e of es){
+      const v = vivos.find(x => x.cv === e.target);
+      if(v) v.aLaVista = e.isIntersecting;
+    }
+    arrancar();
+  }, { rootMargin:'160px 0px' });
+  vivos.forEach(v=>ioSim.observe(v.cv));
+
+  let corriendo = false, ultimo = 0, congelar = false;
+  function bucle(t){
+    const dt = Math.min(.05, (t - ultimo)/1000) || .016;
+    ultimo = t;
+    let alguno = false;
+    for(const v of vivos){
+      if(!v.aLaVista || v.cv.dataset.apagado === '1') continue;
+      alguno = true;
+      if(!v.listo){ if(!medir(v)) continue; v.sis.init(v.W, v.H); v.listo = true; }
+      v.sis.frame(dt, v.ctx, v.W, v.H, v.m);
+      v.m.movido = false;
+    }
+    if(!alguno || congelar){ corriendo = false; return; }
+    requestAnimationFrame(bucle);
+  }
+  function arrancar(){
+    if(corriendo) return;
+    if(!vivos.some(v=>v.aLaVista && v.cv.dataset.apagado !== '1')) return;
+    corriendo = true; ultimo = performance.now();
+    requestAnimationFrame(bucle);
+  }
+  addEventListener('visibilitychange', ()=>{ if(!document.hidden) arrancar(); });
+
+  /* Al cambiar el ancho se vuelve a medir; los cambios sólo de alto (la barra
+     de direcciones del móvil que aparece y se va) no reinician los sistemas. */
+  let remedir, anchoPrevio = innerWidth;
+  addEventListener('resize', ()=>{
+    if(innerWidth === anchoPrevio) return;
+    anchoPrevio = innerWidth;
+    clearTimeout(remedir);
+    remedir = setTimeout(()=>{ vivos.forEach(v=>{ v.listo = false; }); arrancar(); }, 180);
+  }, {passive:true});
+  document.fonts && document.fonts.ready.then(()=>{ vivos.forEach(v=>{ v.listo=false; }); arrancar(); });
+  arrancar();
+  if(QUIETO) setTimeout(()=>{ congelar = true; }, 1500);
+
+  /* ── Datos vivos de las tarjetas ──────────────────────────────────────
+     Los dos se miden en el navegador del visitante; ninguno es un número
+     escrito a mano. */
+  const enLinea = document.getElementById('enLinea');
+  if(enLinea){
+    const pinta = () => {
+      enLinea.textContent = navigator.onLine ? 'EN LÍNEA' : 'SIN CONEXIÓN';
+      enLinea.classList.toggle('off', !navigator.onLine);
+    };
+    pinta();
+    addEventListener('online', pinta); addEventListener('offline', pinta);
+  }
+  const vel = document.getElementById('velCorr');
+  if(vel){
+    const medirVel = () => {
+      /* Corrige un PHQ-9 completo —suma de nueve ítems y banda de severidad—
+         con respuestas que cambian en cada vuelta, durante ~150 ms. */
+      const R = new Uint8Array(9);
+      let n = 0, basura = 0;
+      const t0 = performance.now();
+      while(performance.now() - t0 < 150){
+        for(let k=0;k<2000;k++){
+          let tot = 0;
+          for(let j=0;j<9;j++){ R[j] = ((n*(j+7)) >> j) & 3; tot += R[j]; }
+          basura += tot < 5 ? 0 : tot < 10 ? 1 : tot < 15 ? 2 : tot < 20 ? 3 : 4;
+          n++;
+        }
+      }
+      const porSeg = n / ((performance.now() - t0)/1000);
+      vel.textContent = porSeg >= 1e6
+        ? (porSeg/1e6).toFixed(1).replace('.',',') + ' millones'
+        : Math.round(porSeg).toLocaleString('es-CL');
+      return basura;
+    };
+    new IntersectionObserver((es,io)=>{
+      if(es.some(e=>e.isIntersecting)){ io.disconnect(); setTimeout(medirVel, 250); }
+    }).observe(vel);
+  }
+})();
+</script>
+<script type="module" src="/openpsico/cerebro3d.js"></script>
+</body>
+</html>

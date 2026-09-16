@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0806">
+  <script>
+  /* Tema antes del primer pixel. chrome.js va con defer y llegaría tarde: sin
+     esto la página pinta oscura y salta al claro. Comparte la preferencia con
+     el home ('bn-tema'); el modo va en data-mode porque data-theme ya es la
+     paleta de acento del lab. */
+  (function(){var t;try{t=localStorage.getItem('bn-tema');}catch(e){}
+  if(!({dark:1,light:1})[t])t='dark';document.documentElement.dataset.mode=t;})();
+  </script>
+  <script>(function(){try{var t=localStorage.getItem('nm-theme');
+    if(t&&['amber','lilac','magenta','blue','jade','aurora','nova'].indexOf(t)>-1)
+      document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <title>Reacciones químicas cotidianas: guía resuelta — Lab — B&N SOLUTIONS</title>
+  <meta name="description" content="Combustión, óxido-reducción, ozono, lluvia ácida y reacciones industriales: las cinco preguntas resueltas, con simulaciones en vivo para ver por qué pasa cada cosa.">
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://bnsolutions.cl/lab/quimica-guia">
+  <meta property="og:title" content="Reacciones químicas cotidianas: guía resuelta — Lab">
+  <meta property="og:description" content="Combustión, óxido-reducción, ozono, lluvia ácida y reacciones industriales: las cinco preguntas resueltas, con simulaciones en vivo.">
+<meta property="og:image" content="https://www.bnsolutions.cl/og-2026.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.bnsolutions.cl/og-2026.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="/lab.js" defer></script>
+  <script src="/chrome.js" defer></script>
+  <style>
+    /* ── Temas ────────────────────────────────────────────────────────────
+       El acento no es solo un color de detalle: cada tema reencuadra el negro
+       del fondo, el tinte de los bordes y la temperatura de los blancos. Por eso
+       cambiar de tema se siente como cambiar de atmósfera y no como repintar
+       botones. --accent-rgb existe para poder usar el acento con transparencia.
+       --amber* se mantienen como alias: hay ~50 usos repartidos por la hoja. */
+    :root,[data-theme="amber"]{
+      --accent:#e8eaee;      --accent-rgb:232 234 238;
+      --accent-warm:#c9ced6; --accent-deep:#9aa3af;
+      --rust:#c2410c;        --nebula:#dc2626;
+      --accent-pale:#f4f5f7; --on-accent:#0a0b0d;
+      --bg:#000000; --bg-2:#060708; --surface:#0b0d10; --surface-2:#12151a;
+      --border:rgba(232,234,238,0.08); --border-2:rgba(232,234,238,0.16);
+      --text:#f4f5f7; --text-2:#c9ced6; --text-3:rgba(244,245,247,.5); --text-dim:rgba(244,245,247,.3);
+    }
+    [data-theme="lilac"]{
+      --accent:#b98cff;      --accent-rgb:185 140 255;
+      --accent-warm:#a78bfa; --accent-deep:#7c3aed;
+      --rust:#6d28d9;        --nebula:#e879f9;
+      --accent-pale:#ded0ff; --on-accent:#12081f;
+      --bg:#050410; --bg-2:#0a0818; --surface:#100d1e; --surface-2:#171326;
+      --border:rgba(215,200,255,0.09); --border-2:rgba(215,200,255,0.17);
+      --text:#efeaf8; --text-2:#b0a8c4; --text-3:#6a6280; --text-dim:#494360;
+    }
+    [data-theme="magenta"]{
+      --accent:#ff5da2;      --accent-rgb:255 93 162;
+      --accent-warm:#ff7ab8; --accent-deep:#db2777;
+      --rust:#be185d;        --nebula:#f43f5e;
+      --accent-pale:#ffc2da; --on-accent:#1f0512;
+      --bg:#0a0308; --bg-2:#12060d; --surface:#1a0a13; --surface-2:#22101a;
+      --border:rgba(255,205,230,0.09); --border-2:rgba(255,205,230,0.17);
+      --text:#f8e9f1; --text-2:#c2a4b4; --text-3:#7a5f6c; --text-dim:#55404b;
+    }
+    [data-theme="blue"]{
+      --accent:#5aa8ff;      --accent-rgb:90 168 255;
+      --accent-warm:#e8eaee; --accent-deep:#9aa3af;
+      --rust:#0369a1;        --nebula:#22d3ee;
+      --accent-pale:#c2ddff; --on-accent:#04101f;
+      --bg:#020509; --bg-2:#050b14; --surface:#08111c; --surface-2:#0d1826;
+      --border:rgba(190,220,255,0.09); --border-2:rgba(190,220,255,0.17);
+      --text:#e8f0fa; --text-2:#9fb2c8; --text-3:#5c6b7d; --text-dim:#3e4a58;
+    }
+    /* Temas de degradado: acento, cálido y óxido son tres tonos distintos, así el
+       planeta (que mezcla los tres en los puntos de tierra) se ve degradado solo.
+       --accent-grad es para las superficies que sí admiten gradiente. */
+    [data-theme="aurora"]{
+      --accent:#7cf5d0;      --accent-rgb:124 245 208;
+      --accent-warm:#7aa2ff; --accent-deep:#4f46e5;
+      --rust:#b98cff;        --nebula:#f0abfc;
+      --accent-pale:#d6fff2; --on-accent:#04211a;
+      --accent-grad:linear-gradient(135deg,#7cf5d0 0%,#7aa2ff 52%,#b98cff 100%);
+      --bg:#02070c; --bg-2:#050e16; --surface:#08161f; --surface-2:#0d2029;
+      --border:rgba(200,240,255,0.09); --border-2:rgba(200,240,255,0.17);
+      --text:#e8f6f2; --text-2:#9fbcb8; --text-3:#5a7370; --text-dim:#3e5250;
+    }
+    [data-theme="nova"]{
+      --accent:#e8eaee;      --accent-rgb:232 234 238;
+      --accent-warm:#ff5da2; --accent-deep:#db2777;
+      --rust:#b98cff;        --nebula:#f0abfc;
+      --accent-pale:#ffd9e8; --on-accent:#1f0a14;
+      --accent-grad:linear-gradient(135deg,#e8eaee 0%,#ff5da2 54%,#b98cff 100%);
+      --bg:#08040a; --bg-2:#100714; --surface:#180b1d; --surface-2:#201026;
+      --border:rgba(255,215,240,0.09); --border-2:rgba(255,215,240,0.17);
+      --text:#f7eaf4; --text-2:#bda6b8; --text-3:#756070; --text-dim:#524250;
+    }
+    [data-theme="jade"]{
+      --accent:#4ee7a8;      --accent-rgb:78 231 168;
+      --accent-warm:#34d399; --accent-deep:#059669;
+      --rust:#047857;        --nebula:#22d3ee;
+      --accent-pale:#bff5de; --on-accent:#04170f;
+      --bg:#020705; --bg-2:#050d0a; --surface:#08150f; --surface-2:#0d1e16;
+      --border:rgba(200,255,230,0.09); --border-2:rgba(200,255,230,0.17);
+      --text:#e6f7ef; --text-2:#9dbcae; --text-3:#597268; --text-dim:#3d5148;
+    }
+    :root{
+      --amber:var(--accent); --amber-warm:var(--accent-warm); --amber-deep:var(--accent-deep);
+      --accent-grad:linear-gradient(135deg,var(--accent),var(--accent-warm));
+      /* El cambio de tema se cruza en vez de saltar. */
+      transition:--accent 0s;
+    }
+    body,nav,.hud-cta,#hudCard,.trans-btn,.observation{
+      transition:background-color 0.55s ease,border-color 0.55s ease,color 0.55s ease;
+    }
+    /* NAV — like observatory control panel */
+    nav.site-nav{
+      position:fixed;top:1.25rem;left:50%;transform:translateX(-50%);
+      display:flex;align-items:center;gap:0;
+      background:rgba(10,8,6,0.82);
+      backdrop-filter:blur(18px) saturate(150%);
+      -webkit-backdrop-filter:blur(18px) saturate(150%);
+      border:1px solid var(--border);
+      border-radius:3px;
+      padding:0.35rem;
+      z-index:50;
+      font-family:'IBM Plex Mono',monospace;
+    }
+    nav.site-nav a{
+      padding:0.55rem 0.95rem;
+      color:var(--text-2);
+      text-decoration:none;
+      font-size:0.68rem;
+      font-weight:500;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      transition:color 0.3s,background 0.3s;
+      border-radius:2px;
+    }
+    nav.site-nav a:hover{color:var(--amber);background:rgba(232,234,238,0.08);}
+    nav.site-nav a.dot{
+      width:6px;height:6px;border-radius:50%;
+      background:var(--amber);
+      padding:0;margin:0 0.35rem;
+      align-self:center;
+      animation:blink 2s infinite;
+      display:inline-block;
+    }
+    /* ── Selector de color ───────────────────────────────────────────────
+       Colapsado a un solo punto para no cargar la barra. En escritorio se abre
+       al pasar el mouse (o con foco de teclado); en táctil, donde no hay hover,
+       se abre tocando y se cierra tocando fuera. */
+    .theme-pick{position:relative;margin-left:0.6rem;padding-left:0.7rem;
+      border-left:1px solid var(--border-2);display:flex;align-items:center;}
+    .theme-trigger{
+      width:17px;height:17px;padding:0;border-radius:50%;cursor:none;
+      background:none;border:0;position:relative;
+      transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+    .theme-trigger i{
+      position:absolute;inset:0;border-radius:50%;
+      background:var(--accent-grad);
+      box-shadow:0 0 0 1px rgb(var(--accent-rgb)/0.55),0 0 12px rgb(var(--accent-rgb)/0.45);
+      transition:box-shadow 0.35s ease;
+    }
+    .theme-pick.open .theme-trigger{transform:scale(1.14);}
+    .theme-pick.open .theme-trigger i{box-shadow:0 0 0 1px var(--accent),0 0 18px rgb(var(--accent-rgb)/0.7);}
+
+    .theme-panel{
+      position:absolute;top:calc(100% + 14px);right:-10px;z-index:60;
+      display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+      padding:0.7rem 0.85rem 0.6rem;
+      background:rgb(var(--accent-rgb)/0.04);
+      border:1px solid var(--border-2);
+      opacity:0;visibility:hidden;transform:translateY(-8px) scale(0.96);
+      transform-origin:top right;pointer-events:none;
+      transition:opacity 0.32s ease,transform 0.42s cubic-bezier(0.16,1,0.3,1),visibility 0s linear 0.32s;
+    }
+    .theme-pick.open .theme-panel{
+      opacity:1;visibility:visible;transform:none;pointer-events:auto;
+      transition:opacity 0.32s ease,transform 0.42s cubic-bezier(0.16,1,0.3,1),visibility 0s;
+    }
+    /* Puente invisible: el mouse cruza el hueco sin que el panel se cierre. */
+    .theme-panel::before{content:'';position:absolute;top:-16px;left:0;right:0;height:16px;}
+
+    .theme-swatches{display:flex;align-items:center;gap:0.5rem;}
+    .theme-swatches button{
+      width:15px;height:15px;padding:0;border:0;background:none;cursor:none;
+      position:relative;border-radius:50%;
+      opacity:0;transform:translateY(-6px) scale(0.7);
+      transition:opacity 0.3s ease,transform 0.44s cubic-bezier(0.16,1,0.3,1);
+    }
+    /* Entran escalonados: da la sensación de que se despliegan, no de que aparecen */
+    .theme-pick.open .theme-swatches button{opacity:1;transform:none;}
+    .theme-pick.open .theme-swatches button:nth-child(1){transition-delay:0.02s}
+    .theme-pick.open .theme-swatches button:nth-child(2){transition-delay:0.05s}
+    .theme-pick.open .theme-swatches button:nth-child(3){transition-delay:0.08s}
+    .theme-pick.open .theme-swatches button:nth-child(4){transition-delay:0.11s}
+    .theme-pick.open .theme-swatches button:nth-child(5){transition-delay:0.14s}
+    .theme-pick.open .theme-swatches button:nth-child(6){transition-delay:0.17s}
+    .theme-pick.open .theme-swatches button:nth-child(7){transition-delay:0.20s}
+    .theme-swatches button i{
+      position:absolute;inset:0;border-radius:50%;
+      background:var(--sw);
+      box-shadow:0 0 0 1px rgba(0,0,0,0.5);
+      transition:transform 0.35s cubic-bezier(0.16,1,0.3,1),box-shadow 0.35s ease;
+    }
+    .theme-swatches button:hover i{transform:scale(1.28);box-shadow:0 0 0 1px rgba(0,0,0,0.5),0 0 14px var(--glow);}
+    .theme-swatches button[aria-pressed="true"] i{
+      transform:scale(1.1);
+      box-shadow:0 0 0 2px var(--bg-2),0 0 0 3.5px var(--glow),0 0 16px var(--glow);
+    }
+    .theme-swatches button:focus-visible{outline:2px solid var(--accent);outline-offset:4px;}
+
+    .theme-name{
+      font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:0.16em;
+      text-transform:uppercase;color:var(--text-3);min-height:0.8em;
+      transition:color 0.3s ease;
+    }
+    .theme-pick.open .theme-name{color:var(--accent);}
+
+    /* Táctil: sin hover, el panel se abre tocando y se agranda para el dedo. */
+    @media(hover:none),(max-width:640px){
+      /* Anclado a la pantalla y no al disparador: el selector vive al borde
+         derecho de la barra y centrarlo ahí dejaba los últimos colores fuera. */
+      .theme-panel{position:fixed;top:4.4rem;left:50%;right:auto;
+        transform:translate(-50%,-8px) scale(0.96);
+        transform-origin:top center;padding:0.6rem 0.7rem 0.55rem;
+        background:var(--surface);}
+      .theme-pick.open .theme-panel{transform:translate(-50%,0) scale(1);}
+      .theme-panel::before{display:none;}
+      /* Punto de 22px dentro de un blanco táctil de 40px */
+      .theme-swatches{gap:0.1rem;}
+      .theme-swatches button{width:40px;height:40px;}
+      .theme-swatches button i{inset:9px;}
+      .theme-trigger{width:20px;height:20px;}
+      .theme-name{margin-top:0.15rem;}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .theme-panel,.theme-swatches button,.theme-trigger,.theme-trigger i{transition:none;}
+      .theme-pick.open .theme-swatches button{transition-delay:0s;}
+    }
+
+    .lang-toggle{
+      margin-left:0.15rem;
+      padding:0.4rem 0.7rem;
+      background:rgb(var(--accent-rgb)/0.08);
+      border:1px solid var(--border-2);
+      border-radius:2px;
+      color:var(--amber);
+      font-family:'IBM Plex Mono',monospace;
+      font-size:0.58rem;
+      font-weight:600;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      cursor:none;
+      transition:all 0.3s;
+    }
+    .lang-toggle:hover{
+      background:rgb(var(--accent-rgb)/0.18);
+      border-color:var(--amber);
+    }
+    .lang-toggle span{opacity:0.4;}
+    .lang-toggle span.active{opacity:1;color:var(--text);}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+    .container{
+      max-width:1120px;
+      margin:0 auto;
+      padding:0 2rem;
+    }
+
+
+    /* ── El nav en móvil ────────────────────────────────────────────────
+       Seis enlaces más idioma y color no caben en 360px: la barra medía 514px
+       y se cortaba por los dos lados. Una tira que se desliza tampoco estaba
+       a la altura del resto. Ahora la barra queda mínima (menú + idioma +
+       color) y los MISMOS enlaces se convierten en una hoja a pantalla
+       completa: cero markup duplicado, solo otra forma de mostrarlos. */
+    nav.site-nav .nav-links{ display:flex; align-items:center; min-width:0; }
+    .nav-menu{ display:none; }
+
+    @media(max-width:768px){
+      nav.site-nav{
+        top:0.6rem; left:0.6rem; right:0.6rem; transform:none; width:auto;
+        gap:0.2rem; padding:0 0.2rem; justify-content:space-between;
+        /* El backdrop-filter convierte al nav en bloque contenedor de sus hijos
+           position:fixed, así que la hoja resolvía inset:0 contra la BARRA y
+           salía de 369×44 en vez de ocupar la pantalla. El desenfoque se muda
+           a un pseudo-elemento, que no contiene a nadie. */
+        background:transparent; border:0;
+        backdrop-filter:none; -webkit-backdrop-filter:none;
+      }
+      /* Sin fondo ni borde en móvil: la barra son solo sus controles flotando
+         sobre el contenido. El pseudo-elemento sigue existiendo pero vacío,
+         porque es el que evita que el nav sea bloque contenedor de la hoja. */
+      /* Sin caja: ni fondo sólido, ni borde, ni desenfoque. Solo un velo que
+         se desvanece hacia abajo, porque sin NADA el texto de la página cruzaba
+         por encima de los botones y no se leía ninguno de los dos. El
+         pseudo-elemento además es lo que evita que el nav sea bloque contenedor
+         de la hoja del menú. */
+      nav.site-nav::before{
+        content:'';position:absolute;left:0;right:0;top:-0.6rem;bottom:-1.6rem;
+        z-index:0;border:0;pointer-events:none;
+        background:linear-gradient(to bottom,
+          rgba(5,4,3,0.92) 0%, rgba(5,4,3,0.80) 46%, rgba(5,4,3,0) 100%);
+      }
+      nav.menu-open::before{ background:none; }
+      nav.site-nav > *:not(.nav-links){ position:relative; z-index:1; }
+
+      /* Botón de menú: dos trazos que se cruzan al abrir */
+      .nav-menu{
+        display:flex; flex-direction:column; justify-content:center; gap:5px;
+        width:44px; height:44px; padding:0 0 0 0.55rem;
+        background:none; border:0; cursor:pointer;
+      }
+      .nav-menu i{
+        display:block; width:19px; height:1.5px; background:var(--text-2);
+        transition:transform .42s cubic-bezier(.16,1,.3,1), opacity .25s ease,
+                   background-color .3s ease;
+      }
+      nav.menu-open .nav-menu i{ background:var(--accent); }
+      nav.menu-open .nav-menu i:first-child{ transform:translateY(3.25px) rotate(45deg); }
+      nav.menu-open .nav-menu i:last-child{ transform:translateY(-3.25px) rotate(-45deg); }
+
+      /* La hoja: los mismos <a>, a pantalla completa */
+      nav.site-nav .nav-links{
+        position:fixed; inset:0; z-index:-1;
+        flex-direction:column; align-items:flex-start; justify-content:center;
+        gap:0.15rem; padding:0 2rem;
+        background:rgba(8,6,5,0.93);
+        -webkit-backdrop-filter:blur(26px) saturate(140%);
+        backdrop-filter:blur(26px) saturate(140%);
+        opacity:0; visibility:hidden; pointer-events:none;
+        transition:opacity .45s ease, visibility .45s;
+        counter-reset:navi;
+      }
+      nav.menu-open .nav-links{
+        opacity:1; visibility:visible; pointer-events:auto;
+      }
+      nav.site-nav .nav-links a{
+        font-family:'Fraunces',serif; font-weight:400; text-transform:none;
+        font-size:clamp(1.9rem,8.5vw,2.6rem); letter-spacing:-0.02em;
+        line-height:1.18; color:var(--text); padding:0.42rem 0;
+        min-height:44px; display:flex; align-items:baseline; gap:0.9rem;
+        opacity:0; transform:translateY(14px);
+        transition:opacity .5s ease, transform .6s cubic-bezier(.16,1,.3,1), color .3s ease;
+      }
+      nav.menu-open .nav-links a{ opacity:1; transform:none; }
+      /* Cada enlace entra un poco después que el anterior */
+      nav.menu-open .nav-links a:nth-child(1){ transition-delay:.06s; }
+      nav.menu-open .nav-links a:nth-child(2){ transition-delay:.11s; }
+      nav.menu-open .nav-links a:nth-child(3){ transition-delay:.16s; }
+      nav.menu-open .nav-links a:nth-child(4){ transition-delay:.21s; }
+      nav.menu-open .nav-links a:nth-child(5){ transition-delay:.26s; }
+      nav.menu-open .nav-links a:nth-child(6){ transition-delay:.31s; }
+      nav.site-nav .nav-links a::before{
+        counter-increment:navi; content:"0" counter(navi);
+        font-family:'IBM Plex Mono',monospace; font-size:0.72rem; font-weight:500;
+        letter-spacing:0.18em; color:rgb(var(--accent-rgb)/0.7);
+        transform:translateY(-0.35em);
+      }
+      nav.site-nav .nav-links a.is-here{ color:var(--accent); }
+      nav.site-nav .nav-links a:hover{ background:none; }
+
+      /* Controles: siempre alcanzables, dentro y fuera de la hoja */
+      /* Menú a la izquierda; idioma y color agrupados a la derecha. Con
+         space-between a secas el EN/ES quedaba flotando en el medio. */
+      nav.site-nav .lang-toggle{
+        flex:0 0 auto; display:flex; align-items:center; white-space:nowrap;
+        min-height:44px; padding:0 0.55rem; font-size:0.72rem; margin-left:auto;
+      }
+      nav.site-nav .theme-pick{ flex:0 0 auto; }
+      /* Área táctil grande sin agrandar el punto: el <i> va con inset:0, así
+         que estirar el botón inflaba el círculo hasta parecer otra cosa. */
+      nav.site-nav .theme-trigger{ width:44px; height:44px; min-width:44px; min-height:44px;
+        display:flex; align-items:center; justify-content:center; }
+      nav.site-nav .theme-trigger i{ position:static; inset:auto; width:17px; height:17px; flex:0 0 auto; }
+      nav.site-nav .theme-swatches{ gap:0.2rem; }
+      nav.site-nav .theme-swatches button{ width:40px; height:40px;
+        display:flex; align-items:center; justify-content:center; }
+      nav.site-nav .theme-swatches button i{ position:static; inset:auto; width:18px; height:18px; flex:0 0 auto; }
+      nav.site-nav .theme-name{ font-size:0.72rem; }
+    }
+    @media(max-width:768px) and (prefers-reduced-motion:reduce){
+      nav.site-nav .nav-links a{ transition:none; opacity:1; transform:none; }
+      .nav-menu i{ transition:none; }
+    }
+
+    @media(hover:hover) and (pointer:fine){
+      body,a,button{cursor:none!important;}
+    }
+
+    /* === CUSTOM CURSOR === */
+    .cursor-dot,.cursor-ring{
+      position:fixed;
+      pointer-events:none;
+      z-index:999;
+      transform:translate(-50%,-50%);
+      will-change:left,top,width,height;
+    }
+    .cursor-dot{
+      width:6px;height:6px;
+      background:var(--amber);
+      border-radius:50%;
+      box-shadow:0 0 10px rgb(var(--accent-rgb)/0.8);
+      opacity:0;
+      transition:width 0.3s,height 0.3s,opacity 0.2s;
+    }
+    .cursor-ring{
+      width:34px;height:34px;
+      border:1px solid rgb(var(--accent-rgb)/0.45);
+      border-radius:50%;
+      opacity:0;
+      transition:width 0.4s cubic-bezier(0.16,1,0.3,1),height 0.4s cubic-bezier(0.16,1,0.3,1),border-color 0.35s,background 0.35s,box-shadow 0.35s,opacity 0.2s;
+    }
+    /* Cursor-ring has no pseudo decorations — clean circle only */
+    .cursor-ring::before,.cursor-ring::after{display:none;}
+
+    /* Orbit container (positioned by JS, does not rotate itself) */
+    .cursor-orbit{
+      position:fixed;
+      pointer-events:none;
+      z-index:998;
+      width:54px;height:54px;
+      transform:translate(-50%,-50%);
+      will-change:left,top,width,height;
+      transition:width 0.45s cubic-bezier(0.16,1,0.3,1),height 0.45s cubic-bezier(0.16,1,0.3,1),opacity 0.25s;
+    }
+    /* Inner rotating layers — concentric orbits like a mini solar system */
+    .orbit-layer{
+      position:absolute;
+      border-radius:50%;
+      opacity:0;
+      transition:opacity 0.5s ease;
+      border:1px dashed rgb(var(--accent-rgb)/0.12);
+    }
+    /* Outer orbit — slow (like outer planets) */
+    .orbit-layer-1{
+      inset:0;
+      animation:orbit-cw 9s linear infinite;
+    }
+    /* Middle orbit — medium speed, opposite direction */
+    .orbit-layer-2{
+      inset:22%;
+      animation:orbit-ccw 5.5s linear infinite;
+      border-color:rgb(var(--accent-rgb)/0.1);
+    }
+    /* Inner orbit — fastest (like Mercury) */
+    .orbit-layer-3{
+      inset:42%;
+      animation:orbit-cw 3s linear infinite;
+      border-color:rgb(var(--accent-rgb)/0.08);
+    }
+    @keyframes orbit-cw{to{transform:rotate(360deg);}}
+    @keyframes orbit-ccw{to{transform:rotate(-360deg);}}
+
+    /* Orbit bodies (planets) — each on its orbit edge */
+    .orbit-layer::before,.orbit-layer::after{
+      content:'';
+      position:absolute;
+      border-radius:50%;
+      background:var(--amber);
+      box-shadow:0 0 8px var(--amber),0 0 2px rgba(255,255,255,0.7);
+    }
+    /* Outer orbit: 2 bodies (12 and 6) */
+    .orbit-layer-1::before{
+      top:-2.5px;left:50%;transform:translateX(-50%);
+      width:4px;height:4px;
+      background:var(--amber);
+    }
+    .orbit-layer-1::after{
+      bottom:-2px;left:50%;transform:translateX(-50%);
+      width:3px;height:3px;
+      background:var(--amber-warm);
+    }
+    /* Middle orbit: 2 bodies (3 and 9) */
+    .orbit-layer-2::before{
+      top:50%;left:-2px;transform:translateY(-50%);
+      width:3px;height:3px;
+      background:var(--amber-warm);
+    }
+    .orbit-layer-2::after{
+      top:50%;right:-2px;transform:translateY(-50%);
+      width:2.5px;height:2.5px;
+      background:var(--accent-pale);
+      box-shadow:0 0 6px var(--accent-pale);
+    }
+    /* Inner orbit: 1 small body (planet Mercury-style) */
+    .orbit-layer-3::before{
+      top:-1.5px;left:50%;transform:translateX(-50%);
+      width:2.5px;height:2.5px;
+      background:#fff;
+      box-shadow:0 0 6px rgb(var(--accent-rgb)/0.9);
+    }
+    .orbit-layer-3::after{display:none;}
+
+    /* Default state: no orbit particles visible */
+
+    /* Hover state — ring expands + all orbit layers visible */
+    .cursor-ring.hover{
+      width:58px;height:58px;
+      border-color:var(--amber);
+      background:rgb(var(--accent-rgb)/0.05);
+      box-shadow:0 0 40px rgb(var(--accent-rgb)/0.2),inset 0 0 18px rgb(var(--accent-rgb)/0.05);
+    }
+    .cursor-dot.hover{
+      width:8px;height:8px;
+      box-shadow:0 0 16px rgb(var(--accent-rgb)/1),0 0 32px rgb(var(--accent-rgb)/0.4);
+    }
+    .cursor-orbit.hover{width:140px;height:140px;}
+    .cursor-orbit.hover .orbit-layer{opacity:1;}
+    ::selection{background:rgb(var(--accent-rgb)/0.25);color:var(--text);}
+    @media(hover:hover) and (pointer:fine){ *,*::before,*::after{cursor:none!important;} }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+    body{font-family:'IBM Plex Sans',-apple-system,sans-serif;background:var(--bg);
+      color:var(--text);-webkit-font-smoothing:antialiased;}
+    a{color:inherit;}
+    .wrap{max-width:900px;margin:0 auto;padding:0 2rem;}
+
+    .top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:6.5rem 0 2rem;
+      font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.16em;
+      text-transform:uppercase;color:var(--text-3);}
+    .top a{color:var(--accent);text-decoration:none;}
+    .top a:hover{text-decoration:underline;}
+
+    /* El canvas manda: entra grande y se queda pegado mientras lees */
+    .hero{padding:1rem 0 3rem;}
+    .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;
+      text-transform:uppercase;color:var(--accent);margin-bottom:1rem;}
+    h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.1rem,6vw,3.6rem);
+      line-height:1.05;letter-spacing:-0.02em;margin-bottom:1.2rem;}
+    .lede{font-size:1.06rem;line-height:1.75;color:var(--text-2);max-width:60ch;}
+
+    .stage{position:relative;width:100%;aspect-ratio:16/10;margin:2.5rem 0 0;
+      background:rgba(0,0,0,0.28);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+      border:1px solid var(--border);overflow:hidden;}
+    .stage canvas{display:block;width:100%;height:100%;}
+    .stage .idx{position:absolute;top:0.7rem;right:0.8rem;font-family:'IBM Plex Mono',monospace;
+      font-size:0.5rem;letter-spacing:0.18em;color:rgb(var(--accent-rgb)/0.75);}
+
+    .blk{padding:3.2rem 0 0;opacity:0;transform:translateY(22px);
+      transition:opacity 0.7s ease,transform 0.7s cubic-bezier(0.16,1,0.3,1);}
+    .blk.in{opacity:1;transform:none;}
+    .blk-h{font-family:'Fraunces',serif;font-weight:400;font-size:1.5rem;
+      letter-spacing:-0.01em;margin-bottom:0.9rem;color:var(--text);}
+    .blk-p{font-size:0.98rem;line-height:1.8;color:var(--text-2);max-width:62ch;}
+
+    .eqs{padding:3.2rem 0 0;}
+    .eq-row{border-top:1px solid var(--border);padding:1.4rem 0;}
+    .eq-row:last-child{border-bottom:1px solid var(--border);}
+    .eq{font-family:'IBM Plex Mono',monospace;font-size:1.02rem;color:var(--accent);
+      margin-bottom:0.6rem;letter-spacing:0.01em;overflow-x:auto;}
+    .eq-note{font-size:0.9rem;line-height:1.75;color:var(--text-3);max-width:62ch;}
+
+    /* Controles */
+    .ctls{display:grid;gap:0.7rem;margin-top:1.2rem;}
+    .ctl{display:grid;grid-template-columns:1fr 200px 62px;align-items:center;gap:1rem;}
+    .ctl-l{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;
+      text-transform:uppercase;color:var(--text-3);}
+    .ctl input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;
+      background:var(--border-2);outline:none;cursor:pointer;}
+    .ctl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;
+      border-radius:50%;background:var(--accent);border:0;cursor:pointer;
+      box-shadow:0 0 0 4px rgb(var(--accent-rgb)/0.14);}
+    .ctl input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;
+      background:var(--accent);border:0;cursor:pointer;}
+    .ctl-v{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--accent);text-align:right;}
+    .ctl-reset{justify-self:start;font-family:'IBM Plex Mono',monospace;font-size:0.55rem;
+      letter-spacing:0.14em;text-transform:uppercase;color:var(--text-3);background:none;
+      border:1px solid var(--border-2);padding:0.4rem 0.7rem;cursor:pointer;
+      transition:color .3s ease,border-color .3s ease;}
+    .ctl-reset:hover{color:var(--accent);border-color:var(--accent);}
+    .hint{margin-top:0.9rem;font-family:'IBM Plex Mono',monospace;font-size:0.55rem;
+      letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);}
+    .hint-touch{display:none;}
+    @media(max-width:640px){
+      /* Etiqueta y valor comparten fila; el deslizador ocupa el ancho completo
+         debajo. Antes se apilaban los tres y el valor quedaba huérfano. */
+      .ctl{grid-template-columns:1fr auto;gap:0.5rem 0.9rem;}
+      .ctl-l{grid-row:1;grid-column:1;font-size:0.72rem;letter-spacing:0.1em;}
+      .ctl-v{grid-row:1;grid-column:2;text-align:right;font-size:0.82rem;}
+      .ctl input[type=range]{grid-row:2;grid-column:1/-1;height:3px;}
+      /* Pulgar más grande: 13px es imposible de agarrar con el dedo */
+      .ctl input[type=range]::-webkit-slider-thumb{width:20px;height:20px;
+        box-shadow:0 0 0 5px rgb(var(--accent-rgb)/0.14);}
+      .ctl input[type=range]::-moz-range-thumb{width:20px;height:20px;}
+      .ctls{gap:1.1rem;margin-top:1.6rem;}
+      .ctl-reset{font-size:0.68rem;padding:0.7rem 1.1rem;min-height:44px;}
+      .eyebrow{font-size:0.72rem;}
+    }
+    /* En pantalla táctil no hay cursor que mover: el aviso cambia, no desaparece */
+    @media(hover:none),(pointer:coarse){
+      .hint-fine{display:none;}
+      .hint-touch{display:block;}
+    }
+    @media(max-width:640px){ .hint{letter-spacing:0.1em;line-height:1.6;} }
+
+    /* Tarjetas de código */
+    .steps{padding-top:3.2rem;}
+    .step{border:1px solid var(--border);margin-top:1.5rem;}
+    .step-head{display:flex;align-items:center;gap:0.8rem;padding:0.8rem 1rem;
+      border-bottom:1px solid var(--border);}
+    .step-n{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.16em;
+      color:rgb(var(--accent-rgb)/0.8);}
+    .step-t{flex:1;font-family:'IBM Plex Sans',sans-serif;font-size:0.82rem;font-weight:600;
+      letter-spacing:0.01em;color:var(--text);}
+    .copy{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.14em;
+      text-transform:uppercase;color:var(--accent);background:rgb(var(--accent-rgb)/0.08);
+      border:1px solid rgb(var(--accent-rgb)/0.35);padding:0.35rem 0.6rem;cursor:pointer;
+      transition:background .3s ease,border-color .3s ease;}
+    .copy:hover{background:rgb(var(--accent-rgb)/0.18);border-color:var(--accent);}
+    .copy.done{color:var(--text);border-color:var(--text-3);}
+    pre.code{margin:0;padding:1rem;overflow-x:auto;background:rgba(0,0,0,0.35);}
+    pre.code code{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;line-height:1.75;
+      color:var(--text-2);white-space:pre;}
+    .step-x{padding:0.95rem 1rem 1.1rem;font-size:0.88rem;line-height:1.75;color:var(--text-3);
+      border-top:1px solid var(--border);}
+
+    .pager{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+      border-top:1px solid var(--border);margin-top:4rem;padding:2rem 0 4rem;
+      font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;
+      text-transform:uppercase;}
+    .pager a{color:var(--accent);text-decoration:none;}
+    .pager a:hover{text-decoration:underline;}
+    .pager .void{color:var(--text-dim);}
+
+    @media(max-width:640px){
+      .wrap{padding:0 1.25rem;}
+      .stage{aspect-ratio:4/3;margin-top:2rem;}
+      .blk{padding-top:2.6rem;}
+      .hero{padding-top:0.5rem;}
+      .lede{font-size:1.02rem;line-height:1.7;}
+      .blk-h{font-size:1.35rem;}
+      .blk-p{font-size:0.96rem;line-height:1.75;}
+      .eqs{padding-top:2.6rem;}
+      .eq{font-size:0.92rem;}
+      .eq-row{padding:1.2rem 0;}
+      .eq-note{font-size:0.88rem;line-height:1.7;}
+      .steps{padding-top:2.6rem;}
+      .step{margin-top:1.1rem;}
+      /* Migas: eran de 9px y quedaban pegadas al borde superior */
+      /* Copiar código: 47×24 es demasiado chico para el dedo */
+      .step-head .copy{min-height:44px;padding:0 0.9rem;font-size:0.72rem;}
+      .step-head{align-items:center;}
+      nav.top{font-size:0.72rem;}
+      nav.top a{min-height:44px;display:inline-flex;align-items:center;}
+      .pager{font-size:0.72rem;padding:1.6rem 0 3rem;}
+      .pager a{min-height:44px;display:inline-flex;align-items:center;}
+      .stage .idx{font-size:0.68rem;}
+      .step-n{font-size:0.72rem;}
+      .ctl-reset{font-size:0.72rem;}
+      .hint{font-size:0.72rem;}
+    }
+    @media(prefers-reduced-motion:reduce){ .blk{opacity:1;transform:none;transition:none;} }
+    /* ── Tema claro ────────────────────────────────────────────────────────
+       El modo vive en data-mode y la paleta de acento sigue en data-theme, así
+       que el visitante conserva el acento que eligió: solo cambia la atmósfera
+       —papel, superficies, bordes y texto—, no su color. */
+    html[data-mode="light"]{
+      --bg:#f7f9fc; --bg-2:#eef2f8; --surface:#ffffff; --surface-2:#f2f5fa;
+      --border:rgba(8,13,24,.10); --border-2:rgba(8,13,24,.20);
+      --text:#080d18; --text-2:rgb(23 36 61/.78);
+      --text-3:rgb(23 36 61/.52); --text-dim:rgb(23 36 61/.34);
+      --on-accent:#ffffff;
+      color-scheme:light;
+    }
+    /* La paleta por defecto es casi blanca (#e8eaee): sobre papel desaparece.
+       Solo esa se reencuadra al azul de marca; las otras seis ya son colores
+       saturados que se sostienen sobre blanco. */
+    /* Superficies que estaban en negro translúcido fijo: sobre papel salían
+       gris sucio. El lienzo del experimento y los bloques de código pasan a
+       superficie clara con borde, que es como se leen en esta atmósfera. */
+    html[data-mode="light"] .stage{
+      background:var(--surface);
+      box-shadow:inset 0 0 0 1px var(--border);
+    }
+    html[data-mode="light"] pre.code{ background:var(--surface-2); }
+    html[data-mode="light"] .exp-shot,
+    html[data-mode="light"] .lab-shot{
+      background:var(--surface);
+      box-shadow:inset 0 0 0 1px var(--border);
+    }
+    html[data-mode="light"] .theme-swatches button i{ box-shadow:0 0 0 1px rgba(8,13,24,.28); }
+    html[data-mode="light"][data-theme="amber"],
+    html[data-mode="light"]:not([data-theme]){
+      --accent:#0a5cff; --accent-rgb:10 92 255;
+      --accent-warm:#1d5bc4; --accent-deep:#0b3fa8;
+      --accent-pale:#5c7aaa;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="top">
+      <a href="/lab">&larr; Todos los experimentos</a>
+      <span>GUÍA · QUÍMICA</span>
+    </nav>
+
+    <header class="hero">
+      <div class="eyebrow">Reacciones químicas cotidianas · 1º medio</div>
+      <h1>La guía de química, resuelta</h1>
+      <p class="lede">Las cinco preguntas se apoyan en una sola idea: <em>quemar algo es transferir electrones</em>. Todo lo demás —el humo, la lluvia ácida, el ozono, el acero— sale de ahí. Empieza moviendo el oxígeno y mira cómo cambia lo que sale por la chimenea.</p>
+
+      <div class="stage"><span class="idx">COMBUSTIÓN</span><canvas id="fuego"></canvas></div>
+      <div class="ctls" id="ctlsFuego"></div>
+      <div class="lectura" id="lecturaFuego"></div>
+      <p class="hint">Con oxígeno de sobra sale dióxido de carbono y agua. Al faltarle, la misma reacción empieza a soltar monóxido de carbono y hollín — y la llama cambia de color.</p>
+    </header>
+
+    <main>
+
+      <div class="aviso">
+        <div class="aviso-t">De dónde sale esta guía</div>
+        <p>La actividad dice «utilice su texto de química, pág. 34–37». Esas páginas del libro fotografiado son de <strong>Unidad 1 · Soluciones químicas</strong>: preparar una solución de hidróxido de sodio, molaridad, dilución, vitamina D y metales pesados en Quintero-Puchuncaví. <strong>No hablan de combustión, óxido-reducción, ozono ni lluvia ácida.</strong> O el profesor usa otra edición, o la referencia de páginas quedó mal. Así que todo lo que sigue está construido desde el currículum de 1º medio, no desde esas páginas — salvo el caso de Quintero, que sí está en la página 37 y calza justo con la pregunta 2.</p>
+      </div>
+
+      <section class="blk">
+        <h2 class="blk-h">1a · Combustible, comburente, combustión</h2>
+        <p class="blk-p">Son tres palabras para tres papeles distintos en la misma reacción. Se confunden porque en la vida diaria decimos «combustible» para todo, pero en química cada una nombra algo preciso.</p>
+
+        <div class="defs">
+          <div class="def">
+            <div class="def-t">Combustible</div>
+            <div class="def-d">Lo que se quema</div>
+            <p class="def-p">La sustancia que entrega electrones y libera energía al oxidarse. Madera, gas, carbón, papel, alcohol. En términos de la pregunta 3: es el <strong>agente reductor</strong>.</p>
+          </div>
+          <div class="def">
+            <div class="def-t">Comburente</div>
+            <div class="def-d">Lo que permite quemar</div>
+            <p class="def-p">La sustancia que acepta esos electrones. Casi siempre es el oxígeno del aire (un 21&nbsp;% de lo que respiras). Es el <strong>agente oxidante</strong>.</p>
+          </div>
+          <div class="def">
+            <div class="def-t">Combustión</div>
+            <div class="def-d">La reacción entre ambos</div>
+            <p class="def-p">Una reacción de óxido-reducción rápida y <strong>exotérmica</strong>: libera energía como calor y luz. La llama que ves es gas tan caliente que emite luz.</p>
+          </div>
+        </div>
+
+        <h3 class="sub-h">Por qué hacen falta los tres a la vez</h3>
+        <p class="blk-p">Falta cualquiera de los tres y no hay fuego. Es lo que se llama el <em>triángulo del fuego</em>, y es exactamente el principio con el que funciona un extintor: no ataca al fuego, le quita un lado al triángulo. Toca un vértice para sacarlo.</p>
+        <div class="stage stage-b"><span class="idx">TRIÁNGULO</span><canvas id="triangulo"></canvas></div>
+        <div class="leyenda" id="legTri"></div>
+        <p class="blk-p">Un extintor de CO<sub>2</sub> desplaza el oxígeno: quita el comburente. El agua baja la temperatura por debajo de la de ignición: quita la energía. Cerrar la llave del gas quita el combustible. Tres formas de apagar lo mismo.</p>
+
+        <div class="resp">
+          <div class="resp-t">Para copiar al cuaderno</div>
+          <p><strong>Combustible:</strong> sustancia que se oxida y libera energía al quemarse (madera, gas natural, carbón, bencina). Es el agente reductor porque cede electrones.</p>
+          <p><strong>Comburente:</strong> sustancia que provoca la combustión al aceptar esos electrones; normalmente el oxígeno (O<sub>2</sub>) del aire. Es el agente oxidante.</p>
+          <p><strong>Combustión:</strong> reacción química de óxido-reducción, rápida y exotérmica, entre un combustible y un comburente, que libera energía en forma de calor y luz. Necesita además una energía de activación (una chispa) para comenzar.</p>
+        </div>
+      </section>
+
+      <section class="blk">
+        <h2 class="blk-h">1b · Un ejemplo, y por qué importa</h2>
+        <p class="blk-p">El más cercano: el gas de la cocina. El gas natural es casi todo metano, CH<sub>4</sub>.</p>
+
+        <div class="rx">CH<sub>4</sub> <span class="fl">+</span> 2&nbsp;O<sub>2</sub> <span class="fl">&rarr;</span> CO<sub>2</sub> <span class="fl">+</span> 2&nbsp;H<sub>2</sub>O <span class="fl">+</span> energía</div>
+        <p class="rx-n">Se lee: una molécula de metano reacciona con dos de oxígeno y produce una de dióxido de carbono y dos de agua. Los números grandes (coeficientes) igualan los átomos a ambos lados; los chicos (subíndices) dicen cuántos átomos tiene cada molécula y <strong>no se pueden cambiar</strong> para cuadrar la ecuación, porque cambiarían la sustancia.</p>
+
+        <h3 class="sub-h">Comprueba que está balanceada</h3>
+        <div class="tabla-caja">
+          <table class="tabla">
+            <tr><th>Átomo</th><th>Reactantes (izquierda)</th><th>Productos (derecha)</th><th>¿Cuadra?</th></tr>
+            <tr><td>Carbono (C)</td><td>1 en CH<sub>4</sub></td><td>1 en CO<sub>2</sub></td><td>Sí</td></tr>
+            <tr><td>Hidrógeno (H)</td><td>4 en CH<sub>4</sub></td><td>4 → 2 × H<sub>2</sub>O</td><td>Sí</td></tr>
+            <tr><td>Oxígeno (O)</td><td>4 → 2 × O<sub>2</sub></td><td>2 en CO<sub>2</sub> + 2 en 2 H<sub>2</sub>O = 4</td><td>Sí</td></tr>
+          </table>
+        </div>
+        <p class="nota-tabla">Esa comprobación es la <strong>ley de conservación de la masa</strong> de Lavoisier: los átomos no se crean ni se destruyen, solo se reordenan. La masa total de los reactantes es igual a la de los productos.</p>
+
+        <h3 class="sub-h">Por qué importa</h3>
+        <p class="blk-p">La combustión es la reacción de la que depende casi toda la energía que usa la humanidad. Cocinar, calefaccionar, mover un auto, generar electricidad en una central térmica, fundir metal: todo es la misma reacción a distintas escalas. También es la reacción que sostiene la vida de otra forma —la <strong>respiración celular</strong> oxida glucosa con oxígeno y produce CO<sub>2</sub> y agua, igual que una llama, pero lenta y controlada por enzimas:</p>
+        <div class="rx">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> <span class="fl">+</span> 6&nbsp;O<sub>2</sub> <span class="fl">&rarr;</span> 6&nbsp;CO<sub>2</sub> <span class="fl">+</span> 6&nbsp;H<sub>2</sub>O <span class="fl">+</span> energía</div>
+        <p class="rx-n">Misma lógica que el metano: un combustible rico en carbono e hidrógeno más oxígeno, y salen los mismos dos productos. Por eso exhalas dióxido de carbono y vapor de agua.</p>
+
+        <div class="resp">
+          <div class="resp-t">Para copiar al cuaderno</div>
+          <p><strong>Ejemplo:</strong> la combustión del metano (gas de cocina): CH<sub>4</sub> + 2 O<sub>2</sub> → CO<sub>2</sub> + 2 H<sub>2</sub>O + energía. El metano es el combustible, el oxígeno el comburente, y se libera calor y luz.</p>
+          <p><strong>Importancia:</strong> de esta reacción sale prácticamente toda la energía que usamos —cocinar, transporte, electricidad, industria— y la misma reacción, en versión lenta y controlada, es la respiración celular que mantiene vivos a los seres vivos.</p>
+        </div>
+      </section>
+
+      <section class="blk">
+        <h2 class="blk-h">2 · Qué sale de quemar carbón y petróleo</h2>
+        <p class="blk-p">Si la combustión fuera perfecta, de un hidrocarburo puro solo saldrían CO<sub>2</sub> y agua. Pero ni el carbón ni el petróleo son puros, y el aire no es solo oxígeno. De ahí salen los otros productos, que son los que causan el daño.</p>
+
+        <div class="tabla-caja">
+          <table class="tabla">
+            <tr><th>Sale</th><th>De dónde viene</th><th>Qué provoca</th></tr>
+            <tr><td>CO<sub>2</sub></td><td>Del carbono del combustible. Es inevitable: es el producto principal.</td><td>Efecto invernadero. No es tóxico, pero retiene calor en la atmósfera.</td></tr>
+            <tr><td>CO</td><td>Combustión incompleta, cuando falta oxígeno.</td><td>Tóxico. Se une a la hemoglobina 200 veces mejor que el oxígeno y asfixia sin que te des cuenta.</td></tr>
+            <tr><td>SO<sub>2</sub></td><td>Del azufre que viene como impureza en el carbón y el petróleo.</td><td>Lluvia ácida y problemas respiratorios.</td></tr>
+            <tr><td>NO<sub>x</sub></td><td>Del nitrógeno del <em>aire</em>, que a más de 1.000&nbsp;°C deja de ser inerte y reacciona.</td><td>Lluvia ácida, ozono troposférico y smog.</td></tr>
+            <tr><td>Hollín (MP<sub>2,5</sub>)</td><td>Carbono que no alcanzó a oxidarse.</td><td>Penetra hasta el fondo del pulmón. Es el contaminante con más muertes atribuidas.</td></tr>
+          </table>
+        </div>
+        <p class="nota-tabla">El NO<sub>x</sub> es el más contraintuitivo: <strong>no viene del combustible</strong>. El nitrógeno es el 78&nbsp;% del aire y normalmente no reacciona con nada, pero a la temperatura de una llama industrial sí lo hace. Por eso una combustión más caliente y más eficiente produce <em>más</em> NO<sub>x</sub>, no menos.</p>
+
+        <h3 class="sub-h">Efectos a largo plazo</h3>
+        <p class="blk-p">Mueve los años y mira qué se acumula. La diferencia entre el CO y el CO<sub>2</sub> es la clave de la pregunta: el monóxido te mata hoy, el dióxido cambia el clima en un siglo.</p>
+        <div class="stage stage-b"><span class="idx">ACUMULACIÓN</span><canvas id="acum"></canvas></div>
+        <div class="ctls" id="ctlsAcum"></div>
+        <p class="blk-p">Los efectos de largo plazo se ordenan así:</p>
+        <div class="defs">
+          <div class="def">
+            <div class="def-t">Décadas a siglos</div>
+            <div class="def-d">Calentamiento global</div>
+            <p class="def-p">El CO<sub>2</sub> permanece en la atmósfera cientos de años. Deja pasar la luz del sol pero retiene el calor que la Tierra devuelve. Sube la temperatura media, se derriten glaciares, sube el nivel del mar.</p>
+          </div>
+          <div class="def">
+            <div class="def-t">Décadas</div>
+            <div class="def-d">Acidificación del océano</div>
+            <p class="def-p">Parte del CO<sub>2</sub> se disuelve en el mar y forma ácido carbónico. El agua se vuelve más ácida y a los organismos con caparazón de carbonato de calcio les cuesta formarlo.</p>
+          </div>
+          <div class="def">
+            <div class="def-t">Años</div>
+            <div class="def-d">Lluvia ácida</div>
+            <p class="def-p">El SO<sub>2</sub> y el NO<sub>x</sub> acidifican la lluvia: acidifica suelos y lagos, mata bosques y corroe metal y piedra caliza.</p>
+          </div>
+          <div class="def">
+            <div class="def-t">Permanente</div>
+            <div class="def-d">Metales pesados</div>
+            <p class="def-p">El carbón trae mercurio, plomo, arsénico y cadmio. No se degradan nunca: se acumulan en suelos y sedimentos y suben por la cadena alimentaria.</p>
+          </div>
+        </div>
+
+        <p class="blk-p">Ese último punto conecta con la página 37 de tu propio libro: el estudio de la Universidad de Playa Ancha en la bahía de <strong>Quintero-Puchuncaví</strong> encontró cadmio, cromo, cobre, manganeso, plomo, vanadio, níquel, zinc y mercurio en el agua, los suelos y los organismos, con el cobre y el vanadio por sobre la norma. Esa bahía concentra una termoeléctrica a carbón y una fundición de cobre: es exactamente lo que describe esta pregunta, ocurriendo en Chile.</p>
+
+        <div class="resp">
+          <div class="resp-t">Para copiar al cuaderno</div>
+          <p><strong>Alteraciones:</strong> la combustión de carbón y petróleo libera CO<sub>2</sub> (gas de efecto invernadero), CO (tóxico, por combustión incompleta), SO<sub>2</sub> (del azufre del combustible), óxidos de nitrógeno NO<sub>x</sub> (del nitrógeno del aire a alta temperatura), material particulado u hollín, y metales pesados como mercurio y plomo.</p>
+          <p><strong>Efectos a largo plazo:</strong> calentamiento global y cambio climático por acumulación de CO<sub>2</sub>; acidificación de los océanos; lluvia ácida que daña suelos, lagos, bosques y construcciones; enfermedades respiratorias y cardiovasculares por material particulado; y acumulación permanente de metales pesados en ecosistemas, como ocurre en la bahía de Quintero-Puchuncaví.</p>
+        </div>
+      </section>
+
+      <section class="blk">
+        <h2 class="blk-h">3 · Óxido-reducción</h2>
+        <p class="blk-p">Acá está la idea que unifica toda la guía. Una reacción redox es aquella en la que <strong>se transfieren electrones</strong> de una sustancia a otra. Siempre ocurren las dos cosas juntas: si alguien pierde electrones, alguien más los gana.</p>
+
+        <div class="defs">
+          <div class="def">
+            <div class="def-t">Oxidación</div>
+            <div class="def-d">Perder electrones</div>
+            <p class="def-p">El número de oxidación <strong>aumenta</strong>. La sustancia que se oxida actúa como <strong>agente reductor</strong>, porque reduce a la otra.</p>
+          </div>
+          <div class="def">
+            <div class="def-t">Reducción</div>
+            <div class="def-d">Ganar electrones</div>
+            <p class="def-p">El número de oxidación <strong>disminuye</strong>. La sustancia que se reduce actúa como <strong>agente oxidante</strong>, porque oxida a la otra.</p>
+          </div>
+        </div>
+        <p class="blk-p">El nombre confunde a todo el mundo y vale la pena decirlo claro: <strong>el que se oxida es el agente reductor</strong>, y viceversa. Se nombra por lo que le hace al otro, no por lo que le pasa a él.</p>
+
+        <h3 class="sub-h">Míralo pasar</h3>
+        <p class="blk-p">Una lámina de zinc metálico dentro de una solución de sulfato de cobre. El zinc se disuelve y el cobre se deposita encima, sólido y rojizo. Los electrones son literalmente lo que se está moviendo.</p>
+        <div class="stage stage-b"><span class="idx">Zn / Cu²⁺</span><canvas id="redox"></canvas></div>
+        <div class="lectura" id="lecturaRedox"></div>
+
+        <div class="rx">Zn<sup>0</sup> <span class="fl">+</span> Cu<sup>2+</sup> <span class="fl">&rarr;</span> Zn<sup>2+</sup> <span class="fl">+</span> Cu<sup>0</sup></div>
+        <p class="rx-n">Separada en sus dos mitades, se ve el intercambio:</p>
+        <div class="rx" style="font-size:.92rem">Zn<sup>0</sup> <span class="fl">&rarr;</span> Zn<sup>2+</sup> <span class="fl">+</span> 2e<sup>−</sup> &nbsp;&nbsp;<span class="fl">(oxidación: 0 → +2)</span><br>Cu<sup>2+</sup> <span class="fl">+</span> 2e<sup>−</sup> <span class="fl">&rarr;</span> Cu<sup>0</sup> &nbsp;&nbsp;<span class="fl">(reducción: +2 → 0)</span></div>
+
+        <h3 class="sub-h">Tres ejemplos más que ya conoces</h3>
+        <div class="tabla-caja">
+          <table class="tabla">
+            <tr><th>Reacción</th><th>Se oxida</th><th>Se reduce</th><th>Dónde la ves</th></tr>
+            <tr><td>4 Fe + 3 O<sub>2</sub> → 2 Fe<sub>2</sub>O<sub>3</sub></td><td>Fe: 0 → +3</td><td>O: 0 → −2</td><td>El óxido de una reja o un clavo</td></tr>
+            <tr><td>CH<sub>4</sub> + 2 O<sub>2</sub> → CO<sub>2</sub> + 2 H<sub>2</sub>O</td><td>C: −4 → +4</td><td>O: 0 → −2</td><td>La llama de la cocina</td></tr>
+            <tr><td>C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6 O<sub>2</sub> → 6 CO<sub>2</sub> + 6 H<sub>2</sub>O</td><td>C de la glucosa</td><td>O: 0 → −2</td><td>Tu propia respiración</td></tr>
+          </table>
+        </div>
+        <p class="nota-tabla"><strong>Toda combustión es una reacción redox.</strong> Por eso la pregunta 1 y la pregunta 3 son la misma pregunta vista desde dos alturas: una describe lo que ves (llama, calor), la otra lo que ocurre entre los átomos (electrones que cambian de dueño).</p>
+
+        <h3 class="sub-h">Por qué importa</h3>
+        <p class="blk-p">Las reacciones redox son la base de: toda la <strong>producción de energía</strong> por combustión; las <strong>pilas y baterías</strong>, que son una redox con los electrones obligados a pasar por un cable; la <strong>metalurgia</strong>, que consiste en reducir un óxido metálico para obtener el metal puro —así se obtiene el hierro y así se refina el cobre chileno—; la <strong>corrosión</strong>, que es la misma reacción ocurriendo cuando no queremos; la <strong>fotosíntesis</strong> y la <strong>respiración celular</strong>; y los <strong>antioxidantes</strong> de los alimentos, que evitan que otras moléculas se oxiden.</p>
+
+        <div class="resp">
+          <div class="resp-t">Para copiar al cuaderno</div>
+          <p><strong>Definición:</strong> una reacción de óxido-reducción (redox) es aquella en la que se transfieren electrones entre las sustancias que reaccionan. La que pierde electrones se <em>oxida</em> (su número de oxidación aumenta) y actúa como agente reductor; la que los gana se <em>reduce</em> (su número de oxidación disminuye) y actúa como agente oxidante. Ambas ocurren siempre al mismo tiempo.</p>
+          <p><strong>Ejemplos:</strong> Zn + Cu<sup>2+</sup> → Zn<sup>2+</sup> + Cu (el zinc se oxida de 0 a +2 y el cobre se reduce de +2 a 0); la oxidación del hierro 4 Fe + 3 O<sub>2</sub> → 2 Fe<sub>2</sub>O<sub>3</sub>; y cualquier combustión, como CH<sub>4</sub> + 2 O<sub>2</sub> → CO<sub>2</sub> + 2 H<sub>2</sub>O.</p>
+          <p><strong>Importancia:</strong> permiten obtener energía (combustión, pilas y baterías), producir metales a partir de sus minerales (metalurgia, refinación del cobre), y ocurren en procesos vitales como la respiración celular y la fotosíntesis. También explican la corrosión, que es lo que buscamos evitar.</p>
+        </div>
+      </section>
+
+      <section class="blk">
+        <h2 class="blk-h">4 · Ozono, lluvia ácida, óxidos, carbonatos y sales</h2>
+
+        <h3 class="sub-h">Ozono: la misma molécula, héroe o villano según dónde esté</h3>
+        <p class="blk-p">El ozono es O<sub>3</sub>: tres átomos de oxígeno en vez de dos. Lo interesante —y lo que suele preguntarse en la prueba— es que se forma de dos maneras distintas, a dos alturas distintas, y en una es indispensable y en la otra es un contaminante.</p>
+
+        <div class="stage stage-b"><span class="idx">O₃</span><canvas id="ozono"></canvas></div>
+        <div class="leyenda" id="legOz"></div>
+
+        <div class="defs">
+          <div class="def">
+            <div class="def-t">Estratosfera · 15 a 35 km</div>
+            <div class="def-d">El ozono bueno</div>
+            <p class="def-p">La radiación ultravioleta del Sol rompe una molécula de O<sub>2</sub> en dos átomos sueltos, y cada uno se pega a otra O<sub>2</sub>. Ese ozono absorbe el UV que dañaría el ADN: es la <strong>capa de ozono</strong>.</p>
+          </div>
+          <div class="def">
+            <div class="def-t">Troposfera · nivel del suelo</div>
+            <div class="def-d">El ozono malo</div>
+            <p class="def-p">La luz solar rompe el NO<sub>2</sub> de los autos y la industria, y el oxígeno liberado forma ozono a ras de suelo. Es el <strong>smog fotoquímico</strong>: irrita ojos y pulmones.</p>
+          </div>
+        </div>
+
+        <div class="rx">Estratosfera: &nbsp; O<sub>2</sub> <span class="fl">+</span> UV <span class="fl">&rarr;</span> 2&nbsp;O &nbsp;&nbsp;<span class="fl">luego</span>&nbsp;&nbsp; O <span class="fl">+</span> O<sub>2</sub> <span class="fl">&rarr;</span> O<sub>3</sub><br>Troposfera: &nbsp; NO<sub>2</sub> <span class="fl">+</span> luz <span class="fl">&rarr;</span> NO <span class="fl">+</span> O &nbsp;&nbsp;<span class="fl">luego</span>&nbsp;&nbsp; O <span class="fl">+</span> O<sub>2</sub> <span class="fl">&rarr;</span> O<sub>3</sub></div>
+        <p class="rx-n">El segundo paso es idéntico en ambos casos. Lo que cambia es de dónde salió el átomo de oxígeno suelto: arriba lo entrega el propio O<sub>2</sub> partido por el UV; abajo lo entrega el NO<sub>2</sub> que salió de un tubo de escape.</p>
+
+        <h3 class="sub-h">Lluvia ácida</h3>
+        <p class="blk-p">La lluvia normal ya es levemente ácida —<span class="num">pH ≈ 5,6</span>— porque el CO<sub>2</sub> del aire se disuelve y forma ácido carbónico. Se llama lluvia ácida cuando baja de ahí, y eso lo provocan el azufre y el nitrógeno. Mueve la contaminación:</p>
+
+        <div class="ctls" id="ctlsPh"></div>
+        <div class="ph-barra"><div class="ph-mark" id="phMark" data-ph="5,6"></div></div>
+        <div class="ph-ejes"><span>0 · ÁCIDO</span><span>7 · NEUTRO</span><span>14 · BÁSICO</span></div>
+        <p class="lectura" id="lecturaPh"></p>
+
+        <div class="rx">Azufre: &nbsp; S <span class="fl">+</span> O<sub>2</sub> <span class="fl">&rarr;</span> SO<sub>2</sub> &nbsp;&nbsp;<span class="fl">&rarr;</span>&nbsp;&nbsp; SO<sub>3</sub> <span class="fl">+</span> H<sub>2</sub>O <span class="fl">&rarr;</span> H<sub>2</sub>SO<sub>4</sub> <span class="fl">(ácido sulfúrico)</span><br>Nitrógeno: &nbsp; N<sub>2</sub> <span class="fl">+</span> O<sub>2</sub> <span class="fl">&rarr;</span> 2&nbsp;NO <span class="fl">&rarr;</span> NO<sub>2</sub> <span class="fl">+</span> H<sub>2</sub>O <span class="fl">&rarr;</span> HNO<sub>3</sub> <span class="fl">(ácido nítrico)</span></div>
+        <p class="rx-n">El patrón es siempre el mismo: <strong>un no metal se oxida, el óxido resultante reacciona con el agua de la nube y produce un ácido.</strong> Ese ácido cae con la lluvia.</p>
+
+        <h3 class="sub-h">Óxidos, carbonatos y sales: un solo patrón</h3>
+        <p class="blk-p">Las tres familias que pide la pregunta salen de la misma lógica, y conviene verlas juntas en vez de memorizarlas por separado.</p>
+
+        <div class="tabla-caja">
+          <table class="tabla">
+            <tr><th>Se forma</th><th>Cómo</th><th>Ejemplo</th><th>Dónde aparece</th></tr>
+            <tr><td>Óxido básico</td><td>metal + O<sub>2</sub></td><td>2 Ca + O<sub>2</sub> → 2 CaO</td><td>Cal viva; la herrumbre del hierro</td></tr>
+            <tr><td>Óxido ácido</td><td>no metal + O<sub>2</sub></td><td>S + O<sub>2</sub> → SO<sub>2</sub></td><td>Humo de una fundición o termoeléctrica</td></tr>
+            <tr><td>Hidróxido</td><td>óxido básico + H<sub>2</sub>O</td><td>CaO + H<sub>2</sub>O → Ca(OH)<sub>2</sub></td><td>Cal apagada, mortero de construcción</td></tr>
+            <tr><td>Ácido</td><td>óxido ácido + H<sub>2</sub>O</td><td>SO<sub>3</sub> + H<sub>2</sub>O → H<sub>2</sub>SO<sub>4</sub></td><td>Lluvia ácida</td></tr>
+            <tr><td>Sal</td><td>ácido + hidróxido<br>(neutralización)</td><td>HCl + NaOH → NaCl + H<sub>2</sub>O</td><td>Sal de mesa; suero fisiológico</td></tr>
+            <tr><td>Carbonato</td><td>óxido básico + CO<sub>2</sub></td><td>CaO + CO<sub>2</sub> → CaCO<sub>3</sub></td><td>Caliza, mármol, conchas, cáscara de huevo</td></tr>
+          </table>
+        </div>
+        <p class="nota-tabla">Fíjate en la simetría: <strong>metal + oxígeno da algo básico; no metal + oxígeno da algo ácido</strong>; y cuando un ácido y una base se encuentran, se neutralizan y producen una sal más agua. Toda la tabla es esa frase.</p>
+
+        <p class="blk-p">Y así se cierra el círculo con la lluvia ácida: el mármol y la caliza de los edificios son carbonato de calcio, y el ácido de la lluvia se los come:</p>
+        <div class="rx">CaCO<sub>3</sub> <span class="fl">+</span> H<sub>2</sub>SO<sub>4</sub> <span class="fl">&rarr;</span> CaSO<sub>4</sub> <span class="fl">+</span> H<sub>2</sub>O <span class="fl">+</span> CO<sub>2</sub></div>
+        <p class="rx-n">El carbonato sólido se convierte en sulfato de calcio, que es soluble y se lava con la lluvia siguiente. Por eso las estatuas antiguas pierden los rasgos.</p>
+
+        <div class="resp">
+          <div class="resp-t">Para copiar al cuaderno</div>
+          <p><strong>Ozono:</strong> en la estratosfera se forma cuando la radiación UV rompe el O<sub>2</sub> en átomos de oxígeno, que se unen a otras moléculas de O<sub>2</sub> (O<sub>2</sub> + UV → 2 O; O + O<sub>2</sub> → O<sub>3</sub>). Allí es beneficioso porque filtra la radiación ultravioleta. A nivel del suelo se forma a partir del NO<sub>2</sub> de los vehículos e industrias con la luz solar, y allí es un contaminante que produce smog.</p>
+          <p><strong>Lluvia ácida:</strong> el SO<sub>2</sub> y los NO<sub>x</sub> emitidos al quemar carbón y petróleo se oxidan y reaccionan con el agua de las nubes formando ácido sulfúrico (H<sub>2</sub>SO<sub>4</sub>) y ácido nítrico (HNO<sub>3</sub>), que caen con la lluvia y bajan su pH por debajo de 5,6.</p>
+          <p><strong>Óxidos:</strong> se forman al combinarse un elemento con oxígeno. Si es un metal, da un óxido básico (2 Ca + O<sub>2</sub> → 2 CaO); si es un no metal, un óxido ácido (S + O<sub>2</sub> → SO<sub>2</sub>).</p>
+          <p><strong>Carbonatos:</strong> se forman cuando un óxido básico reacciona con dióxido de carbono (CaO + CO<sub>2</sub> → CaCO<sub>3</sub>). Forman la caliza, el mármol y las conchas marinas.</p>
+          <p><strong>Sales:</strong> se forman por neutralización, cuando un ácido reacciona con una base y producen sal más agua (HCl + NaOH → NaCl + H<sub>2</sub>O).</p>
+        </div>
+      </section>
+
+      <section class="blk">
+        <h2 class="blk-h">5 · Las reacciones químicas de la industria</h2>
+        <p class="blk-p">Tres reacciones sostienen buena parte del mundo material. Vale la pena conocerlas por nombre porque explican de dónde salen la comida, los materiales y —en Chile— la principal exportación.</p>
+
+        <div class="defs">
+          <div class="def">
+            <div class="def-t">Proceso Haber-Bosch</div>
+            <div class="def-d">Fertilizantes</div>
+            <p class="def-p">N<sub>2</sub> + 3 H<sub>2</sub> ⇌ 2 NH<sub>3</sub>. Toma el nitrógeno inerte del aire y lo convierte en amoníaco, base de todos los fertilizantes. Se calcula que la alimentación de cerca de la mitad de la población mundial depende de él.</p>
+          </div>
+          <div class="def">
+            <div class="def-t">Proceso de contacto</div>
+            <div class="def-d">Ácido sulfúrico</div>
+            <p class="def-p">S → SO<sub>2</sub> → SO<sub>3</sub> → H<sub>2</sub>SO<sub>4</sub>. Es el compuesto químico más producido del mundo, y se usa en fertilizantes, baterías, refinación y —clave acá— en la <strong>lixiviación del cobre</strong>.</p>
+          </div>
+          <div class="def">
+            <div class="def-t">Calcinación</div>
+            <div class="def-d">Cemento y cal</div>
+            <p class="def-p">CaCO<sub>3</sub> → CaO + CO<sub>2</sub>. Calentar caliza para obtener cal, base del cemento. Emite CO<sub>2</sub> dos veces: por la reacción misma y por el combustible que la calienta.</p>
+          </div>
+        </div>
+
+        <h3 class="sub-h">La que más importa en Chile</h3>
+        <p class="blk-p">La obtención del cobre es una reacción redox a escala industrial. En la fundición, el sulfuro de cobre se oxida y el cobre se reduce hasta quedar metálico:</p>
+        <div class="rx">Cu<sub>2</sub>S <span class="fl">+</span> O<sub>2</sub> <span class="fl">&rarr;</span> 2&nbsp;Cu <span class="fl">+</span> SO<sub>2</sub></div>
+        <p class="rx-n">Y ahí aparece el SO<sub>2</sub> otra vez: el mismo gas de la lluvia ácida, ahora como subproducto de la industria que sostiene la economía del país. Por eso las fundiciones modernas lo capturan y lo convierten en ácido sulfúrico en vez de emitirlo — que es, literalmente, el proceso de contacto de la tarjeta de al lado. El residuo de un proceso es la materia prima del otro.</p>
+
+        <h3 class="sub-h">Por qué importan</h3>
+        <div class="tabla-caja">
+          <table class="tabla">
+            <tr><th>Industria</th><th>Qué hace posible</th><th>Costo asociado</th></tr>
+            <tr><td>Fertilizantes</td><td>Producir alimento para una población que no cabría sin ellos</td><td>Exceso de nitrógeno en ríos y lagos</td></tr>
+            <tr><td>Ácido sulfúrico</td><td>Casi toda la química industrial y la minería del cobre</td><td>Emisiones de SO<sub>2</sub> si no se captura</td></tr>
+            <tr><td>Cemento</td><td>Toda la construcción</td><td>Cerca del 8&nbsp;% del CO<sub>2</sub> mundial</td></tr>
+            <tr><td>Metalurgia</td><td>Metales para infraestructura, transporte y electrónica</td><td>SO<sub>2</sub>, escorias y metales pesados</td></tr>
+            <tr><td>Plásticos</td><td>Envases, textiles, dispositivos médicos</td><td>Residuos que tardan siglos en degradarse</td></tr>
+          </table>
+        </div>
+
+        <div class="resp">
+          <div class="resp-t">Para copiar al cuaderno</div>
+          <p><strong>Importancia de las reacciones químicas en la industria:</strong> permiten transformar materias primas en los productos de los que depende la vida moderna. El proceso Haber-Bosch (N<sub>2</sub> + 3 H<sub>2</sub> → 2 NH<sub>3</sub>) produce los fertilizantes con los que se alimenta cerca de la mitad de la humanidad. El proceso de contacto produce ácido sulfúrico, el compuesto más fabricado del mundo, esencial en la minería del cobre. La calcinación de la caliza (CaCO<sub>3</sub> → CaO + CO<sub>2</sub>) da el cemento de toda la construcción. Y la metalurgia, que es óxido-reducción aplicada, permite obtener metales puros: en Chile, la fundición del cobre (Cu<sub>2</sub>S + O<sub>2</sub> → 2 Cu + SO<sub>2</sub>).</p>
+          <p><strong>Contrapartida:</strong> todas generan residuos y emisiones —CO<sub>2</sub>, SO<sub>2</sub>, metales pesados— por lo que la industria moderna busca capturarlos y reutilizarlos, como cuando el SO<sub>2</sub> de una fundición se transforma en ácido sulfúrico en vez de liberarse.</p>
+        </div>
+      </section>
+
+      <section class="blk">
+        <h2 class="blk-h">El hilo que une las cinco preguntas</h2>
+        <p class="blk-p">Si tuvieras que responder la guía entera en un párrafo, sería este:</p>
+        <div class="resp">
+          <div class="resp-t">La idea completa</div>
+          <p>Quemar algo es una <strong>reacción de óxido-reducción</strong>: el combustible cede electrones y el oxígeno los acepta, liberando calor y luz. Cuando quemamos carbón y petróleo salen, además del CO<sub>2</sub> inevitable, las impurezas y los productos de una combustión imperfecta: CO, SO<sub>2</sub>, NO<sub>x</sub> y hollín. Esos óxidos reaccionan con el agua de la atmósfera y forman ácidos que caen como lluvia ácida, o generan ozono donde no corresponde. Los mismos tipos de reacción —oxidación, neutralización, reducción de minerales— son los que la industria usa a propósito para producir fertilizantes, cemento y cobre. La química no distingue entre lo útil y lo dañino: es la misma reacción, y la diferencia está en dónde ocurre y en si controlamos lo que sale.</p>
+        </div>
+      </section>
+
+      <section class="blk">
+        <h2 class="blk-h">El error más común</h2>
+        <p class="blk-p">Confundir <strong>combustible</strong> con <strong>comburente</strong>. Suenan casi igual y en el lenguaje diario la palabra «combustible» se usa para la bencina, que es el que se quema. La forma de no equivocarse: <em>el compra-BURENTE es el que compra los electrones</em> — el que los acepta, o sea el oxígeno.</p>
+        <p class="blk-p">El segundo: creer que los subíndices de una fórmula se pueden cambiar para balancear. No. H<sub>2</sub>O es agua; H<sub>2</sub>O<sub>2</sub> es agua oxigenada, otra sustancia distinta. Para balancear solo se tocan los <strong>coeficientes</strong>, los números grandes de adelante.</p>
+        <p class="blk-p">El tercero: pensar que el NO<sub>x</sub> viene del combustible. Viene del <strong>aire</strong>, y aparece justamente cuando la combustión es más caliente.</p>
+      </section>
+
+      <section class="blk" id="respuestas">
+        <h2 class="blk-h">Las preguntas, respondidas</h2>
+        <p class="blk-p">Las cinco de la guía, en el mismo orden y con el mismo enunciado. Esto es lo que va al cuaderno.</p>
+
+        <div class="hoja">
+          <div class="hoja-n">Pregunta 1a</div>
+          <div class="hoja-p">En relación a la combustión, explique el significado de: combustible, comburente, combustión.</div>
+          <div class="hoja-r">
+            <p>El <strong>combustible</strong> es la sustancia que se quema. Al quemarse se oxida, o sea entrega electrones, y libera energía. Por ejemplo la madera, el gas natural, el carbón o la bencina. Como entrega electrones, se le llama agente reductor.</p>
+            <p>El <strong>comburente</strong> es la sustancia que permite que el combustible se queme, porque recibe esos electrones. Casi siempre es el oxígeno (O<sub>2</sub>) del aire, que corresponde al 21&nbsp;% de lo que respiramos. Como recibe electrones, se le llama agente oxidante.</p>
+            <p>La <strong>combustión</strong> es la reacción química entre los dos. Es una reacción de óxido-reducción, rápida y <strong>exotérmica</strong>, es decir que libera energía en forma de calor y luz. Además necesita una energía de activación para empezar, que es lo que hace la chispa o el fósforo.</p>
+            <p>Para que haya fuego tienen que estar los tres al mismo tiempo: combustible, comburente y energía. Esto se llama <strong>triángulo del fuego</strong>, y es la razón por la que un extintor apaga el fuego: no lo ataca directamente, sino que le quita uno de los tres.</p>
+          </div>
+        </div>
+
+        <div class="hoja">
+          <div class="hoja-n">Pregunta 1b</div>
+          <div class="hoja-p">Dé un ejemplo de combustión, explique e indique su importancia.</div>
+          <div class="hoja-r">
+            <p>Un ejemplo cercano es la combustión del <strong>metano</strong>, que es el gas que usamos en la cocina:</p>
+            <span class="ec">CH<sub>4</sub> + 2 O<sub>2</sub> → CO<sub>2</sub> + 2 H<sub>2</sub>O + energía</span>
+            <p>Acá el metano es el combustible y el oxígeno es el comburente. Al reaccionar se forman dióxido de carbono y agua, y se libera calor y luz. La ecuación está balanceada: hay 1 carbono a cada lado, 4 hidrógenos a cada lado y 4 oxígenos a cada lado, lo que cumple la <strong>ley de conservación de la masa</strong>: los átomos no se crean ni se destruyen, solo se reordenan.</p>
+            <p><strong>Importancia:</strong> de la combustión sale casi toda la energía que usamos las personas. Sirve para cocinar, para calefaccionar, para mover los autos, para generar electricidad en las centrales térmicas y para fundir metales en la industria. Además, la misma reacción ocurre dentro de nuestro cuerpo de forma lenta y controlada: es la <strong>respiración celular</strong>, donde la glucosa se quema con oxígeno y produce los mismos productos.</p>
+            <span class="ec">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6 O<sub>2</sub> → 6 CO<sub>2</sub> + 6 H<sub>2</sub>O + energía</span>
+            <p>Por eso al respirar botamos dióxido de carbono y vapor de agua.</p>
+          </div>
+        </div>
+
+        <div class="hoja">
+          <div class="hoja-n">Pregunta 2</div>
+          <div class="hoja-p">Indique qué alteraciones se producen como resultado de la combustión de carbón y petróleo. ¿Cuáles son sus efectos a largo plazo?</div>
+          <div class="hoja-r">
+            <p>Ni el carbón ni el petróleo son sustancias puras, y el aire tampoco es solo oxígeno. Por eso, además de los productos normales, se liberan otras sustancias que contaminan:</p>
+            <p><strong>Dióxido de carbono (CO<sub>2</sub>):</strong> viene del carbono del combustible y es el producto principal. No es tóxico, pero es un gas de efecto invernadero.<br>
+            <strong>Monóxido de carbono (CO):</strong> se forma cuando la combustión es incompleta, es decir cuando falta oxígeno. Es tóxico porque se une a la sangre e impide que transporte oxígeno.<br>
+            <strong>Dióxido de azufre (SO<sub>2</sub>):</strong> viene del azufre que trae el combustible como impureza. Produce lluvia ácida y problemas respiratorios.<br>
+            <strong>Óxidos de nitrógeno (NO<sub>x</sub>):</strong> no vienen del combustible sino del <strong>nitrógeno del aire</strong>, que a más de 1.000&nbsp;°C alcanza a reaccionar. Producen lluvia ácida y smog.<br>
+            <strong>Material particulado u hollín:</strong> es carbono que no alcanzó a quemarse. Entra profundo en los pulmones.<br>
+            <strong>Metales pesados:</strong> el carbón contiene mercurio, plomo, arsénico y cadmio.</p>
+            <p><strong>Efectos a largo plazo:</strong></p>
+            <p>El <strong>calentamiento global</strong>, porque el CO<sub>2</sub> se queda cientos de años en la atmósfera reteniendo el calor. Esto hace que suba la temperatura del planeta, se derritan los glaciares y suba el nivel del mar.</p>
+            <p>La <strong>acidificación de los océanos</strong>, porque parte del CO<sub>2</sub> se disuelve en el agua de mar y forma ácido carbónico. Eso les dificulta la vida a los organismos que tienen caparazón de carbonato de calcio.</p>
+            <p>La <strong>lluvia ácida</strong>, que acidifica los suelos y los lagos, daña los bosques y corroe las construcciones de metal y de piedra caliza.</p>
+            <p><strong>Enfermedades respiratorias y cardiovasculares</strong> por el material particulado.</p>
+            <p>Y la <strong>acumulación permanente de metales pesados</strong>, que no se degradan nunca y van subiendo por la cadena alimentaria. En Chile esto se ve en la bahía de <strong>Quintero-Puchuncaví</strong>: un estudio de la Universidad de Playa Ancha encontró cadmio, cromo, cobre, manganeso, plomo, vanadio, níquel, zinc y mercurio en el agua, los suelos y los organismos de la zona, donde hay una termoeléctrica a carbón y una fundición de cobre.</p>
+          </div>
+        </div>
+
+        <div class="hoja">
+          <div class="hoja-n">Pregunta 3</div>
+          <div class="hoja-p">Describa la reacción química de óxido-reducción, dé ejemplos, explique e indique su importancia.</div>
+          <div class="hoja-r">
+            <p>Una reacción de <strong>óxido-reducción</strong> (o redox) es aquella en la que se <strong>transfieren electrones</strong> de una sustancia a otra. Las dos cosas pasan siempre juntas: si una sustancia pierde electrones, otra los tiene que ganar.</p>
+            <p>La sustancia que <strong>pierde</strong> electrones se <strong>oxida</strong>, y su número de oxidación aumenta. Se le llama agente reductor, porque hace que la otra se reduzca. La sustancia que <strong>gana</strong> electrones se <strong>reduce</strong>, y su número de oxidación disminuye. Se le llama agente oxidante, porque hace que la otra se oxide. Es importante fijarse en que cada una se nombra por lo que le hace a la otra, no por lo que le pasa a ella.</p>
+            <p><strong>Ejemplo 1.</strong> Una lámina de zinc dentro de una solución de sulfato de cobre. El zinc se disuelve y el cobre se deposita encima:</p>
+            <span class="ec">Zn<sup>0</sup> + Cu<sup>2+</sup> → Zn<sup>2+</sup> + Cu<sup>0</sup></span>
+            <p>El zinc se oxida (pasa de 0 a +2, pierde 2 electrones) y el cobre se reduce (pasa de +2 a 0, gana 2 electrones).</p>
+            <p><strong>Ejemplo 2.</strong> La oxidación del hierro, que es lo que le pasa a una reja con el tiempo:</p>
+            <span class="ec">4 Fe + 3 O<sub>2</sub> → 2 Fe<sub>2</sub>O<sub>3</sub></span>
+            <p><strong>Ejemplo 3.</strong> Cualquier combustión también es una reacción redox. En el metano, el carbono se oxida y el oxígeno se reduce. Por eso las preguntas 1 y 3 hablan de lo mismo: la combustión es lo que se ve —la llama, el calor— y la redox es lo que pasa entre los átomos.</p>
+            <p><strong>Importancia:</strong> las reacciones redox permiten obtener energía, tanto en las combustiones como en las <strong>pilas y baterías</strong>, que son una reacción redox donde se obliga a los electrones a pasar por un cable. También son la base de la <strong>metalurgia</strong>, que consiste en reducir un mineral para sacar el metal puro: así se obtiene el hierro y así se refina el cobre en Chile. Además ocurren en la <strong>respiración celular</strong> y en la <strong>fotosíntesis</strong>. Por último, explican la <strong>corrosión</strong>, que es la misma reacción pero ocurriendo cuando no queremos.</p>
+          </div>
+        </div>
+
+        <div class="hoja">
+          <div class="hoja-n">Pregunta 4</div>
+          <div class="hoja-p">¿Cómo se produce la formación de ozono, la lluvia ácida y la formación de carbonatos, óxidos y sales?</div>
+          <div class="hoja-r">
+            <p><strong>Formación de ozono.</strong> El ozono es O<sub>3</sub>: una molécula formada por tres átomos de oxígeno. Se forma de dos maneras distintas según la altura, y en una es bueno y en la otra es malo.</p>
+            <p>En la <strong>estratosfera</strong> (entre 15 y 35 km de altura), la radiación ultravioleta del Sol rompe una molécula de oxígeno en dos átomos sueltos, y cada átomo se une a otra molécula de oxígeno:</p>
+            <span class="ec">O<sub>2</sub> + UV → 2 O &nbsp;&nbsp;&nbsp; O + O<sub>2</sub> → O<sub>3</sub></span>
+            <p>Este ozono forma la <strong>capa de ozono</strong> y es beneficioso, porque absorbe la radiación ultravioleta que daña la piel y el ADN.</p>
+            <p>En la <strong>troposfera</strong>, a nivel del suelo, la luz solar rompe el dióxido de nitrógeno que emiten los autos y las industrias, y el átomo de oxígeno que queda libre forma ozono:</p>
+            <span class="ec">NO<sub>2</sub> + luz → NO + O &nbsp;&nbsp;&nbsp; O + O<sub>2</sub> → O<sub>3</sub></span>
+            <p>Este ozono es un <strong>contaminante</strong>: forma el smog fotoquímico e irrita los ojos y las vías respiratorias.</p>
+            <p><strong>Lluvia ácida.</strong> La lluvia limpia ya es un poco ácida, con un pH de aproximadamente <strong>5,6</strong>, porque el CO<sub>2</sub> del aire se disuelve en ella y forma ácido carbónico. Se habla de lluvia ácida cuando el pH baja de ese valor, y eso lo provocan el azufre y el nitrógeno que salen al quemar carbón y petróleo:</p>
+            <span class="ec">S + O<sub>2</sub> → SO<sub>2</sub> → SO<sub>3</sub> ; &nbsp; SO<sub>3</sub> + H<sub>2</sub>O → H<sub>2</sub>SO<sub>4</sub> (ácido sulfúrico)</span>
+            <span class="ec">N<sub>2</sub> + O<sub>2</sub> → 2 NO → NO<sub>2</sub> ; &nbsp; 3 NO<sub>2</sub> + H<sub>2</sub>O → 2 HNO<sub>3</sub> + NO (ácido nítrico)</span>
+            <p>Estos ácidos se disuelven en el agua de las nubes y caen con la lluvia. Con mucha contaminación el pH puede llegar a 4,0 o 4,5.</p>
+            <p><strong>Formación de óxidos.</strong> Un óxido se forma cuando un elemento se combina con oxígeno. Si el elemento es un <strong>metal</strong> se forma un <strong>óxido básico</strong>; si es un <strong>no metal</strong> se forma un <strong>óxido ácido</strong>:</p>
+            <span class="ec">2 Ca + O<sub>2</sub> → 2 CaO (óxido básico) &nbsp;&nbsp; S + O<sub>2</sub> → SO<sub>2</sub> (óxido ácido)</span>
+            <p>Si el óxido básico reacciona con agua se forma un <strong>hidróxido</strong> (CaO + H<sub>2</sub>O → Ca(OH)<sub>2</sub>), y si el óxido ácido reacciona con agua se forma un <strong>ácido</strong> (SO<sub>3</sub> + H<sub>2</sub>O → H<sub>2</sub>SO<sub>4</sub>). Esto último es justamente lo que produce la lluvia ácida.</p>
+            <p><strong>Formación de sales.</strong> Una sal se forma cuando un ácido reacciona con una base. A esta reacción se le llama <strong>neutralización</strong>, porque se produce una sal y agua:</p>
+            <span class="ec">HCl + NaOH → NaCl + H<sub>2</sub>O</span>
+            <p>El NaCl es la sal de mesa. Todas las sales se forman de la misma manera.</p>
+            <p><strong>Formación de carbonatos.</strong> Un carbonato se forma cuando un óxido básico reacciona con dióxido de carbono:</p>
+            <span class="ec">CaO + CO<sub>2</sub> → CaCO<sub>3</sub></span>
+            <p>El carbonato de calcio (CaCO<sub>3</sub>) forma la caliza, el mármol, las conchas de los moluscos y la cáscara de los huevos. Justamente por eso la lluvia ácida daña las estatuas y los edificios de mármol: el ácido reacciona con el carbonato y lo disuelve.</p>
+            <span class="ec">CaCO<sub>3</sub> + H<sub>2</sub>SO<sub>4</sub> → CaSO<sub>4</sub> + H<sub>2</sub>O + CO<sub>2</sub></span>
+          </div>
+        </div>
+
+        <div class="hoja">
+          <div class="hoja-n">Pregunta 5</div>
+          <div class="hoja-p">Explique e indique la importancia de las reacciones químicas producidas en la industria.</div>
+          <div class="hoja-r">
+            <p>La industria usa reacciones químicas para transformar materias primas en los productos que usamos todos los días. Las más importantes son:</p>
+            <p><strong>Proceso Haber-Bosch.</strong> Toma el nitrógeno del aire, que normalmente no reacciona con nada, y lo convierte en amoníaco:</p>
+            <span class="ec">N<sub>2</sub> + 3 H<sub>2</sub> ⇌ 2 NH<sub>3</sub></span>
+            <p>El amoníaco es la base de todos los fertilizantes. Se calcula que la alimentación de cerca de la mitad de la población mundial depende de este proceso.</p>
+            <p><strong>Proceso de contacto.</strong> Produce ácido sulfúrico, que es el compuesto químico más fabricado del mundo:</p>
+            <span class="ec">S → SO<sub>2</sub> → SO<sub>3</sub> → H<sub>2</sub>SO<sub>4</sub></span>
+            <p>Se usa en fertilizantes, en baterías, en refinerías y en la minería del cobre.</p>
+            <p><strong>Calcinación de la caliza.</strong> Se calienta el carbonato de calcio para obtener cal, que es la base del cemento:</p>
+            <span class="ec">CaCO<sub>3</sub> → CaO + CO<sub>2</sub></span>
+            <p><strong>Obtención del cobre.</strong> Es la más importante en Chile y es una reacción redox a escala industrial. En la fundición, el sulfuro de cobre se oxida y el cobre se reduce hasta quedar metálico:</p>
+            <span class="ec">Cu<sub>2</sub>S + O<sub>2</sub> → 2 Cu + SO<sub>2</sub></span>
+            <p><strong>Importancia:</strong> gracias a estas reacciones existen los alimentos que produce la agricultura moderna, el cemento con el que se construye, los metales para la infraestructura y la electrónica, los plásticos y los medicamentos. Sin ellas la vida actual no sería posible.</p>
+            <p><strong>Contrapartida:</strong> todas generan residuos y emisiones, como CO<sub>2</sub>, SO<sub>2</sub> y metales pesados. Por eso la industria moderna busca capturarlos y reutilizarlos. Un buen ejemplo es que el SO<sub>2</sub> que sale de una fundición de cobre se puede transformar en ácido sulfúrico en vez de liberarse al aire: el residuo de un proceso se convierte en la materia prima de otro.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="blk">
+        <h2 class="blk-h">Para entregar</h2>
+        <p class="blk-p">Las cinco respuestas están en los recuadros marcados «Para copiar al cuaderno». Si quieres llevarlas en papel, acá está todo en un PDF.</p>
+        <a class="dl-card" href="/lab/quimica-guia.pdf" download>
+          <span class="esq a"></span><span class="esq b"></span><span class="esq c"></span><span class="esq d"></span>
+          <span class="dl-info">
+            <span class="dl-kick">Descargar</span>
+            <span class="dl-t">Guía resuelta en PDF</span>
+            <span class="dl-meta">Reacciones químicas cotidianas · 1º medio</span>
+          </span>
+          <span class="dl-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </span>
+        </a>
+      </section>
+
+      <div class="void"></div>
+    </main>
+  </div>
+
+<style>
+  /* ── Añadidos propios de esta guía ───────────────────────────────────── */
+  .lectura{display:flex;flex-wrap:wrap;gap:1.4rem;margin-top:1.1rem;
+    font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.06em;color:var(--text-3);}
+  .lectura b{color:var(--accent);font-weight:500;}
+  .stage-b{aspect-ratio:16/9;}
+  .stage-c{aspect-ratio:21/8;margin-top:1.6rem;}
+  .sub-h{font-family:'Fraunces',serif;font-weight:400;font-size:1.1rem;
+    margin:2.6rem 0 .5rem;color:var(--text);}
+
+  /* La ecuación química es el objeto central de toda la guía: se le da su
+     propio tratamiento para que se lea como una fórmula y no como texto. */
+  .rx{font-family:'IBM Plex Mono',monospace;font-size:1rem;line-height:2;
+    color:var(--accent);margin:1.1rem 0;letter-spacing:.02em;word-break:break-word;}
+  .rx sub{font-size:.72em;vertical-align:-.25em;}
+  .rx sup{font-size:.72em;vertical-align:.45em;}
+  .rx .fl{color:var(--text-3);padding:0 .35em;}
+  .rx-n{font-size:.86rem;color:var(--text-3);line-height:1.7;margin:.2rem 0 0;}
+
+  /* Tarjeta de concepto: el término, su definición corta y el porqué. */
+  .defs{display:grid;gap:1rem;margin-top:1.5rem;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+  .def{border:1px solid var(--border);padding:1.3rem 1.4rem;}
+  .def-t{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;
+    text-transform:uppercase;color:rgb(var(--accent-rgb)/.8);margin-bottom:.6rem;}
+  .def-d{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--text);margin-bottom:.5rem;}
+  .def-p{font-size:.88rem;line-height:1.7;color:var(--text-2);margin:0;}
+
+  .tabla-caja{overflow-x:auto;margin-top:1.4rem;-webkit-overflow-scrolling:touch;}
+  .tabla{border-collapse:collapse;width:100%;min-width:560px;
+    font-family:'IBM Plex Mono',monospace;font-size:.72rem;}
+  .tabla th,.tabla td{border:1px solid var(--border);padding:.62rem .7rem;text-align:left;
+    color:var(--text-2);vertical-align:top;}
+  .tabla th{color:var(--text-3);font-weight:400;font-size:.58rem;letter-spacing:.14em;
+    text-transform:uppercase;}
+  .tabla td:first-child{color:var(--accent);white-space:nowrap;}
+  .nota-tabla{font-size:.8rem;color:var(--text-3);margin-top:.9rem;}
+
+  .leyenda{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.4rem;}
+  .chip{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.08em;
+    border:1px solid var(--border);background:none;padding:.45rem .75rem;cursor:pointer;
+    display:inline-flex;align-items:center;gap:.55rem;color:var(--text-2);user-select:none;
+    transition:opacity .2s ease,border-color .2s ease;}
+  .chip:hover{border-color:var(--border-2);}
+  .chip .pt{width:9px;height:9px;border-radius:50%;flex:none;}
+  .chip.off{opacity:.35;}
+
+  /* Aviso de procedencia. Va arriba del todo porque cambia cómo se lee la
+     guía entera: el libro fotografiado no cubre estos temas. */
+  .aviso{border:1px solid var(--border-2);border-left:2px solid var(--accent);
+    padding:1.2rem 1.4rem;margin-top:2rem;}
+  .aviso-t{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.2em;
+    text-transform:uppercase;color:rgb(var(--accent-rgb)/.8);margin-bottom:.55rem;}
+  .aviso p{font-size:.88rem;line-height:1.75;color:var(--text-2);margin:0;}
+
+  /* Bloque de respuesta: lo que efectivamente se copia al cuaderno. */
+  .resp{border:1px solid var(--border-2);padding:1.4rem 1.5rem;margin-top:1.6rem;
+    background:rgb(var(--accent-rgb)/.03);}
+  .resp-t{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.2em;
+    text-transform:uppercase;color:rgb(var(--accent-rgb)/.85);margin-bottom:.7rem;}
+  .resp p{font-size:.94rem;line-height:1.75;color:var(--text);margin:0 0 .7rem;}
+  .resp p:last-child{margin-bottom:0;}
+
+  .num{font-family:'IBM Plex Mono',monospace;color:var(--accent);}
+
+  /* Escala de pH: una barra continua con un marcador que se mueve. */
+  .ph-barra{position:relative;height:38px;margin-top:1.3rem;border:1px solid var(--border);
+    background:linear-gradient(90deg,#c2410c 0%,#dc2626 18%,#e8a33d 36%,#d9d245 50%,
+      #7cc47c 64%,#4aa3d6 82%,#7c5ce0 100%);}
+  .ph-mark{position:absolute;top:-7px;bottom:-7px;width:2px;background:var(--text);
+    transition:left .25s cubic-bezier(.6,.02,.2,1);}
+  .ph-mark::after{content:attr(data-ph);position:absolute;top:-1.35rem;left:50%;
+    transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+    color:var(--text);white-space:nowrap;}
+  .ph-ejes{display:flex;justify-content:space-between;margin-top:.5rem;
+    font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.1em;color:var(--text-dim);}
+
+  /* Tarjeta de descarga con el lenguaje del home: marco discontinuo que se
+     vuelve sólido, escuadras de esquina que crecen al fijar, barrido de
+     fondo y el icono real de descarga (Lucide) que se llena de acento. */
+  .dl-card{position:relative;display:flex;align-items:center;justify-content:space-between;
+    gap:1.2rem;margin-top:1.4rem;padding:1.5rem 1.7rem;
+    border:1px dashed var(--border-2);text-decoration:none;overflow:hidden;
+    transition:border-color .35s ease;}
+  .dl-card::before{content:'';position:absolute;inset:0;
+    background:rgb(var(--accent-rgb)/.05);
+    transform:scaleX(0);transform-origin:left;
+    transition:transform .45s cubic-bezier(.6,.02,.2,1);}
+  .dl-card:hover{border-color:rgb(var(--accent-rgb)/.55);border-style:solid;}
+  .dl-card:hover::before{transform:scaleX(1);}
+  .dl-card .esq{position:absolute;width:14px;height:14px;
+    border:0 solid var(--accent);opacity:.85;transition:width .35s ease,height .35s ease;}
+  .dl-card .esq.a{top:-1px;left:-1px;border-top-width:2px;border-left-width:2px;}
+  .dl-card .esq.b{top:-1px;right:-1px;border-top-width:2px;border-right-width:2px;}
+  .dl-card .esq.c{bottom:-1px;left:-1px;border-bottom-width:2px;border-left-width:2px;}
+  .dl-card .esq.d{bottom:-1px;right:-1px;border-bottom-width:2px;border-right-width:2px;}
+  .dl-card:hover .esq{width:24px;height:24px;}
+  .dl-info{position:relative;display:flex;flex-direction:column;gap:.45rem;}
+  .dl-kick{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.28em;
+    color:rgb(var(--accent-rgb)/.75);text-transform:uppercase;}
+  .dl-t{font-family:'Fraunces',serif;font-size:1.3rem;color:var(--text);}
+  .dl-meta{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.1em;
+    color:var(--text-3);text-transform:uppercase;}
+  .dl-ico{position:relative;flex:none;width:56px;height:56px;border:1px solid var(--border-2);
+    border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);
+    transition:background .3s ease,border-color .3s ease,color .3s ease;}
+  .dl-ico svg{width:22px;height:22px;transition:transform .3s ease;}
+  .dl-card:hover .dl-ico{background:var(--accent);border-color:var(--accent);color:var(--on-accent);}
+  .dl-card:hover .dl-ico svg{transform:translateY(3px);}
+  @media(max-width:560px){.dl-card{flex-direction:column;align-items:flex-start;}
+    .dl-ico{align-self:flex-end;margin-top:-1.6rem;}}
+  /* Hoja de respuestas: el bloque que se copia tal cual. Se distingue del
+     resto con un filete a la izquierda y la pregunta en el mismo tono en que
+     viene en la guía impresa, para poder cotejar una contra otra. */
+  .hoja{border:1px solid var(--border-2);padding:1.6rem 1.7rem;margin-top:1.4rem;}
+  .hoja + .hoja{margin-top:1rem;}
+  .hoja-n{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.2em;
+    text-transform:uppercase;color:rgb(var(--accent-rgb)/.85);}
+  .hoja-p{font-family:'Fraunces',serif;font-size:1.02rem;line-height:1.5;color:var(--text);
+    margin:.5rem 0 1rem;padding-left:.9rem;border-left:2px solid rgb(var(--accent-rgb)/.4);}
+  .hoja-r p{font-size:.95rem;line-height:1.8;color:var(--text-2);margin:0 0 .85rem;}
+  .hoja-r p:last-child{margin-bottom:0;}
+  .hoja-r strong{color:var(--text);font-weight:600;}
+  .hoja-r .ec{font-family:'IBM Plex Mono',monospace;color:var(--accent);
+    display:block;margin:.5rem 0 .9rem;font-size:.9rem;}
+
+  /* `.blk-p` viene sin margen del bloque compartido: en la guía de ondas
+     cada sección tenía un solo párrafo, acá hay varios seguidos y se fundían
+     en un bloque sin respiro. Se separan solo entre ellos, para no alterar el
+     espaciado que ya tiene con títulos, tablas y lienzos. */
+  .blk-p + .blk-p{margin-top:1.05rem;}
+
+  .void{height:clamp(80px,12vh,130px);}
+</style>
+
+<script>
+(function(){
+  const ES  = n => n.toLocaleString('es-CL',{maximumFractionDigits:2});
+  const acc = () => getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e8eaee';
+  const tinta = () => getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim() || '#888';
+  const DPR = Math.min(devicePixelRatio||1, 2);
+
+  /* Prepara el canvas al tamaño real de su caja: sin esto el trazo sale
+     borroso en retina, porque el lienzo mediría la mitad. */
+  function lienzo(cv){
+    const r = cv.getBoundingClientRect();
+    cv.width = Math.round(r.width*DPR); cv.height = Math.round(r.height*DPR);
+    const c = cv.getContext('2d'); c.setTransform(DPR,0,0,DPR,0,0);
+    return {c, w:r.width, h:r.height};
+  }
+  /* Anima solo cuando el canvas está a la vista. Cinco simulaciones corriendo
+     a la vez fuera de pantalla calentarían el teléfono sin que nadie las vea. */
+  function alVerlo(cv, frame){
+    let raf=0, t0=performance.now();
+    const paso = ts => { frame((ts-t0)/1000); raf=requestAnimationFrame(paso); };
+    new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.isIntersecting){ if(!raf){ t0=performance.now(); raf=requestAnimationFrame(paso); } }
+      else if(raf){ cancelAnimationFrame(raf); raf=0; }
+    }),{threshold:.01}).observe(cv);
+  }
+  /* Una llama de verdad: ancha abajo, afilada arriba y con el borde
+     temblando. Dibujarla como círculos apilados —que fue el primer intento—
+     da manchas, no fuego. `limpio` va de 0 a 1: 1 es azul de gas quemando
+     completo, 0 es amarillo de hollín incandescente, que es exactamente lo
+     que ilumina una vela. */
+  function llama(c, cx, baseY, alto, ancho, t, limpio, semilla){
+    const AZ=[100,170,255], AM=[250,170,60];
+    for(let capa=0; capa<3; capa++){
+      const k=1-capa*0.28, al=alto*k, an=ancho*k;
+      const col=AZ.map((v,i)=>Math.round(v*limpio+AM[i]*(1-limpio)));
+      c.beginPath();
+      for(let i=0;i<=28;i++){
+        const f=i/28;                                   // 0 base, 1 punta
+        const perfil=Math.sin(Math.pow(f,0.62)*Math.PI); // ancho por altura
+        const temblor=Math.sin(t*9+f*7+semilla+capa)*an*0.10*f;
+        const x=cx+temblor+perfil*an*0.5;
+        const y=baseY-f*al;
+        i?c.lineTo(x,y):c.moveTo(x,y);
+      }
+      for(let i=28;i>=0;i--){
+        const f=i/28, perfil=Math.sin(Math.pow(f,0.62)*Math.PI);
+        const temblor=Math.sin(t*9+f*7+semilla+capa)*an*0.10*f;
+        c.lineTo(cx+temblor-perfil*an*0.5, baseY-f*al);
+      }
+      c.closePath();
+      c.fillStyle=`rgba(${col[0]},${col[1]},${col[2]},${0.22+capa*0.20})`;
+      c.fill();
+    }
+  }
+
+  function control(host, etq, min, max, paso, val, alCambiar){
+    const row=document.createElement('label'); row.className='ctl';
+    row.innerHTML=`<span class="ctl-l">${etq}</span>`;
+    const inp=document.createElement('input');
+    Object.assign(inp,{type:'range',min,max,step:paso,value:val});
+    const out=document.createElement('output'); out.className='ctl-v';
+    const pinta = v => out.textContent = alCambiar(v);
+    inp.addEventListener('input',()=>pinta(+inp.value));
+    row.append(inp,out); host.appendChild(row); pinta(val);
+  }
+
+  /* ══ 1 · COMBUSTIÓN ═══════════════════════════════════════════════════
+     El oxígeno disponible decide los productos. Con exceso de O2 la reacción
+     llega hasta CO2; al faltarle, el carbono se queda a medio oxidar y sale
+     como CO y como hollín. La llama azul es gas quemando limpio; la amarilla
+     es hollín incandescente, que es literalmente lo que ilumina una vela. */
+  (function(){
+    const cv=document.getElementById('fuego'); if(!cv) return;
+    const P={o2:100};
+    const lec=document.getElementById('lecturaFuego');
+    control(document.getElementById('ctlsFuego'),'Oxígeno disponible',30,140,1,100,v=>{P.o2=v;leer();return v+' %';});
+
+    // Reparto de productos según el oxígeno. Por debajo de 100% la combustión
+    // es incompleta y el carbono se reparte entre CO2, CO y hollín.
+    function mezcla(){
+      const x=Math.min(1,P.o2/100);
+      if(x>=1) return {co2:1,co:0,c:0};
+      const co2=x*x, resto=1-co2;
+      return {co2, co:resto*0.65, c:resto*0.35};
+    }
+    function leer(){
+      const m=mezcla(), pc=v=>ES(v*100)+' %';
+      lec.innerHTML =
+        `<span>CO<sub>2</sub> <b>${pc(m.co2)}</b></span>`+
+        `<span>CO <b>${pc(m.co)}</b></span>`+
+        `<span>hollín <b>${pc(m.c)}</b></span>`+
+        `<span>${P.o2>=100?'combustión <b>completa</b>':'combustión <b>incompleta</b>'}</span>`;
+    }
+
+    const parts=[];
+    alVerlo(cv, t=>{
+      const {c,w,h}=lienzo(cv); c.clearRect(0,0,w,h);
+      const m=mezcla(), baseY=h*0.86, cx=w*0.32;
+
+      // Suelo y quemador
+      c.strokeStyle=tinta(); c.globalAlpha=.3; c.lineWidth=1;
+      c.beginPath(); c.moveTo(0,baseY); c.lineTo(w,baseY); c.stroke(); c.globalAlpha=1;
+      c.fillStyle=tinta(); c.globalAlpha=.25;
+      c.fillRect(cx-26,baseY-14,52,14); c.globalAlpha=1;
+
+      // Llama: más alta y más limpia mientras más oxígeno haya.
+      const limpio=m.co2, alt=h*(0.34+0.30*Math.min(1,P.o2/140));
+      llama(c, cx, baseY-14, alt, 74, t, limpio, 0);
+
+      // Partículas que suben: cada una es una molécula de producto.
+      if(parts.length<70 && Math.random()<0.5){
+        const r=Math.random(), tipo = r<m.co2?'co2' : (r<m.co2+m.co?'co':'c');
+        parts.push({x:cx+(Math.random()-0.5)*30, y:baseY-alt*0.92, v:0.5+Math.random()*0.9,
+                    d:(Math.random()-0.5)*0.35, tipo, vida:1});
+      }
+      const COL={co2:acc(), co:'#e0533f', c:'#6b6b6b'};
+      for(let i=parts.length-1;i>=0;i--){
+        const p=parts[i]; p.y-=p.v; p.x+=p.d; p.vida-=0.007;
+        if(p.vida<=0||p.y<0){ parts.splice(i,1); continue; }
+        c.globalAlpha=p.vida*0.85; c.fillStyle=COL[p.tipo];
+        c.beginPath(); c.arc(p.x,p.y,p.tipo==='c'?2.4:3.1,0,7); c.fill();
+      }
+      c.globalAlpha=1;
+
+      // La ecuación que corresponde, escrita a la derecha.
+      c.font='13px "IBM Plex Mono", monospace'; c.textAlign='left';
+      const X=w*0.56, Y=h*0.34;
+      c.fillStyle=acc();
+      c.fillText(P.o2>=100 ? 'CH₄ + 2 O₂ → CO₂ + 2 H₂O' : '2 CH₄ + 3 O₂ → 2 CO + 4 H₂O', X, Y);
+      c.fillStyle=tinta(); c.font='11px "IBM Plex Mono", monospace';
+      c.fillText(P.o2>=100 ? 'combustión completa' : 'combustión incompleta', X, Y+22);
+      c.fillText(P.o2>=100 ? 'llama azul, sin residuo' : 'llama amarilla: hollín ardiendo', X, Y+40);
+
+      // Barras de producto
+      const bw=w*0.30, by=Y+70;
+      [['CO₂',m.co2,COL.co2],['CO',m.co,COL.co],['C hollín',m.c,COL.c]].forEach((r,i)=>{
+        const y=by+i*22;
+        c.fillStyle=tinta(); c.globalAlpha=.25; c.fillRect(X,y,bw,7); c.globalAlpha=1;
+        c.fillStyle=r[2]; c.fillRect(X,y,bw*r[1],7);
+        c.fillStyle=tinta(); c.font='10px "IBM Plex Mono", monospace';
+        c.fillText(r[0], X+bw+10, y+7);
+      });
+    });
+    leer();
+  })();
+
+  /* ══ 2 · TRIÁNGULO DEL FUEGO ══════════════════════════════════════════ */
+  (function(){
+    const cv=document.getElementById('triangulo'); if(!cv) return;
+    const V=[{k:'comb',n:'COMBUSTIBLE',d:'lo que se quema',on:true},
+             {k:'ox',  n:'COMBURENTE', d:'el oxígeno',     on:true},
+             {k:'ene', n:'ENERGÍA',    d:'la chispa',      on:true}];
+    const leg=document.getElementById('legTri');
+    V.forEach((v,i)=>{
+      const b=document.createElement('button'); b.className='chip';
+      b.innerHTML=`<span class="pt" style="background:${['#e8a33d','#5aa8ff','#e0533f'][i]}"></span>${v.n}`;
+      b.onclick=()=>{ v.on=!v.on; b.classList.toggle('off',!v.on); };
+      leg.appendChild(b);
+    });
+    alVerlo(cv, t=>{
+      const {c,w,h}=lienzo(cv); c.clearRect(0,0,w,h);
+      const cx=w/2, cy=h*0.54, R=Math.min(w,h)*0.30;
+      const pts=[0,1,2].map(i=>{const a=-Math.PI/2+i*2*Math.PI/3;
+        return {x:cx+R*Math.cos(a), y:cy+R*Math.sin(a)};});
+      const vivo=V.every(v=>v.on);
+
+      // Lados del triángulo: cada lado se dibuja si sus dos vértices están.
+      c.lineWidth=1.4;
+      for(let i=0;i<3;i++){
+        const a=pts[i], b=pts[(i+1)%3], hay=V[i].on&&V[(i+1)%3].on;
+        c.strokeStyle=hay?acc():tinta(); c.globalAlpha=hay?.75:.18;
+        c.setLineDash(hay?[]:[4,6]);
+        c.beginPath(); c.moveTo(a.x,a.y); c.lineTo(b.x,b.y); c.stroke();
+      }
+      c.setLineDash([]); c.globalAlpha=1;
+
+      // Fuego al centro solo si están los tres.
+      if(vivo) llama(c, cx, cy+R*0.30, R*0.95, R*0.62, t, 0.15, 1.7);
+      c.textAlign='center'; c.font='11px "IBM Plex Mono", monospace';
+      pts.forEach((p,i)=>{
+        const on=V[i].on;
+        c.fillStyle=on?['#e8a33d','#5aa8ff','#e0533f'][i]:tinta();
+        c.globalAlpha=on?1:.3;
+        c.beginPath(); c.arc(p.x,p.y,7,0,7); c.fill();
+        c.fillStyle=on?acc():tinta();
+        // En el vértice de arriba el subtítulo va ENCIMA del título; si no,
+        // cae justo sobre el punto y se lee montado.
+        const arriba = i===0;
+        const dy = arriba ? -34 : 26;
+        c.fillText(V[i].n, p.x, p.y+dy);
+        c.fillStyle=tinta(); c.font='10px "IBM Plex Mono", monospace';
+        c.fillText(V[i].d, p.x, p.y+dy+(arriba?-14:15));
+        c.font='11px "IBM Plex Mono", monospace';
+      });
+      c.globalAlpha=1;
+      c.fillStyle=vivo?acc():tinta(); c.font='12px "IBM Plex Mono", monospace';
+      c.fillText(vivo?'HAY FUEGO':'SE APAGÓ', cx, h-14);
+      c.textAlign='left';
+    });
+  })();
+
+  /* ══ 3 · ACUMULACIÓN EN EL TIEMPO ═════════════════════════════════════
+     La diferencia que pide la pregunta 2: el CO se disipa en horas, el CO2
+     permanece siglos. Por eso uno es un riesgo inmediato y el otro un
+     problema acumulativo — aunque el segundo salga en mucha mayor cantidad. */
+  (function(){
+    const cv=document.getElementById('acum'); if(!cv) return;
+    const P={anios:60};
+    control(document.getElementById('ctlsAcum'),'Años de emisión continua',5,120,1,60,v=>{P.anios=v;return v+' años';});
+    function pintar(){
+      const {c,w,h}=lienzo(cv); c.clearRect(0,0,w,h);
+      const m={l:52,r:18,t:22,b:34}, gw=w-m.l-m.r, gh=h-m.t-m.b;
+      c.strokeStyle=tinta(); c.globalAlpha=.3; c.lineWidth=1;
+      c.beginPath(); c.moveTo(m.l,m.t); c.lineTo(m.l,m.t+gh); c.lineTo(m.l+gw,m.t+gh); c.stroke();
+      c.globalAlpha=1;
+      // CO2: se acumula casi sin retirarse (vida ~siglos).
+      // CO: se oxida a CO2 en meses, así que su nivel se estabiliza bajo.
+      const N=P.anios;
+      const serie=(vida)=>{ let a=0; const out=[];
+        for(let i=0;i<=N;i++){ a=a*Math.exp(-1/vida)+1; out.push(a); } return out; };
+      const co2=serie(300), co=serie(0.3);
+      const max=Math.max(...co2);
+      const linea=(d,col,gr)=>{ c.strokeStyle=col; c.lineWidth=gr; c.beginPath();
+        d.forEach((v,i)=>{ const x=m.l+gw*i/N, y=m.t+gh-gh*(v/max);
+          i?c.lineTo(x,y):c.moveTo(x,y); }); c.stroke(); };
+      linea(co2, acc(), 1.8); linea(co, '#e0533f', 1.6);
+      c.font='11px "IBM Plex Mono", monospace';
+      c.fillStyle=acc();     c.fillText('CO₂  ·  permanece siglos', m.l+10, m.t+16);
+      c.fillStyle='#e0533f'; c.fillText('CO  ·  se oxida en meses', m.l+10, m.t+34);
+      c.fillStyle=tinta(); c.font='10px "IBM Plex Mono", monospace';
+      c.fillText('0', m.l-4, m.t+gh+16);
+      c.fillText(N+' años', m.l+gw-42, m.t+gh+16);
+      c.save(); c.translate(14, m.t+gh/2); c.rotate(-Math.PI/2); c.textAlign='center';
+      c.fillText('acumulado en la atmósfera',0,0); c.restore(); c.textAlign='left';
+    }
+    new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) pintar(); }),{threshold:.05}).observe(cv);
+    document.getElementById('ctlsAcum').addEventListener('input', pintar);
+    addEventListener('resize', pintar, {passive:true});
+    addEventListener('themechange', pintar);
+  })();
+
+  /* ══ 4 · REDOX Zn / Cu²⁺ ══════════════════════════════════════════════
+     Se dibuja el vaso porque sin él la escena no se entiende: el color azul
+     del líquido ES el ion Cu²⁺ en solución, y verlo destiñir mientras el
+     cobre se deposita en la lámina es la reacción entera contada sin texto. */
+  (function(){
+    const cv=document.getElementById('redox'); if(!cv) return;
+    const lec=document.getElementById('lecturaRedox');
+    const e=[], iones=[]; let transferidos=0, ultimo=-1;
+    alVerlo(cv, t=>{
+      const {c,w,h}=lienzo(cv); c.clearRect(0,0,w,h);
+      const vx=w*0.14, vy=h*0.16, vw=w*0.72, vh=h*0.62;   // vaso
+      const avance=Math.min(1, transferidos/260);
+
+      // Líquido: azul intenso al principio, casi incoloro al final.
+      const azul=0.42*(1-avance)+0.04;
+      c.fillStyle=`rgba(70,130,220,${azul})`;
+      c.fillRect(vx+2, vy+vh*0.16, vw-4, vh*0.84-2);
+
+      // Paredes del vaso
+      c.strokeStyle=tinta(); c.globalAlpha=.5; c.lineWidth=1.4;
+      c.beginPath(); c.moveTo(vx,vy); c.lineTo(vx,vy+vh); c.lineTo(vx+vw,vy+vh); c.lineTo(vx+vw,vy);
+      c.stroke(); c.globalAlpha=1;
+
+      // Lámina de zinc: se adelgaza a medida que se disuelve.
+      const zx=vx+vw*0.24, zw=26*(1-avance*0.45);
+      c.fillStyle=tinta(); c.globalAlpha=.55;
+      c.fillRect(zx-zw/2, vy+vh*0.10, zw, vh*0.74);
+      c.globalAlpha=1;
+      // Cobre depositándose encima, rojizo.
+      c.fillStyle='#c2683f'; c.globalAlpha=.85;
+      c.fillRect(zx-zw/2-3, vy+vh*0.10+vh*0.74*(1-avance), 3, vh*0.74*avance);
+      c.fillRect(zx+zw/2,   vy+vh*0.10+vh*0.74*(1-avance), 3, vh*0.74*avance);
+      c.globalAlpha=1;
+
+      // Iones Cu²⁺ flotando, cada vez menos.
+      if(iones.length < Math.round(16*(1-avance)) && Math.random()<0.08)
+        iones.push({x:vx+vw*(0.45+Math.random()*0.48), y:vy+vh*(0.25+Math.random()*0.6),
+                    fx:(Math.random()-0.5)*0.25, fy:(Math.random()-0.5)*0.25});
+      iones.forEach(io=>{
+        io.x+=io.fx; io.y+=io.fy;
+        if(io.x<vx+vw*0.42||io.x>vx+vw-8) io.fx*=-1;
+        if(io.y<vy+vh*0.20||io.y>vy+vh-8) io.fy*=-1;
+        c.fillStyle='rgba(120,170,240,.75)';
+        c.beginPath(); c.arc(io.x,io.y,3.2,0,7); c.fill();
+      });
+      if(iones.length > Math.round(16*(1-avance))) iones.shift();
+
+      // Electrones cruzando desde el zinc hacia los iones.
+      if(e.length<8 && Math.random()<0.07) e.push({p:0, y:vy+vh*(0.3+Math.random()*0.5)});
+      for(let i=e.length-1;i>=0;i--){
+        const el=e[i]; el.p+=0.009;
+        if(el.p>=1){ e.splice(i,1); transferidos++; continue; }
+        const x=zx+zw/2+ (vw*0.52)*el.p;
+        c.fillStyle='#7cc4ff';
+        c.beginPath(); c.arc(x, el.y+Math.sin(el.p*Math.PI*2)*7, 3.2, 0, 7); c.fill();
+        c.font='9px "IBM Plex Mono", monospace'; c.fillStyle='rgba(124,196,255,.45)';
+        c.fillText('e⁻', x-4, el.y-9);
+      }
+
+      // Rótulos, fuera del vaso para no taparlo.
+      c.textAlign='center'; c.font='12px "IBM Plex Mono", monospace';
+      c.fillStyle=acc();     c.fillText('Zn⁰ → Zn²⁺', zx, vy-10);
+      c.fillStyle='#e08a5a'; c.fillText('Cu²⁺ → Cu⁰', vx+vw*0.74, vy-10);
+      c.font='10px "IBM Plex Mono", monospace'; c.fillStyle=tinta();
+      c.fillText('se oxida · pierde e⁻', zx, vy+vh+20);
+      c.fillText('se reduce · gana e⁻', vx+vw*0.74, vy+vh+20);
+      c.textAlign='left';
+
+      if(transferidos!==ultimo){
+        ultimo=transferidos;
+        lec.innerHTML=`<span>electrones transferidos <b>${transferidos}</b></span>`+
+          `<span>solución <b>${azul>0.25?'azul intenso':azul>0.12?'destiñendo':'casi incolora'}</b></span>`+
+          `<span>cobre depositado <b>${ES(avance*100)} %</b></span>`;
+      }
+    });
+  })();
+
+  /* ══ 5 · OZONO ════════════════════════════════════════════════════════ */
+  (function(){
+    const cv=document.getElementById('ozono'); if(!cv) return;
+    const capas=[{k:'estr',n:'ESTRATOSFERA',on:true},{k:'trop',n:'TROPOSFERA',on:true}];
+    const leg=document.getElementById('legOz');
+    capas.forEach((v,i)=>{
+      const b=document.createElement('button'); b.className='chip';
+      b.innerHTML=`<span class="pt" style="background:${['#5aa8ff','#e0533f'][i]}"></span>${v.n}`;
+      b.onclick=()=>{ v.on=!v.on; b.classList.toggle('off',!v.on); };
+      leg.appendChild(b);
+    });
+    const mol=[];
+    alVerlo(cv, t=>{
+      const {c,w,h}=lienzo(cv); c.clearRect(0,0,w,h);
+      const yE=h*0.30, yT=h*0.78;
+      // Franjas
+      c.fillStyle='rgba(90,168,255,.05)'; c.fillRect(0,0,w,h*0.48);
+      c.fillStyle='rgba(224,83,63,.05)';  c.fillRect(0,h*0.60,w,h*0.40);
+      c.strokeStyle=tinta(); c.globalAlpha=.25; c.setLineDash([3,6]);
+      c.beginPath(); c.moveTo(0,h*0.54); c.lineTo(w,h*0.54); c.stroke();
+      c.setLineDash([]); c.globalAlpha=1;
+
+      c.font='10px "IBM Plex Mono", monospace';
+      c.fillStyle='#5aa8ff'; c.fillText('ESTRATOSFERA · 15–35 km · protege', 14, 20);
+      c.fillStyle='#e0533f'; c.fillText('TROPOSFERA · nivel del suelo · contamina', 14, h-12);
+
+      // Rayos UV cayendo sobre la estratosfera
+      if(capas[0].on){
+        c.strokeStyle='rgba(160,200,255,.45)'; c.lineWidth=1;
+        for(let i=0;i<7;i++){
+          const x=(w/8)*(i+1)+Math.sin(t*2+i)*4;
+          c.beginPath(); c.moveTo(x,0); c.lineTo(x, yE-14); c.stroke();
+        }
+        c.fillStyle='rgba(160,200,255,.6)'; c.font='9px "IBM Plex Mono", monospace';
+        c.fillText('UV del Sol', 14, 36);
+      }
+      // Suelo con fuentes de NO2
+      if(capas[1].on){
+        c.fillStyle=tinta(); c.globalAlpha=.3;
+        for(let i=0;i<4;i++){ const x=(w/5)*(i+1); c.fillRect(x-9,h-26,18,14); }
+        c.globalAlpha=1;
+        c.fillStyle='rgba(224,83,63,.6)'; c.font='9px "IBM Plex Mono", monospace';
+        c.fillText('NO₂', w/5-10, h-32);
+      }
+      // Moléculas de O3 formándose en cada capa
+      capas.forEach((cap,ci)=>{
+        if(!cap.on) return;
+        if(mol.filter(m=>m.capa===ci).length<9 && Math.random()<0.05)
+          mol.push({capa:ci, x:20+Math.random()*(w-40), y:ci?h-30:yE+10, vida:1, sube:ci?-0.28:0.1});
+      });
+      for(let i=mol.length-1;i>=0;i--){
+        const m=mol[i];
+        if(!capas[m.capa].on){ mol.splice(i,1); continue; }
+        m.y+=m.sube; m.vida-=0.004;
+        if(m.vida<=0){ mol.splice(i,1); continue; }
+        const col=m.capa? '224,83,63' : '90,168,255';
+        c.globalAlpha=m.vida*0.9;
+        // O3: tres átomos en ángulo CON sus enlaces. La molécula real es
+        // angular (~117°), no lineal: dibujarla derecha sería enseñar mal.
+        c.strokeStyle=`rgba(${col},.55)`; c.lineWidth=1.4;
+        c.beginPath(); c.moveTo(m.x-7,m.y+4); c.lineTo(m.x,m.y); c.lineTo(m.x+7,m.y+4); c.stroke();
+        [[0,0],[7,4],[-7,4]].forEach(([dx,dy])=>{
+          c.fillStyle=`rgb(${col})`;
+          c.beginPath(); c.arc(m.x+dx, m.y+dy, 2.8, 0, 7); c.fill();
+        });
+        c.globalAlpha=1;
+      }
+      c.fillStyle=acc(); c.font='11px "IBM Plex Mono", monospace'; c.textAlign='center';
+      c.fillText('O₃', w/2, h*0.50);
+      c.fillStyle=tinta(); c.font='9px "IBM Plex Mono", monospace';
+      c.fillText('la misma molécula en los dos lados', w/2, h*0.50+15);
+      c.textAlign='left';
+    });
+  })();
+
+  /* ══ 6 · pH DE LA LLUVIA ══════════════════════════════════════════════
+     La lluvia limpia ya es ácida (pH 5,6) por el CO2 disuelto. El SO2 y el
+     NOx la bajan mucho más rápido porque forman ácidos fuertes. */
+  (function(){
+    const marca=document.getElementById('phMark'); if(!marca) return;
+    const lec=document.getElementById('lecturaPh');
+    const P={cont:0};
+    control(document.getElementById('ctlsPh'),'SO₂ y NOₓ en el aire',0,100,1,0,v=>{P.cont=v;pinta();return v+' %';});
+    function pinta(){
+      // 5,6 es la lluvia limpia; con contaminación alta baja hasta ~4,0.
+      const ph = 5.6 - 1.6*Math.pow(P.cont/100, 0.75);
+      marca.style.left = (ph/14*100)+'%';
+      marca.dataset.ph = ES(+ph.toFixed(1));
+      const est = P.cont===0 ? 'lluvia limpia, acidez natural por CO₂ disuelto'
+                : ph>5.0 ? 'levemente acidificada'
+                : ph>4.5 ? 'lluvia ácida: daña suelos y hojas'
+                : 'lluvia ácida fuerte: acidifica lagos y corroe construcciones';
+      lec.innerHTML = `<span>pH <b>${ES(+ph.toFixed(1))}</b></span><span>${est}</span>`;
+    }
+    pinta();
+  })();
+
+  /* ── Los .blk arrancan en opacidad 0: revelarlos al entrar ─────────── */
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){ e.target.style.opacity=1; e.target.style.transform='none'; }
+  }),{threshold:.08});
+  document.querySelectorAll('.blk,.steps').forEach(el=>io.observe(el));
+})();
+</script>
+
+</body>
+</html>

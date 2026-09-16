@@ -1,0 +1,163 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<style>
+  @font-face{font-family:'Space Grotesk';font-weight:400;src:url('print-fonts/grotesk-400.woff2') format('woff2')}
+  @font-face{font-family:'Space Grotesk';font-weight:500;src:url('print-fonts/grotesk-500.woff2') format('woff2')}
+  @font-face{font-family:'Space Grotesk';font-weight:600;src:url('print-fonts/grotesk-600.woff2') format('woff2')}
+  @font-face{font-family:'IBM Plex Mono';font-weight:400;src:url('print-fonts/plexmono-400.woff2') format('woff2')}
+  @font-face{font-family:'IBM Plex Mono';font-weight:500;src:url('print-fonts/plexmono-500.woff2') format('woff2')}
+  /* Arial y Courier New cierran la pila a propósito: si un glifo (λ) no está
+     en la web font, cae en una fuente TrueType que se incrusta limpia — no en
+     las del sistema de Apple, que entran al PDF como Type 3 y rompen Preview. */
+  /* Nada de negrita sintética: <b> pide 700 y aquí no existe — Chrome la
+     fabrica y la incrusta como Type 3, que rompe Preview. Se fija cada
+     contexto al peso real más alto de su familia: 600 en Grotesk, 500 en
+     Plex Mono. */
+  b{font-weight:600}
+  .eq b,.paso b,td b,.r3 b,.mono b{font-weight:500}
+  *{margin:0;padding:0;box-sizing:border-box}
+  @page{size:A4;margin:0}
+  body{font-family:'Space Grotesk',Arial,sans-serif;color:#111;background:#fff;
+       font-size:10.5px;line-height:1.55}
+  .mono,.tk,.sub,.eq,.paso div,td,th{font-family:'IBM Plex Mono','Courier New',monospace}
+  .page{width:210mm;min-height:297mm;padding:14mm 15mm 12mm;position:relative;page-break-after:always}
+  .page:last-child{page-break-after:auto}
+  .cab{display:flex;justify-content:space-between;align-items:baseline;
+       border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:14px}
+  h1{font-size:19px;font-weight:600;letter-spacing:-.01em}
+  .cab .mono{font-size:8px;letter-spacing:.18em;color:#666}
+  .ficha{display:flex;gap:18px;margin:10px 0 16px;font-size:9.5px;color:#444}
+  .ficha span{border-bottom:1px solid #999;min-width:150px;display:inline-block}
+  h2{font-size:12.5px;font-weight:600;margin:16px 0 6px}
+  h3{font-size:10.5px;font-weight:500;margin:10px 0 4px;color:#333}
+  p{margin:4px 0;color:#333}
+  .eq{color:#0a5cff;font-size:10.5px;margin:3px 0}
+  .caja{border:1px solid #ccc;padding:9px 12px;margin:8px 0;display:flex;gap:26px;flex-wrap:wrap}
+  table{border-collapse:collapse;width:100%;margin:8px 0;font-size:9.5px}
+  th,td{border:1px solid #999;padding:4.5px 8px;text-align:right;font-weight:500}
+  thead th{background:#f0f2f5;font-weight:500;text-align:right;font-size:8.5px}
+  th:first-child,td:first-child{text-align:left}
+  td.dado{font-weight:500;background:#eef3ff}
+  .leyenda{font-size:8.5px;color:#666;margin:2px 0 10px}
+  .leyenda i{display:inline-block;width:9px;height:9px;background:#eef3ff;border:1px solid #999;
+             vertical-align:-1px;margin-right:4px;font-style:normal}
+  .pasos{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin:6px 0}
+  .paso{border:1px solid #ddd;padding:6px 9px;display:flex;gap:10px;align-items:flex-start}
+  .paso .pid{font-weight:500;color:#0a5cff;font-family:'IBM Plex Mono','Courier New',monospace}
+  .paso div{font-size:8.8px;line-height:1.7}
+  .paso b{color:#0a5cff}
+  .onda-svg{width:100%;height:auto;display:block;margin:2px 0}
+  .tk{font-size:8px;fill:#555;font-family:'IBM Plex Mono','Courier New',monospace}
+  .ttl{font-size:9px;font-weight:500;fill:#111;font-family:'IBM Plex Mono','Courier New',monospace}
+  .sub{font-size:8px;fill:#666}
+  .pie{position:absolute;left:15mm;right:15mm;bottom:7mm;display:flex;justify-content:space-between;
+       font-family:'IBM Plex Mono','Courier New',monospace;font-size:7.5px;color:#888;
+       border-top:1px solid #ddd;padding-top:5px}
+  .dos{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .r3{border:1px solid #ddd;padding:8px 11px;margin:5px 0}
+  .r3 .pid{font-size:8px;letter-spacing:.16em;color:#0a5cff;font-family:'IBM Plex Mono','Courier New',monospace}
+  sub{font-size:.72em;vertical-align:-.25em}
+  sup{font-size:.72em;vertical-align:.4em}
+  .rx{color:#0a5cff;font-family:'IBM Plex Mono','Courier New',monospace;font-size:10.5px;margin:5px 0}
+  .resp{border:1px solid #999;background:#f6f8fc;padding:8px 11px;margin:7px 0}
+  .resp .pid{font-size:8px;letter-spacing:.16em;color:#0a5cff;
+             font-family:'IBM Plex Mono','Courier New',monospace;margin-bottom:4px}
+  .resp p{font-size:9.5px;line-height:1.65;margin:3px 0}
+  .aviso{border:1px solid #999;border-left:3px solid #0a5cff;padding:8px 11px;margin:8px 0;font-size:9px;color:#444}
+  .defs2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0}
+  .d2{border:1px solid #ddd;padding:7px 9px}
+  .d2 .t{font-size:8px;letter-spacing:.14em;color:#0a5cff;
+         font-family:'IBM Plex Mono','Courier New',monospace}
+  .d2 .n{font-size:10px;font-weight:600;margin:3px 0}
+  .d2 p{font-size:8.6px;line-height:1.6}
+  th,td{text-align:left}
+  thead th{text-align:left}
+</style></head><body>
+<div class="page">
+<div class="cab"><h1>Reacciones químicas cotidianas — resuelta</h1><span class="mono">QUÍMICA · 1º MEDIO</span></div>
+<div class="ficha"><div>Nombre: <span></span></div><div>Curso: <span></span></div><div>Fecha: <span></span></div></div>
+
+<div class="aviso"><b>Sobre las páginas 34–37.</b> Esas páginas del texto corresponden a «Unidad 1 · Soluciones químicas» (preparación de soluciones, molaridad, dilución) y no tratan combustión, óxido-reducción, ozono ni lluvia ácida. El contenido de esta guía se desarrolló desde el currículum de 1º medio. La única excepción es el caso de Quintero-Puchuncaví, que sí aparece en la página 37 y se usa en la pregunta 2.</div>
+
+<h2>1a · Combustible, comburente y combustión</h2>
+<div class="defs2">
+  <div class="d2"><div class="t">COMBUSTIBLE</div><div class="n">Lo que se quema</div>
+    <p>Sustancia que se oxida y libera energía. Cede electrones: es el <b>agente reductor</b>. Ej.: madera, gas natural, carbón, bencina.</p></div>
+  <div class="d2"><div class="t">COMBURENTE</div><div class="n">Lo que permite quemar</div>
+    <p>Sustancia que acepta esos electrones; normalmente el oxígeno (O<sub>2</sub>) del aire. Es el <b>agente oxidante</b>.</p></div>
+  <div class="d2"><div class="t">COMBUSTIÓN</div><div class="n">La reacción entre ambos</div>
+    <p>Reacción de óxido-reducción rápida y exotérmica que libera calor y luz. Requiere una energía de activación (chispa) para iniciarse.</p></div>
+</div>
+<p><b>Triángulo del fuego:</b> hacen falta los tres a la vez —combustible, comburente y energía—. Un extintor apaga quitando uno: el de CO<sub>2</sub> desplaza el oxígeno, el agua baja la temperatura, cerrar la llave quita el combustible.</p>
+
+<h2>1b · Ejemplo de combustión e importancia</h2>
+<div class="rx">CH<sub>4</sub> + 2 O<sub>2</sub> &rarr; CO<sub>2</sub> + 2 H<sub>2</sub>O + energía</div>
+<p>Combustión del metano (gas de cocina). Comprobación del balance: C 1 = 1; H 4 = 4; O 4 = 4. Cumple la ley de conservación de la masa. Los subíndices no se modifican para balancear —cambiarían la sustancia—; solo se ajustan los coeficientes.</p>
+<div class="rx">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6 O<sub>2</sub> &rarr; 6 CO<sub>2</sub> + 6 H<sub>2</sub>O + energía</div>
+<p>La respiración celular es la misma reacción, lenta y controlada por enzimas.</p>
+<div class="resp"><div class="pid">RESPUESTA 1</div>
+<p><b>Combustible:</b> sustancia que se oxida y libera energía al quemarse; actúa como agente reductor. <b>Comburente:</b> sustancia que provoca la combustión al aceptar electrones, normalmente el oxígeno del aire; actúa como agente oxidante. <b>Combustión:</b> reacción de óxido-reducción rápida y exotérmica entre ambos, que libera calor y luz.</p>
+<p><b>Ejemplo:</b> CH<sub>4</sub> + 2 O<sub>2</sub> → CO<sub>2</sub> + 2 H<sub>2</sub>O + energía. <b>Importancia:</b> de esta reacción proviene casi toda la energía que utilizamos (cocina, transporte, electricidad, industria), y en su versión biológica —la respiración celular— sostiene la vida de los seres vivos.</p></div>
+<div class="pie"><span>Guía resuelta · bnsolutions.cl/lab/quimica-guia</span><span>Página 1 de 3</span></div>
+</div><div class="page">
+<div class="cab"><h1>Reacciones químicas cotidianas — resuelta</h1><span class="mono">QUÍMICA · 1º MEDIO</span></div>
+<h2>2 · Alteraciones por la combustión de carbón y petróleo</h2>
+<table>
+<thead><tr><th>Sustancia</th><th>Origen</th><th>Efecto</th></tr></thead>
+<tr><td>CO<sub>2</sub></td><td>Del carbono del combustible; producto principal</td><td>Efecto invernadero y calentamiento global</td></tr>
+<tr><td>CO</td><td>Combustión incompleta (falta de oxígeno)</td><td>Tóxico: impide el transporte de oxígeno en la sangre</td></tr>
+<tr><td>SO<sub>2</sub></td><td>Del azufre presente como impureza</td><td>Lluvia ácida y afecciones respiratorias</td></tr>
+<tr><td>NO<sub>x</sub></td><td>Del nitrógeno del <i>aire</i>, sobre 1.000 °C</td><td>Lluvia ácida, ozono troposférico y smog</td></tr>
+<tr><td>Material particulado</td><td>Carbono sin oxidar (hollín)</td><td>Enfermedades respiratorias y cardiovasculares</td></tr>
+<tr><td>Metales pesados</td><td>Impurezas del carbón (Hg, Pb, As, Cd)</td><td>Acumulación permanente en los ecosistemas</td></tr>
+</table>
+<h3>Efectos a largo plazo</h3>
+<p><b>Calentamiento global:</b> el CO<sub>2</sub> permanece siglos en la atmósfera reteniendo calor; provoca aumento de temperatura, derretimiento de glaciares y alza del nivel del mar. <b>Acidificación de los océanos:</b> el CO<sub>2</sub> disuelto forma ácido carbónico y dificulta la formación de caparazones de carbonato de calcio. <b>Lluvia ácida:</b> acidifica suelos y lagos, daña bosques y corroe construcciones. <b>Salud:</b> el material particulado fino penetra en los pulmones. <b>Metales pesados:</b> no se degradan y ascienden por la cadena alimentaria.</p>
+<p><b>Caso en Chile:</b> el estudio de la Universidad de Playa Ancha en la bahía de Quintero-Puchuncaví (pág. 37 del texto) detectó cadmio, cromo, cobre, manganeso, plomo, vanadio, níquel, zinc y mercurio en agua, suelos y organismos, con cobre y vanadio sobre la norma.</p>
+<div class="resp"><div class="pid">RESPUESTA 2</div>
+<p>La combustión de carbón y petróleo libera CO<sub>2</sub>, CO, SO<sub>2</sub>, óxidos de nitrógeno, material particulado y metales pesados. Sus efectos a largo plazo son el calentamiento global, la acidificación de los océanos, la lluvia ácida, enfermedades respiratorias y la acumulación permanente de metales pesados en los ecosistemas, como ocurre en la bahía de Quintero-Puchuncaví.</p></div>
+
+<h2>3 · Reacción de óxido-reducción</h2>
+<p>Reacción en la que se <b>transfieren electrones</b> entre sustancias. La que pierde electrones se <b>oxida</b> (su número de oxidación aumenta) y actúa como agente reductor; la que los gana se <b>reduce</b> (disminuye) y actúa como agente oxidante. Ambas ocurren siempre simultáneamente.</p>
+<div class="rx">Zn<sup>0</sup> + Cu<sup>2+</sup> &rarr; Zn<sup>2+</sup> + Cu<sup>0</sup></div>
+<div class="rx">Zn<sup>0</sup> &rarr; Zn<sup>2+</sup> + 2e<sup>−</sup> &nbsp;(oxidación) &nbsp;&nbsp; Cu<sup>2+</sup> + 2e<sup>−</sup> &rarr; Cu<sup>0</sup> &nbsp;(reducción)</div>
+<table>
+<thead><tr><th>Reacción</th><th>Se oxida</th><th>Se reduce</th><th>Dónde se observa</th></tr></thead>
+<tr><td>4 Fe + 3 O<sub>2</sub> → 2 Fe<sub>2</sub>O<sub>3</sub></td><td>Fe: 0 → +3</td><td>O: 0 → −2</td><td>Oxidación del hierro</td></tr>
+<tr><td>CH<sub>4</sub> + 2 O<sub>2</sub> → CO<sub>2</sub> + 2 H<sub>2</sub>O</td><td>C: −4 → +4</td><td>O: 0 → −2</td><td>Toda combustión</td></tr>
+</table>
+<div class="resp"><div class="pid">RESPUESTA 3</div>
+<p>Una reacción redox es aquella en que se transfieren electrones. Ejemplos: Zn + Cu<sup>2+</sup> → Zn<sup>2+</sup> + Cu; la oxidación del hierro; y toda combustión. <b>Importancia:</b> permiten obtener energía (combustión, pilas y baterías), producir metales a partir de sus minerales (metalurgia y refinación del cobre), y ocurren en la respiración celular y la fotosíntesis. También explican la corrosión.</p></div>
+<div class="pie"><span>Guía resuelta · bnsolutions.cl/lab/quimica-guia</span><span>Página 2 de 3</span></div>
+</div><div class="page">
+<div class="cab"><h1>Reacciones químicas cotidianas — resuelta</h1><span class="mono">QUÍMICA · 1º MEDIO</span></div>
+<h2>4 · Ozono, lluvia ácida, óxidos, carbonatos y sales</h2>
+<h3>Ozono (O<sub>3</sub>)</h3>
+<div class="rx">Estratosfera: &nbsp; O<sub>2</sub> + UV &rarr; 2 O &nbsp;&nbsp;|&nbsp;&nbsp; O + O<sub>2</sub> &rarr; O<sub>3</sub></div>
+<div class="rx">Troposfera: &nbsp; NO<sub>2</sub> + luz &rarr; NO + O &nbsp;&nbsp;|&nbsp;&nbsp; O + O<sub>2</sub> &rarr; O<sub>3</sub></div>
+<p>En la estratosfera (15–35 km) el ozono es beneficioso: filtra la radiación ultravioleta. A nivel del suelo se forma a partir del NO<sub>2</sub> de vehículos e industrias y constituye el smog fotoquímico, que irrita ojos y vías respiratorias.</p>
+<h3>Lluvia ácida</h3>
+<div class="rx">S + O<sub>2</sub> &rarr; SO<sub>2</sub> &nbsp;&rarr;&nbsp; SO<sub>3</sub> + H<sub>2</sub>O &rarr; H<sub>2</sub>SO<sub>4</sub></div>
+<div class="rx">N<sub>2</sub> + O<sub>2</sub> &rarr; 2 NO &nbsp;&rarr;&nbsp; NO<sub>2</sub> + H<sub>2</sub>O &rarr; HNO<sub>3</sub></div>
+<p>La lluvia limpia tiene pH ≈ 5,6 por el CO<sub>2</sub> disuelto. Se considera lluvia ácida bajo ese valor; con contaminación alta llega a pH 4,0–4,5.</p>
+<h3>Óxidos, carbonatos y sales</h3>
+<table>
+<thead><tr><th>Compuesto</th><th>Formación</th><th>Ejemplo</th></tr></thead>
+<tr><td>Óxido básico</td><td>metal + O<sub>2</sub></td><td>2 Ca + O<sub>2</sub> → 2 CaO</td></tr>
+<tr><td>Óxido ácido</td><td>no metal + O<sub>2</sub></td><td>S + O<sub>2</sub> → SO<sub>2</sub></td></tr>
+<tr><td>Hidróxido</td><td>óxido básico + H<sub>2</sub>O</td><td>CaO + H<sub>2</sub>O → Ca(OH)<sub>2</sub></td></tr>
+<tr><td>Ácido</td><td>óxido ácido + H<sub>2</sub>O</td><td>SO<sub>3</sub> + H<sub>2</sub>O → H<sub>2</sub>SO<sub>4</sub></td></tr>
+<tr><td>Sal</td><td>ácido + base (neutralización)</td><td>HCl + NaOH → NaCl + H<sub>2</sub>O</td></tr>
+<tr><td>Carbonato</td><td>óxido básico + CO<sub>2</sub></td><td>CaO + CO<sub>2</sub> → CaCO<sub>3</sub></td></tr>
+</table>
+<div class="resp"><div class="pid">RESPUESTA 4</div>
+<p><b>Ozono:</b> en la estratosfera se forma cuando el UV rompe el O<sub>2</sub> y los átomos libres se unen a otras moléculas de O<sub>2</sub>; allí protege de la radiación. A nivel del suelo se forma desde el NO<sub>2</sub> con luz solar y contamina. <b>Lluvia ácida:</b> el SO<sub>2</sub> y los NO<sub>x</sub> forman H<sub>2</sub>SO<sub>4</sub> y HNO<sub>3</sub> con el agua de las nubes, bajando el pH por debajo de 5,6. <b>Óxidos:</b> elemento + oxígeno; básicos si es metal, ácidos si es no metal. <b>Carbonatos:</b> óxido básico + CO<sub>2</sub> (CaO + CO<sub>2</sub> → CaCO<sub>3</sub>); forman caliza, mármol y conchas. <b>Sales:</b> por neutralización de un ácido con una base (HCl + NaOH → NaCl + H<sub>2</sub>O).</p></div>
+
+<h2>5 · Reacciones químicas en la industria</h2>
+<div class="rx">Haber-Bosch: N<sub>2</sub> + 3 H<sub>2</sub> &#8652; 2 NH<sub>3</sub> &nbsp;·&nbsp; Contacto: S &rarr; SO<sub>2</sub> &rarr; SO<sub>3</sub> &rarr; H<sub>2</sub>SO<sub>4</sub></div>
+<div class="rx">Calcinación: CaCO<sub>3</sub> &rarr; CaO + CO<sub>2</sub> &nbsp;·&nbsp; Cobre: Cu<sub>2</sub>S + O<sub>2</sub> &rarr; 2 Cu + SO<sub>2</sub></div>
+<div class="resp"><div class="pid">RESPUESTA 5</div>
+<p>Las reacciones químicas industriales permiten transformar materias primas en los productos de los que depende la vida moderna. El proceso Haber-Bosch produce amoníaco para fertilizantes, de los que depende la alimentación de cerca de la mitad de la población mundial. El proceso de contacto produce ácido sulfúrico, el compuesto más fabricado del mundo y esencial en la minería del cobre. La calcinación de la caliza da el cemento de toda la construcción. La metalurgia, que es óxido-reducción aplicada, permite obtener metales puros: en Chile, la fundición del cobre.</p>
+<p><b>Contrapartida:</b> generan emisiones y residuos (CO<sub>2</sub>, SO<sub>2</sub>, metales pesados), por lo que la industria moderna busca capturarlos y reutilizarlos —por ejemplo, transformando el SO<sub>2</sub> de una fundición en ácido sulfúrico en vez de emitirlo.</p></div>
+<div class="pie"><span>Guía resuelta · bnsolutions.cl/lab/quimica-guia</span><span>Página 3 de 3</span></div>
+</div>
+</body></html>

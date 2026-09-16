@@ -1,0 +1,172 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<style>
+  @font-face{font-family:'Space Grotesk';font-weight:400;src:url('print-fonts/grotesk-400.woff2') format('woff2')}
+  @font-face{font-family:'Space Grotesk';font-weight:500;src:url('print-fonts/grotesk-500.woff2') format('woff2')}
+  @font-face{font-family:'Space Grotesk';font-weight:600;src:url('print-fonts/grotesk-600.woff2') format('woff2')}
+  @font-face{font-family:'IBM Plex Mono';font-weight:400;src:url('print-fonts/plexmono-400.woff2') format('woff2')}
+  @font-face{font-family:'IBM Plex Mono';font-weight:500;src:url('print-fonts/plexmono-500.woff2') format('woff2')}
+  /* Arial y Courier New cierran la pila a propósito: si un glifo (λ) no está
+     en la web font, cae en una fuente TrueType que se incrusta limpia — no en
+     las del sistema de Apple, que entran al PDF como Type 3 y rompen Preview. */
+  /* Nada de negrita sintética: <b> pide 700 y aquí no existe — Chrome la
+     fabrica y la incrusta como Type 3, que rompe Preview. Se fija cada
+     contexto al peso real más alto de su familia: 600 en Grotesk, 500 en
+     Plex Mono. */
+  b{font-weight:600}
+  .eq b,.paso b,td b,.r3 b,.mono b,.rx b,.pasos5 b.n{font-weight:500}
+  *{margin:0;padding:0;box-sizing:border-box}
+  @page{size:A4;margin:0}
+  body{font-family:'Space Grotesk',Arial,sans-serif;color:#111;background:#fff;
+       font-size:10.5px;line-height:1.55}
+  .mono,.tk,.sub,.eq,.paso div,td,th{font-family:'IBM Plex Mono','Courier New',monospace}
+  .page{width:210mm;min-height:297mm;padding:14mm 15mm 12mm;position:relative;page-break-after:always}
+  .page:last-child{page-break-after:auto}
+  .cab{display:flex;justify-content:space-between;align-items:baseline;
+       border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:14px}
+  h1{font-size:19px;font-weight:600;letter-spacing:-.01em}
+  .cab .mono{font-size:8px;letter-spacing:.18em;color:#666}
+  .ficha{display:flex;gap:18px;margin:10px 0 16px;font-size:9.5px;color:#444}
+  .ficha span{border-bottom:1px solid #999;min-width:150px;display:inline-block}
+  h2{font-size:12.5px;font-weight:600;margin:16px 0 6px}
+  h3{font-size:10.5px;font-weight:500;margin:10px 0 4px;color:#333}
+  p{margin:4px 0;color:#333}
+  .eq{color:#0a5cff;font-size:10.5px;margin:3px 0}
+  .caja{border:1px solid #ccc;padding:9px 12px;margin:8px 0;display:flex;gap:26px;flex-wrap:wrap}
+  table{border-collapse:collapse;width:100%;margin:8px 0;font-size:9.5px}
+  th,td{border:1px solid #999;padding:4.5px 8px;text-align:right;font-weight:500}
+  thead th{background:#f0f2f5;font-weight:500;text-align:right;font-size:8.5px}
+  th:first-child,td:first-child{text-align:left}
+  td.dado{font-weight:500;background:#eef3ff}
+  .leyenda{font-size:8.5px;color:#666;margin:2px 0 10px}
+  .leyenda i{display:inline-block;width:9px;height:9px;background:#eef3ff;border:1px solid #999;
+             vertical-align:-1px;margin-right:4px;font-style:normal}
+  .pasos{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin:6px 0}
+  .paso{border:1px solid #ddd;padding:6px 9px;display:flex;gap:10px;align-items:flex-start}
+  .paso .pid{font-weight:500;color:#0a5cff;font-family:'IBM Plex Mono','Courier New',monospace}
+  .paso div{font-size:8.8px;line-height:1.7}
+  .paso b{color:#0a5cff}
+  .onda-svg{width:100%;height:auto;display:block;margin:2px 0}
+  .tk{font-size:8px;fill:#555;font-family:'IBM Plex Mono','Courier New',monospace}
+  .ttl{font-size:9px;font-weight:500;fill:#111;font-family:'IBM Plex Mono','Courier New',monospace}
+  .sub{font-size:8px;fill:#666}
+  .pie{position:absolute;left:15mm;right:15mm;bottom:7mm;display:flex;justify-content:space-between;
+       font-family:'IBM Plex Mono','Courier New',monospace;font-size:7.5px;color:#888;
+       border-top:1px solid #ddd;padding-top:5px}
+  .dos{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .r3{border:1px solid #ddd;padding:8px 11px;margin:5px 0}
+  .r3 .pid{font-size:8px;letter-spacing:.16em;color:#0a5cff;font-family:'IBM Plex Mono','Courier New',monospace}
+  sub{font-size:.72em;vertical-align:-.25em}
+  sup{font-size:.72em;vertical-align:.4em}
+  .rx{color:#1a7a4a;font-family:'IBM Plex Mono','Courier New',monospace;font-size:10.5px;margin:5px 0}
+  .resp{border:1px solid #999;background:#f3faf6;padding:8px 11px;margin:7px 0}
+  .resp .pid{font-size:8px;letter-spacing:.16em;color:#1a7a4a;
+             font-family:'IBM Plex Mono','Courier New',monospace;margin-bottom:4px}
+  .resp p{font-size:9.5px;line-height:1.65;margin:3px 0}
+  .aviso{border:1px solid #999;border-left:3px solid #1a7a4a;padding:8px 11px;margin:8px 0;font-size:9px;color:#444}
+  .defs2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0}
+  .d2{border:1px solid #ddd;padding:7px 9px}
+  .d2 .t{font-size:8px;letter-spacing:.14em;color:#1a7a4a;
+         font-family:'IBM Plex Mono','Courier New',monospace}
+  .d2 .n{font-size:10px;font-weight:600;margin:3px 0}
+  .d2 p{font-size:8.6px;line-height:1.6}
+  th,td{text-align:left}
+  thead th{text-align:left}
+  .d2b{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+  .pasos5{margin:8px 0}
+  .pasos5 div{display:flex;gap:9px;margin:4px 0;font-size:9.3px;line-height:1.6}
+  .pasos5 b.n{color:#1a7a4a;font-family:'IBM Plex Mono','Courier New',monospace;flex:none}
+</style></head><body>
+<div class="page">
+<div class="cab"><h1>Materia y energía de los ecosistemas — resuelta</h1><span class="mono">BIOLOGÍA · 1º MEDIO</span></div>
+<div class="ficha"><div>Nombre: <span></span></div><div>Curso: <span></span></div><div>Fecha: <span></span></div></div>
+
+<div class="aviso"><b>La idea que ordena toda la guía:</b> la <b>energía fluye</b> en una sola dirección —entra del Sol, atraviesa los niveles y se escapa como calor sin volver— mientras que la <b>materia circula</b> en un ciclo cerrado, porque los descomponedores la devuelven al medio. Por eso el esquema de la energía es una flecha y el de la materia es un círculo.</div>
+
+<h2>1 · Por qué es necesaria materia y energía. Fuente productora</h2>
+<div class="d2b">
+  <div class="d2"><div class="t">LA MATERIA</div><div class="n">De qué están hechos</div>
+    <p>Los átomos que forman sus células y tejidos: carbono, nitrógeno, fósforo, oxígeno. La necesitan para <b>crecer, formar sus estructuras y reparar</b> lo dañado.</p></div>
+  <div class="d2"><div class="t">LA ENERGÍA</div><div class="n">Lo que los mantiene funcionando</div>
+    <p>La necesitan para <b>moverse, respirar, alimentarse y mantener su temperatura</b>. Se gasta y se pierde como calor, por lo que hay que reponerla constantemente.</p></div>
+</div>
+<h3>La fuente productora</h3>
+<p>La fuente productora es el <b>Sol</b>: toda la energía utilizada por los seres vivos proviene de él. Sin embargo, esa energía solo entra al ecosistema a través de los organismos <b>productores</b> o <b>autótrofos</b> (plantas, algas y algunas bacterias), que la captan mediante la fotosíntesis y la usan para transformar la materia inorgánica del medio en materia orgánica. Todos los demás seres vivos dependen de lo que ellos fabrican.</p>
+<h3>Esquema representativo</h3>
+<div class="rx">Energía solar &rarr; Productores &rarr; Consumidores 1.º &rarr; Consumidores 2.º &rarr; Consumidores 3.º</div>
+<div class="rx">&darr; en cada paso se pierde energía calorífica (no vuelve)</div>
+<div class="rx">Todos los niveles &rarr; Descomponedores &rarr; materia inorgánica &rarr; vuelve a los Productores</div>
+<div class="resp"><div class="pid">RESPUESTA 1</div>
+<p>Los ecosistemas necesitan <b>materia</b> para que los seres vivos formen sus estructuras, crezcan y se reparen, y <b>energía</b> para realizar sus funciones vitales: moverse, respirar, alimentarse y mantener la temperatura. La <b>fuente productora</b> es el <b>Sol</b>, pero su energía solo entra al ecosistema a través de los organismos productores o autótrofos, que la captan por fotosíntesis y transforman la materia inorgánica en materia orgánica, es decir, en alimento para el resto.</p></div>
+<div class="pie"><span>Guía resuelta · bnsolutions.cl/lab/ecosistemas-guia</span><span>Página 1 de 3</span></div>
+</div><div class="page">
+<div class="cab"><h1>Materia y energía de los ecosistemas — resuelta</h1><span class="mono">BIOLOGÍA · 1º MEDIO</span></div>
+<h2>2 · Cadena trófica</h2>
+<div class="rx">Productores &rarr; Consumidor 1.º &rarr; Consumidor 2.º &rarr; Consumidor 3.º</div>
+<div class="rx">Pasto &rarr; Conejo &rarr; Culebra &rarr; Águila &nbsp;&nbsp; (y desde todos) &rarr; Descomponedores</div>
+<p>Una <b>cadena trófica</b> representa cómo pasan la materia y la energía de un ser vivo a otro por medio de la alimentación. Cada eslabón se llama <b>nivel trófico</b>. Las <b>flechas</b> indican hacia dónde pasan la materia y la energía: se leen como «es comido por». Por eso se escribe pasto → conejo y no al revés.</p>
+<h3>Por qué las cadenas tienen pocos eslabones</h3>
+<p>En cada nivel la mayor parte de la energía se pierde como <b>calor</b>, en la respiración y las demás funciones del organismo. Como regla aproximada, solo un <b>10&nbsp;%</b> pasa al nivel siguiente:</p>
+<table>
+<thead><tr><th>Nivel</th><th>Energía disponible</th><th>Se pierde como calor</th></tr></thead>
+<tr><td>Productores</td><td>10.000 kcal</td><td>9.000 kcal</td></tr>
+<tr><td>Consumidor 1.º</td><td>1.000 kcal</td><td>900 kcal</td></tr>
+<tr><td>Consumidor 2.º</td><td>100 kcal</td><td>90 kcal</td></tr>
+<tr><td>Consumidor 3.º</td><td>10 kcal</td><td>9 kcal</td></tr>
+<tr><td>Consumidor 4.º</td><td>1 kcal</td><td>—</td></tr>
+</table>
+<p>Por eso las cadenas suelen tener cuatro o cinco eslabones, y por eso siempre hay muchos más productores que herbívoros y más herbívoros que carnívoros. Eso es lo que representa la <b>pirámide de niveles tróficos</b>.</p>
+<h3>Los tres tipos de pirámide</h3>
+<div class="defs2">
+  <div class="d2"><div class="t">DE ENERGÍA</div><div class="n">Siempre es pirámide</div>
+    <p>Mide la energía de cada nivel. <b>Nunca puede estar invertida</b>: un nivel no puede tener más energía que aquel del que se alimenta.</p></div>
+  <div class="d2"><div class="t">DE BIOMASA</div><div class="n">Casi siempre</div>
+    <p>Mide la masa total de seres vivos. Puede <b>invertirse</b> en el mar: el fitoplancton pesa poco pero se reproduce muy rápido.</p></div>
+  <div class="d2"><div class="t">DE NÚMEROS</div><div class="n">A menudo no</div>
+    <p>Cuenta individuos. Se invierte con facilidad: <b>un solo árbol</b> alimenta a miles de orugas.</p></div>
+</div>
+<div class="resp"><div class="pid">RESPUESTA 2</div>
+<p>Una cadena trófica es la representación de cómo pasan la materia y la energía de un ser vivo a otro mediante la alimentación. Está formada por niveles tróficos: productores, consumidores primarios (herbívoros), consumidores secundarios (carnívoros), consumidores terciarios y descomponedores. Las flechas significan «es comido por». En cada paso se pierde gran parte de la energía como calor —pasa aproximadamente un 10&nbsp;% al nivel siguiente—, por lo que las cadenas tienen pocos eslabones y siempre existen más productores que consumidores. Existen tres tipos de pirámides: la de <b>energía</b>, que nunca puede estar invertida; la de <b>biomasa</b>, que puede invertirse (como en el mar); y la de <b>números</b>, que se invierte con facilidad, ya que un solo árbol puede alimentar a miles de orugas.</p></div>
+
+<h2>3 · El ciclo de la materia</h2>
+<p>La materia de los ecosistemas se utiliza de <b>forma cíclica, una y otra vez</b>. Está formada por moléculas inorgánicas (agua y sales minerales) y orgánicas (glúcidos, lípidos, proteínas) que se transforman químicamente, aunque los elementos que la constituyen —carbono, nitrógeno, fósforo— permanecen. «La materia pasa del medio a los seres vivos, y viceversa, describiendo un ciclo cerrado.»</p>
+<div class="pasos5">
+<div><b class="n">1.</b><span>Los <b>compuestos inorgánicos</b> del medio son transformados en materia orgánica por los organismos <b>autótrofos</b>.</span></div>
+<div><b class="n">2.</b><span>Los <b>herbívoros</b> (heterótrofos) obtienen la materia alimentándose de plantas.</span></div>
+<div><b class="n">3.</b><span>Los <b>carnívoros</b> (heterótrofos) obtienen la materia alimentándose de animales.</span></div>
+<div><b class="n">4.</b><span>Las <b>bacterias y los hongos</b> transforman la materia orgánica en compuestos inorgánicos.</span></div>
+<div><b class="n">5.</b><span>Esos compuestos son <b>reutilizados por los autótrofos</b> y el ciclo <b>se cierra</b>.</span></div>
+</div>
+<div class="resp"><div class="pid">RESPUESTA 3</div>
+<p>El ciclo de la materia es el recorrido que hacen los elementos químicos entre el medio y los seres vivos, de forma cíclica y cerrada. Los autótrofos transforman los compuestos inorgánicos (agua, sales minerales y CO<sub>2</sub>) en materia orgánica; esa materia pasa a los herbívoros y de ellos a los carnívoros; cuando estos mueren o eliminan desechos, las bacterias y los hongos la descomponen y la transforman nuevamente en compuestos inorgánicos, que son reutilizados por los autótrofos. Así el ciclo se cierra. A diferencia de la energía, <b>la materia se recicla</b>: los átomos no se gastan, solo cambian de molécula.</p></div>
+<div class="pie"><span>Guía resuelta · bnsolutions.cl/lab/ecosistemas-guia</span><span>Página 2 de 3</span></div>
+</div><div class="page">
+<div class="cab"><h1>Materia y energía de los ecosistemas — resuelta</h1><span class="mono">BIOLOGÍA · 1º MEDIO</span></div>
+<h2>4 · Definición de términos</h2>
+<table>
+<thead><tr><th>Término</th><th>Definición</th><th>Ejemplo</th></tr></thead>
+<tr><td>Productores</td><td>Seres <b>autótrofos</b> que captan la energía solar y la utilizan para transformar la materia inorgánica en materia orgánica.</td><td>Pasto, árboles, algas</td></tr>
+<tr><td>Consumidores</td><td>Seres <b>heterótrofos</b> que obtienen la materia y la energía alimentándose de los productores o de otros consumidores.</td><td>Todos los animales</td></tr>
+<tr><td>Consumidores primarios</td><td><b>Herbívoros</b>: se alimentan directamente de los productores.</td><td>Conejo, vaca, oruga</td></tr>
+<tr><td>Consumidores secundarios</td><td><b>Carnívoros</b>: se alimentan de los consumidores primarios.</td><td>Culebra, zorro</td></tr>
+<tr><td>Consumidores terciarios</td><td>Se nutren de los consumidores secundarios.</td><td>Águila, puma</td></tr>
+<tr><td>Herbívoros</td><td>Animales que se alimentan de vegetales. Ocupan el nivel de consumidores primarios.</td><td>Conejo, caballo</td></tr>
+<tr><td>Carnívoros</td><td>Animales que se alimentan de otros animales. Ocupan el nivel de consumidores secundarios o terciarios.</td><td>León, culebra</td></tr>
+<tr><td>Descomponedores</td><td>Bacterias y hongos que descomponen los restos orgánicos e inorgánicos de otros seres vivos y los transforman en materia útil para los productores.</td><td>Hongos, lombrices, bacterias</td></tr>
+<tr><td>Redes tróficas</td><td>Conjunto de cadenas alimentarias conectadas entre sí. Como un consumidor se alimenta de más de una especie del nivel inferior y sirve de alimento a varios del nivel superior, es más correcto hablar de redes que de cadenas aisladas.</td><td>Todo un bosque</td></tr>
+</table>
+<p><b>Ojo:</b> «herbívoro» y «carnívoro» describen <i>qué come</i> un animal; «consumidor primario, secundario o terciario» describen <i>qué lugar ocupa</i> en la cadena. Casi siempre coinciden, pero no son lo mismo.</p>
+
+<h2>La diferencia entre energía y materia</h2>
+<table>
+<thead><tr><th></th><th>La energía</th><th>La materia</th></tr></thead>
+<tr><td>Cómo se mueve</td><td>Fluye en una sola dirección</td><td>Circula en un ciclo cerrado</td></tr>
+<tr><td>De dónde viene</td><td>Del Sol, siempre nueva</td><td>Del propio planeta, siempre la misma</td></tr>
+<tr><td>A dónde va</td><td>Se escapa como calor y no vuelve</td><td>Vuelve al suelo y sube otra vez</td></tr>
+<tr><td>¿Se acaba?</td><td>Sí: hay que reponerla del Sol</td><td>No: se recicla indefinidamente</td></tr>
+<tr><td>Quién la reintroduce</td><td>Nadie: solo entra luz nueva</td><td>Los descomponedores</td></tr>
+</table>
+<div class="resp"><div class="pid">RESPUESTA 4</div>
+<p><b>Productores:</b> seres autótrofos que captan la energía solar y transforman la materia inorgánica en orgánica. <b>Consumidores:</b> seres heterótrofos que obtienen materia y energía alimentándose de los productores o de otros consumidores. <b>Consumidores primarios:</b> herbívoros, se alimentan directamente de los productores. <b>Consumidores secundarios:</b> carnívoros, se alimentan de los primarios. <b>Consumidores terciarios:</b> se nutren de los secundarios. <b>Herbívoros:</b> animales que se alimentan de vegetales. <b>Carnívoros:</b> animales que se alimentan de otros animales. <b>Descomponedores:</b> bacterias y hongos que descomponen los restos orgánicos e inorgánicos y los transforman en materia útil para los productores. <b>Redes tróficas:</b> conjunto de cadenas alimentarias conectadas entre sí, ya que un consumidor come más de una especie y sirve de alimento a varias.</p></div>
+<div class="pie"><span>Guía resuelta · bnsolutions.cl/lab/ecosistemas-guia</span><span>Página 3 de 3</span></div>
+</div>
+</body></html>
