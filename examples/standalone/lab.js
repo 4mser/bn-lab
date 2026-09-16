@@ -3230,75 +3230,36 @@
       note: L('Equal areas in equal times. The law Newton later explained.',
               'Áreas iguales en tiempos iguales. La ley que Newton explicó después.'),
       params: [
-        { key: 'ecc',     label: L('Eccentricity', 'Excentricidad'), min: 0, max: 0.9, step: 0.01, def: 0.55 },
-        { key: 'planets', label: L('Planets', 'Planetas'),           min: 1, max: 6, step: 1, def: 3 },
-        { key: 'perturb', label: L('Cursor mass', 'Masa del cursor'), min: 0, max: 4000, step: 100, def: 900 }
+        { key: 'ecc', label: L('Eccentricity', 'Excentricidad'), min: 0, max: 0.85, step: 0.01, def: 0.55 },
+        { key: 'planets', label: L('Planets', 'Planetas'), min: 1, max: 6, step: 1, def: 3 },
+        { key: 'speed', label: L('Time scale', 'Escala temporal'), min: 0.08, max: 0.8, step: 0.01, def: 0.28 }
       ],
       make(w, h) {
-        let ps = [];
-        const seed = (w, h, ecc) => {
-          ps = [];
-          const cx = w / 2, cy = h / 2;
-          for (let i = 0; i < 6; i++) {
-            const r = Math.min(w, h) * (0.12 + i * 0.055);
-            const vc = Math.sqrt(2600 / r) * Math.sqrt(1 - ecc);
-            ps.push({ x: cx + r, y: cy, vx: 0, vy: vc, p: [], area: [] });
-          }
-        };
         let lw = w, lh = h;
-        seed(w, h, 0.55);
         return {
-          resize(w, h) { lw = w; lh = h; seed(w, h, 0.55); },
-          reset() { seed(lw, lh, 0.55); },
+          resize(w, h) { lw = w; lh = h; },
+          reset() {},
           step(ctx, w, h, t, acc, P, M) {
-            const cx = w / 2, cy = h / 2, GM = 2600;
-            ctx.fillStyle = `rgba(${acc},0.95)`;
+            const cx = w / 2, cy = h / 2, R = Math.min(w, h) * 0.38;
+            ctx.fillStyle = `rgba(${acc},0.96)`;
             ctx.beginPath(); ctx.arc(cx, cy, 6, 0, TAU); ctx.fill();
-            if (M.in && P.perturb) {
-              ctx.strokeStyle = `rgba(${acc},0.4)`; ctx.lineWidth = 1;
-              ctx.beginPath(); ctx.arc(M.x, M.y, 4 + P.perturb / 900, 0, TAU); ctx.stroke();
-            }
-            const n = P.planets | 0;
-            for (let i = 0; i < n && i < ps.length; i++) {
-              const b = ps[i];
-              // Leapfrog, 64 subpasos por frame, suavizado de Plummer de 0,5 px. Con Euler
-              // y la distancia +6 px la órbita precesaba 60° por vuelta (suite de
-              // validación de BN Lab Simulations); así baja de medio grado.
-              const acel = () => {
-                const dx = cx - b.x, dy = cy - b.y, q = dx * dx + dy * dy + 0.25;
-                const k = GM / (q * Math.sqrt(q));
-                let ax = dx * k, ay = dy * k;
-                if (M.in && P.perturb) {                     // el cursor es otra masa
-                  const ux = M.x - b.x, uy = M.y - b.y, ur = Math.hypot(ux, uy) + 14;
-                  ax += (ux / ur) * (P.perturb / (ur * ur));
-                  ay += (uy / ur) * (P.perturb / (ur * ur));
-                }
-                return [ax, ay];
-              };
-              const H = 1 / 64;
-              let a = acel();
-              for (let s = 0; s < 64; s++) {
-                b.vx += a[0] * H / 2; b.vy += a[1] * H / 2;
-                b.x += b.vx * H; b.y += b.vy * H;
-                a = acel();
-                b.vx += a[0] * H / 2; b.vy += a[1] * H / 2;   // segundo medio impulso
+            const n = P.planets | 0, e = Math.min(.85, Math.max(0, P.ecc));
+            for (let i = 0; i < n; i++) {
+              const a = R * (0.22 + i * 0.13), b = a * Math.sqrt(1 - e * e);
+              const mean = t * P.speed * (0.52 / Math.pow(i + 1, 1.5)) + i * 1.7;
+              let E = mean;
+              for (let q = 0; q < 5; q++) E -= (E - e * Math.sin(E) - mean) / (1 - e * Math.cos(E));
+              const px = cx + a * (Math.cos(E) - e), py = cy + b * Math.sin(E);
+              ctx.strokeStyle = `rgba(${acc},${i === 0 ? .28 : .12})`; ctx.lineWidth = i === 0 ? 1.2 : .7;
+              ctx.beginPath(); ctx.ellipse(cx - a * e, cy, a, b, 0, 0, TAU); ctx.stroke();
+              ctx.fillStyle = `rgba(${acc},${i === 0 ? .98 : .7})`;
+              ctx.beginPath(); ctx.arc(px, py, i === 0 ? 4 : 2.8, 0, TAU); ctx.fill();
+              if (i === 0) {
+                ctx.fillStyle = `rgba(${acc},.13)`;
+                const E0 = E - .7, E1 = E - .28;
+                ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + a * (Math.cos(E0) - e), cy + b * Math.sin(E0));
+                ctx.lineTo(px, py); ctx.closePath(); ctx.fill();
               }
-              b.p.push([b.x, b.y]); if (b.p.length > 700) b.p.shift();
-              ctx.strokeStyle = `rgba(${acc},0.35)`; ctx.lineWidth = 1;
-              ctx.beginPath();
-              b.p.forEach((q, k) => k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]));
-              ctx.stroke();
-              // Segunda ley: sectores barridos en intervalos iguales
-              if (i === 0 && b.p.length > 12) {
-                ctx.fillStyle = `rgba(${acc},0.14)`;
-                for (let k = b.p.length - 1; k > b.p.length - 60 && k > 11; k -= 12) {
-                  ctx.beginPath(); ctx.moveTo(cx, cy);
-                  ctx.lineTo(b.p[k][0], b.p[k][1]); ctx.lineTo(b.p[k - 11][0], b.p[k - 11][1]);
-                  ctx.closePath(); ctx.fill();
-                }
-              }
-              ctx.fillStyle = `rgba(${acc},0.95)`;
-              ctx.beginPath(); ctx.arc(b.x, b.y, 3, 0, TAU); ctx.fill();
             }
           }
         };
